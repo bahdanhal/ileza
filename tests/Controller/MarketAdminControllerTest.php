@@ -14,11 +14,14 @@ use App\Market\Application\RecordPriceObservation;
 use App\Market\Domain\PriceObservation;
 use App\Market\Domain\PriceObservationRepository;
 use App\Market\Domain\PriceTipRepository;
+use App\Market\Domain\Product;
+use App\Market\Domain\ProductRepository;
 use App\Market\Domain\ProductRequestStore;
 use App\Market\Infrastructure\JsonPriceTipRepository;
 use App\Market\Infrastructure\JsonProductRequestStore;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Twig\Environment;
 
@@ -27,6 +30,7 @@ final class MarketAdminControllerTest extends TestCase
     public function testRendersLoginWhenUnauthenticated(): void
     {
         $catalog = new ProductCatalog();
+        $prodRepo = $this->createStub(ProductRepository::class);
         $observations = $this->createStub(PriceObservationRepository::class);
         $productRequests = new JsonProductRequestStore(sys_get_temp_dir(), 'secret');
         $priceTips = new JsonPriceTipRepository(sys_get_temp_dir(), 'secret');
@@ -43,6 +47,7 @@ final class MarketAdminControllerTest extends TestCase
 
         $controller = new MarketAdminController(
             $catalog,
+            $prodRepo,
             new GetMarketStatistics($catalog, $observations),
             new RecordPriceObservation($catalog, $observations),
             new DeletePriceObservation($observations),
@@ -63,6 +68,7 @@ final class MarketAdminControllerTest extends TestCase
     public function testRejectsQueryTokenAuthentication(): void
     {
         $catalog = new ProductCatalog();
+        $prodRepo = $this->createStub(ProductRepository::class);
         $observations = $this->createStub(PriceObservationRepository::class);
         $productRequests = new JsonProductRequestStore(sys_get_temp_dir(), 'secret');
         $priceTips = new JsonPriceTipRepository(sys_get_temp_dir(), 'secret');
@@ -79,6 +85,7 @@ final class MarketAdminControllerTest extends TestCase
 
         $controller = new MarketAdminController(
             $catalog,
+            $prodRepo,
             new GetMarketStatistics($catalog, $observations),
             new RecordPriceObservation($catalog, $observations),
             new DeletePriceObservation($observations),
@@ -98,6 +105,7 @@ final class MarketAdminControllerTest extends TestCase
     public function testAuthenticatesWithValidLoginPassword(): void
     {
         $catalog = new ProductCatalog();
+        $prodRepo = $this->createStub(ProductRepository::class);
         $observations = $this->createStub(PriceObservationRepository::class);
         $productRequests = new JsonProductRequestStore(sys_get_temp_dir(), 'secret');
         $priceTips = new JsonPriceTipRepository(sys_get_temp_dir(), 'secret');
@@ -111,6 +119,7 @@ final class MarketAdminControllerTest extends TestCase
 
         $controller = new MarketAdminController(
             $catalog,
+            $prodRepo,
             new GetMarketStatistics($catalog, $observations),
             new RecordPriceObservation($catalog, $observations),
             new DeletePriceObservation($observations),
@@ -133,6 +142,7 @@ final class MarketAdminControllerTest extends TestCase
     public function testSavesManualObservation(): void
     {
         $catalog = new ProductCatalog();
+        $prodRepo = $this->createStub(ProductRepository::class);
         $observations = $this->createMock(PriceObservationRepository::class);
         $observations->expects(self::once())
             ->method('save')
@@ -156,6 +166,7 @@ final class MarketAdminControllerTest extends TestCase
 
         $controller = new MarketAdminController(
             $catalog,
+            $prodRepo,
             new GetMarketStatistics($catalog, $observations),
             new RecordPriceObservation($catalog, $observations),
             new DeletePriceObservation($observations),
@@ -184,9 +195,78 @@ final class MarketAdminControllerTest extends TestCase
         self::assertSame(302, $response->getStatusCode());
     }
 
+    public function testSavesAndDeletesProduct(): void
+    {
+        $catalog = new ProductCatalog();
+        $prodRepo = $this->createMock(ProductRepository::class);
+        $prodRepo->expects(self::once())
+            ->method('save')
+            ->with(self::callback(static function (Product $prod): bool {
+                return $prod->slug === 'iphone-16-pro-256gb'
+                    && $prod->name === 'Apple iPhone 16 Pro 256 GB'
+                    && $prod->category === 'smartphones';
+            }));
+        $prodRepo->expects(self::once())
+            ->method('delete')
+            ->with('iphone-16-pro-256gb');
+
+        $observations = $this->createStub(PriceObservationRepository::class);
+        $productRequests = new JsonProductRequestStore(sys_get_temp_dir(), 'secret');
+        $priceTips = new JsonPriceTipRepository(sys_get_temp_dir(), 'secret');
+        $secret = 'test-secret-key';
+
+        $router = $this->createStub(\Symfony\Component\Routing\Generator\UrlGeneratorInterface::class);
+        $router->method('generate')->willReturn('/admin/market');
+
+        $container = new Container();
+        $container->set('router', $router);
+
+        $controller = new MarketAdminController(
+            $catalog,
+            $prodRepo,
+            new GetMarketStatistics($catalog, $observations),
+            new RecordPriceObservation($catalog, $observations),
+            new DeletePriceObservation($observations),
+            $productRequests,
+            $priceTips,
+            $this->trafficAnalytics(),
+            $secret,
+            sys_get_temp_dir(),
+        );
+        $controller->setContainer($container);
+
+        $authCookie = hash_hmac('sha256', 'market_admin_authenticated', $secret);
+
+        // Save
+        $saveRequest = new Request(
+            request: [
+                'slug' => 'iphone-16-pro-256gb',
+                'name' => 'Apple iPhone 16 Pro 256 GB',
+                'category' => 'smartphones',
+                'definition' => 'Used clean condition',
+                'family_slug' => 'iphone-16-pro',
+                'family_name' => 'Apple iPhone 16 Pro',
+                'image_url' => '/images/market/iphone-16.jpg',
+                'specifications' => '{"storage":"256 GB"}',
+            ],
+            cookies: ['market_admin_auth' => $authCookie]
+        );
+        $saveResponse = $controller->saveProduct($saveRequest);
+        self::assertSame(302, $saveResponse->getStatusCode());
+
+        // Delete
+        $deleteRequest = new Request(
+            request: ['slug' => 'iphone-16-pro-256gb'],
+            cookies: ['market_admin_auth' => $authCookie]
+        );
+        $deleteResponse = $controller->deleteProduct($deleteRequest);
+        self::assertSame(302, $deleteResponse->getStatusCode());
+    }
+
     public function testAuthenticatedDashboardWithBearerHeader(): void
     {
         $catalog = new ProductCatalog();
+        $prodRepo = $this->createStub(ProductRepository::class);
         $observations = $this->createStub(PriceObservationRepository::class);
         $observations->method('history')->willReturn([]);
         $productRequests = $this->createStub(ProductRequestStore::class);
@@ -214,6 +294,7 @@ final class MarketAdminControllerTest extends TestCase
 
         $controller = new MarketAdminController(
             $catalog,
+            $prodRepo,
             new GetMarketStatistics($catalog, $observations),
             new RecordPriceObservation($catalog, $observations),
             new DeletePriceObservation($observations),
@@ -235,6 +316,7 @@ final class MarketAdminControllerTest extends TestCase
     public function testAuthenticatedDashboardWithCustomHeader(): void
     {
         $catalog = new ProductCatalog();
+        $prodRepo = $this->createStub(ProductRepository::class);
         $observations = $this->createStub(PriceObservationRepository::class);
         $observations->method('history')->willReturn([]);
         $productRequests = $this->createStub(ProductRequestStore::class);
@@ -254,6 +336,7 @@ final class MarketAdminControllerTest extends TestCase
 
         $controller = new MarketAdminController(
             $catalog,
+            $prodRepo,
             new GetMarketStatistics($catalog, $observations),
             new RecordPriceObservation($catalog, $observations),
             new DeletePriceObservation($observations),

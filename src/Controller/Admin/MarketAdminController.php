@@ -13,9 +13,11 @@ use App\Market\Domain\PriceObservation;
 use App\Market\Domain\PriceTip;
 use App\Market\Domain\PriceTipRepository;
 use App\Market\Domain\Product;
+use App\Market\Domain\ProductRepository;
 use App\Market\Domain\ProductRequestStore;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -26,6 +28,7 @@ final class MarketAdminController extends AbstractController
 
     public function __construct(
         private readonly ProductCatalog $catalog,
+        private readonly ProductRepository $productRepository,
         private readonly GetMarketStatistics $marketStatistics,
         private readonly RecordPriceObservation $recordObservation,
         private readonly DeletePriceObservation $deleteObservation,
@@ -33,6 +36,7 @@ final class MarketAdminController extends AbstractController
         private readonly PriceTipRepository $priceTips,
         private readonly TrafficAnalytics $trafficAnalytics,
         private readonly string $secret,
+        private readonly string $projectDir = '',
     ) {
     }
 
@@ -210,6 +214,118 @@ final class MarketAdminController extends AbstractController
         }
 
         return $this->redirectToRoute('market_admin_dashboard', ['status' => 'Deleted observation for ' . $slug . ' (' . $date . ')']);
+    }
+
+    #[Route('/admin/market/product/save', name: 'market_admin_save_product', methods: ['POST'])]
+    public function saveProduct(Request $request): Response
+    {
+        if (!$this->isAuthenticated($request)) {
+            return $this->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $slug = strtolower(trim((string) $request->request->get('slug')));
+        $name = trim((string) $request->request->get('name'));
+        $category = trim((string) $request->request->get('category'));
+        $definition = trim((string) $request->request->get('definition'));
+        $familySlug = trim((string) $request->request->get('family_slug'));
+        $familyName = trim((string) $request->request->get('family_name'));
+        $imageUrl = trim((string) $request->request->get('image_url'));
+        $imageCredit = trim((string) $request->request->get('image_credit'));
+        $imageSource = trim((string) $request->request->get('image_source'));
+        $specsInput = trim((string) $request->request->get('specifications', '{}'));
+
+        if (!preg_match('/^[a-z0-9]+(?:-[a-z0-9]+)*$/', $slug)) {
+            return $this->redirectToRoute('market_admin_dashboard', ['error' => 'Product slug must be lowercase alphanumeric with hyphens.']);
+        }
+
+        if ($name === '' || $category === '' || $definition === '') {
+            return $this->redirectToRoute('market_admin_dashboard', ['error' => 'Name, category, and definition are required.']);
+        }
+
+        /** @var array<string, mixed> $specifications */
+        $specifications = [];
+        if ($specsInput !== '') {
+            try {
+                $decoded = json_decode($specsInput, true, 512, JSON_THROW_ON_ERROR);
+                if (is_array($decoded)) {
+                    /** @var array<string, mixed> $decoded */
+                    $specifications = $decoded;
+                }
+            } catch (\JsonException) {
+                return $this->redirectToRoute('market_admin_dashboard', ['error' => 'Specifications must be valid JSON format.']);
+            }
+        }
+
+        $existing = $this->productRepository->get($slug);
+        $finalImage = $imageUrl !== '' ? $imageUrl : $existing?->image;
+        $finalCredit = $imageCredit !== '' ? $imageCredit : $existing?->imageCredit;
+        $finalSource = $imageSource !== '' ? $imageSource : $existing?->imageSource;
+
+        /** @var UploadedFile|null $imageFile */
+        $imageFile = $request->files->get('image_file');
+        if ($imageFile instanceof UploadedFile && $imageFile->isValid()) {
+            $allowedMimes = ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml'];
+            $mime = (string) $imageFile->getMimeType();
+            if (!in_array($mime, $allowedMimes, true)) {
+                return $this->redirectToRoute('market_admin_dashboard', ['error' => 'Invalid image format. Allowed: JPG, PNG, WEBP, SVG.']);
+            }
+
+            $ext = match ($mime) {
+                'image/jpeg' => 'jpg',
+                'image/png' => 'png',
+                'image/webp' => 'webp',
+                default => 'svg',
+            };
+            $filename = $slug . '-' . time() . '.' . $ext;
+            $targetDir = ($this->projectDir !== '' ? $this->projectDir : sys_get_temp_dir()) . '/public/images/market';
+            if (!is_dir($targetDir)) {
+                mkdir($targetDir, 0777, true);
+            }
+            $imageFile->move($targetDir, $filename);
+            $finalImage = '/images/market/' . $filename;
+        }
+
+        $product = new Product(
+            $slug,
+            $name,
+            $definition,
+            $category,
+            $specifications,
+            $familySlug !== '' ? $familySlug : $slug,
+            $familyName !== '' ? $familyName : $name,
+            $finalImage,
+            $finalCredit,
+            $finalSource,
+        );
+
+        try {
+            $this->productRepository->save($product);
+        } catch (\Throwable $e) {
+            return $this->redirectToRoute('market_admin_dashboard', ['error' => 'Failed to save product: ' . $e->getMessage()]);
+        }
+
+        return $this->redirectToRoute('market_admin_dashboard', ['status' => 'Product saved: ' . $product->name]);
+    }
+
+    #[Route('/admin/market/product/delete', name: 'market_admin_delete_product', methods: ['POST'])]
+    public function deleteProduct(Request $request): Response
+    {
+        if (!$this->isAuthenticated($request)) {
+            return $this->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $slug = trim((string) $request->request->get('slug'));
+        if ($slug === '') {
+            return $this->redirectToRoute('market_admin_dashboard', ['error' => 'Product slug is required.']);
+        }
+
+        try {
+            $this->productRepository->delete($slug);
+        } catch (\Throwable $e) {
+            return $this->redirectToRoute('market_admin_dashboard', ['error' => 'Failed to delete product: ' . $e->getMessage()]);
+        }
+
+        return $this->redirectToRoute('market_admin_dashboard', ['status' => 'Deleted product: ' . $slug]);
     }
 
     private function isAuthenticated(Request $request): bool

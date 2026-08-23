@@ -8,8 +8,10 @@ use App\Entity\LeadEntity;
 use App\Entity\PageViewEntity;
 use App\Entity\PriceObservationEntity;
 use App\Entity\PriceTipEntity;
+use App\Entity\ProductEntity;
 use App\Entity\ProductRequestEntity;
 use App\Lead\Domain\Lead;
+use App\Market\Application\ProductCatalog;
 use App\Market\Domain\PriceObservation;
 use App\Market\Domain\PriceTip;
 use Doctrine\ORM\EntityManagerInterface;
@@ -39,6 +41,7 @@ final class MigrateStorageToDatabaseCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $io->title('Migrating JSON / JSONL file storage to Database');
 
+        $productCount = $this->importProducts($io);
         $observationCount = $this->importPriceObservations($io);
         $leadCount = $this->importLeads($io);
         $requestCount = $this->importProductRequests($io);
@@ -48,7 +51,8 @@ final class MigrateStorageToDatabaseCommand extends Command
         $this->entityManager->flush();
 
         $io->success(sprintf(
-            'Migration completed: %d observations, %d leads, %d product requests, %d price tips, %d page views.',
+            'Migration completed: %d products, %d observations, %d leads, %d product requests, %d price tips, %d page views.',
+            $productCount,
             $observationCount,
             $leadCount,
             $requestCount,
@@ -57,6 +61,53 @@ final class MigrateStorageToDatabaseCommand extends Command
         ));
 
         return Command::SUCCESS;
+    }
+
+    private function importProducts(SymfonyStyle $io): int
+    {
+        $repository = $this->entityManager->getRepository(ProductEntity::class);
+        if ($repository->count([]) > 0) {
+            $io->text('Products table already populated, skipping initial product seed.');
+            return 0;
+        }
+
+        $catalog = new ProductCatalog();
+        $count = 0;
+        foreach ($catalog->seedProducts() as $product) {
+            $familySlug = $catalog->familySlug($product);
+            [$image, $credit, $source] = $catalog->familyImage($familySlug, $product->category);
+
+            $familyName = match ($product->category) {
+                'smartphones' => 'Apple ' . ($product->specifications['generation'] ?? $product->name),
+                'laptops' => sprintf(
+                    '%s %s %s',
+                    $product->specifications['line'] ?? 'MacBook Air',
+                    $product->specifications['display'] ?? '',
+                    $product->specifications['chip'] ?? ''
+                ),
+                'ram' => $product->specifications['family_name'] ?? 'RAM Memory',
+                'cars' => 'Peugeot 206 CC',
+                default => $product->name,
+            };
+
+            $entity = new ProductEntity(
+                $product->slug,
+                $product->name,
+                $product->definition,
+                $product->category,
+                $familySlug,
+                trim($familyName),
+                $image,
+                $credit,
+                $source,
+                $product->specifications
+            );
+            $this->entityManager->persist($entity);
+            $count++;
+        }
+
+        $io->text(sprintf('Seeded %d products.', $count));
+        return $count;
     }
 
     private function importPriceObservations(SymfonyStyle $io): int

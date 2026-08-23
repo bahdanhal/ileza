@@ -3,13 +3,13 @@
     admin off
 }
 
-http://bahdanhal.pl, http://www.bahdanhal.pl, http://bahdan-hal.ovh, http://www.bahdan-hal.ovh {
+http://ileza.pl, http://www.ileza.pl {
     handle /.well-known/acme-challenge/* {
         root * /srv/certbot
         file_server
     }
     handle {
-        redir https://bahdanhal.pl{uri} permanent
+        redir https://ileza.pl{uri} permanent
     }
 }
 
@@ -25,18 +25,13 @@ http://localhost, http://127.0.0.1 {
     }
 }
 
-https://bahdan-hal.ovh, https://www.bahdan-hal.ovh {
-    tls /etc/letsencrypt/live/bahdan-hal.ovh/fullchain.pem /etc/letsencrypt/live/bahdan-hal.ovh/privkey.pem
-    redir https://bahdanhal.pl{uri} permanent
+https://www.ileza.pl {
+    tls /etc/letsencrypt/live/ileza.pl/fullchain.pem /etc/letsencrypt/live/ileza.pl/privkey.pem
+    redir https://ileza.pl{uri} permanent
 }
 
-https://www.bahdanhal.pl {
-    tls /etc/letsencrypt/live/bahdanhal.pl/fullchain.pem /etc/letsencrypt/live/bahdanhal.pl/privkey.pem
-    redir https://bahdanhal.pl{uri} permanent
-}
-
-https://bahdanhal.pl {
-    tls /etc/letsencrypt/live/bahdanhal.pl/fullchain.pem /etc/letsencrypt/live/bahdanhal.pl/privkey.pem
+https://ileza.pl {
+    tls /etc/letsencrypt/live/ileza.pl/fullchain.pem /etc/letsencrypt/live/ileza.pl/privkey.pem
     root * /app/public
     encode zstd gzip
     header {

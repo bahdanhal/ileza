@@ -8,6 +8,8 @@ use App\Market\Application\GetProductPriceHistory;
 use App\Market\Application\ProductCatalog;
 use App\Market\Application\RecordPriceObservation;
 use App\Market\Domain\PriceObservation;
+use App\Market\Domain\Product;
+use App\Market\Domain\ProductRepository;
 use Mcp\Capability\Attribute\McpTool;
 use Mcp\Capability\Attribute\Schema;
 
@@ -18,6 +20,7 @@ final readonly class MarketPriceTools
         private GetProductPriceHistory $priceHistory,
         private RecordPriceObservation $recordObservation,
         private ?AdminAccess $adminAccess = null,
+        private ?ProductRepository $productRepository = null,
     ) {
     }
 
@@ -32,11 +35,46 @@ final readonly class MarketPriceTools
                 'slug' => $product->slug,
                 'name' => $product->name,
                 'category' => $product->category,
+                'family_slug' => $product->familySlug,
+                'family_name' => $product->familyName,
+                'image' => $product->image,
                 'configuration' => $product->specifications,
                 'has_observations' => $this->priceHistory->latestForProduct($product->slug) !== null,
                 'canonical_url' => $this->canonicalUrl($product->slug),
             ], $this->catalog->all()),
             'terms' => 'Public read-only estimates; no account or API key required.',
+        ]);
+    }
+
+    #[McpTool(
+        name: 'get_polish_used_price_product',
+        description: 'Get full product specification, family grouping, and media details for a product slug.'
+    )]
+    public function getProduct(#[Schema(description: 'Product slug returned by list_polish_used_price_products.')] string $slug): string
+    {
+        $product = $this->catalog->get($slug);
+        if ($product === null) {
+            return $this->json(['error' => 'Unknown product slug.', 'suggestion' => 'Call list_polish_used_price_products first.']);
+        }
+
+        $latest = $this->priceHistory->latestForProduct($slug);
+
+        return $this->json([
+            'product' => [
+                'slug' => $product->slug,
+                'name' => $product->name,
+                'category' => $product->category,
+                'definition' => $product->definition,
+                'family_slug' => $product->familySlug,
+                'family_name' => $product->familyName,
+                'image' => $product->image,
+                'image_credit' => $product->imageCredit,
+                'image_source' => $product->imageSource,
+                'specifications' => $product->specifications,
+                'latest_median_pln' => $latest !== null ? $latest->medianGrosz / 100 : null,
+                'latest_observed_at' => $latest?->observedAt->format('Y-m-d'),
+            ],
+            'canonical_url' => $this->canonicalUrl($slug),
         ]);
     }
 
@@ -153,6 +191,185 @@ final readonly class MarketPriceTools
                 'summary' => $note,
             ],
             'canonical_url' => $this->canonicalUrl($slug),
+        ]);
+    }
+
+    #[McpTool(
+        name: 'create_polish_used_price_product',
+        description: 'Admin-only: Create a new tracked product configuration in the database. Requires Bearer authorization.'
+    )]
+    public function createProduct(
+        #[Schema(description: 'URL-safe product slug (e.g. iphone-16-pro-256gb).')] string $slug,
+        #[Schema(description: 'Human-readable product name (e.g. Apple iPhone 16 Pro 256 GB).')] string $name,
+        #[Schema(description: 'Product category (smartphones, laptops, ram, cars).')] string $category,
+        #[Schema(description: 'Product condition definition and inclusion/exclusion rules.')] string $definition,
+        #[Schema(description: 'Optional family slug (e.g. iphone-16).')] ?string $family_slug = null,
+        #[Schema(description: 'Optional family name (e.g. Apple iPhone 16).')] ?string $family_name = null,
+        #[Schema(description: 'Optional image path or URL (e.g. /images/market/iphone-16.jpg).')] ?string $image = null,
+        #[Schema(description: 'Optional image attribution author.')] ?string $image_credit = null,
+        #[Schema(description: 'Optional image source URL.')] ?string $image_source = null,
+        #[Schema(description: 'Optional specifications as a JSON string or key-value object.')] ?string $specifications_json = null,
+    ): string {
+        if ($this->adminAccess?->isGranted() !== true) {
+            return $this->json(['error' => 'Unauthorized: Invalid admin token.']);
+        }
+
+        $cleanSlug = strtolower(trim($slug));
+        if (!preg_match('/^[a-z0-9]+(?:-[a-z0-9]+)*$/', $cleanSlug)) {
+            return $this->json(['error' => 'Product slug must be lowercase alphanumeric with hyphens.']);
+        }
+
+        /** @var array<string, mixed> $specifications */
+        $specifications = [];
+        if ($specifications_json !== null && trim($specifications_json) !== '') {
+            try {
+                $decoded = json_decode($specifications_json, true, 512, JSON_THROW_ON_ERROR);
+                if (is_array($decoded)) {
+                    /** @var array<string, mixed> $decoded */
+                    $specifications = $decoded;
+                }
+            } catch (\JsonException) {
+                return $this->json(['error' => 'Specifications must be valid JSON format.']);
+            }
+        }
+
+        $product = new Product(
+            $cleanSlug,
+            trim($name),
+            trim($definition),
+            trim($category),
+            $specifications,
+            $family_slug !== null && trim($family_slug) !== '' ? trim($family_slug) : $cleanSlug,
+            $family_name !== null && trim($family_name) !== '' ? trim($family_name) : trim($name),
+            $image !== null && trim($image) !== '' ? trim($image) : null,
+            $image_credit !== null && trim($image_credit) !== '' ? trim($image_credit) : null,
+            $image_source !== null && trim($image_source) !== '' ? trim($image_source) : null,
+        );
+
+        if ($this->productRepository !== null) {
+            try {
+                $this->productRepository->save($product);
+            } catch (\Throwable $e) {
+                return $this->json(['error' => 'Failed to save product: ' . $e->getMessage()]);
+            }
+        }
+
+        return $this->json([
+            'status' => 'success',
+            'message' => 'Product created successfully.',
+            'product' => [
+                'slug' => $product->slug,
+                'name' => $product->name,
+                'category' => $product->category,
+                'family_slug' => $product->familySlug,
+                'family_name' => $product->familyName,
+                'image' => $product->image,
+            ],
+            'canonical_url' => $this->canonicalUrl($cleanSlug),
+        ]);
+    }
+
+    #[McpTool(
+        name: 'update_polish_used_price_product',
+        description: 'Admin-only: Update an existing tracked product configuration. Requires Bearer authorization.'
+    )]
+    public function updateProduct(
+        #[Schema(description: 'Existing product slug to update.')] string $slug,
+        #[Schema(description: 'Updated human-readable product name.')] ?string $name = null,
+        #[Schema(description: 'Updated category.')] ?string $category = null,
+        #[Schema(description: 'Updated condition definition.')] ?string $definition = null,
+        #[Schema(description: 'Updated family slug.')] ?string $family_slug = null,
+        #[Schema(description: 'Updated family name.')] ?string $family_name = null,
+        #[Schema(description: 'Updated image path or URL.')] ?string $image = null,
+        #[Schema(description: 'Updated image credit author.')] ?string $image_credit = null,
+        #[Schema(description: 'Updated image source URL.')] ?string $image_source = null,
+        #[Schema(description: 'Updated specifications JSON string.')] ?string $specifications_json = null,
+    ): string {
+        if ($this->adminAccess?->isGranted() !== true) {
+            return $this->json(['error' => 'Unauthorized: Invalid admin token.']);
+        }
+
+        $existing = $this->productRepository?->get($slug) ?? $this->catalog->get($slug);
+        if ($existing === null) {
+            return $this->json(['error' => 'Unknown product slug: ' . $slug]);
+        }
+
+        /** @var array<string, mixed> $specifications */
+        $specifications = $existing->specifications;
+        if ($specifications_json !== null && trim($specifications_json) !== '') {
+            try {
+                $decoded = json_decode($specifications_json, true, 512, JSON_THROW_ON_ERROR);
+                if (is_array($decoded)) {
+                    /** @var array<string, mixed> $decoded */
+                    $specifications = $decoded;
+                }
+            } catch (\JsonException) {
+                return $this->json(['error' => 'Specifications must be valid JSON format.']);
+            }
+        }
+
+        $updated = new Product(
+            $existing->slug,
+            $name !== null && trim($name) !== '' ? trim($name) : $existing->name,
+            $definition !== null && trim($definition) !== '' ? trim($definition) : $existing->definition,
+            $category !== null && trim($category) !== '' ? trim($category) : $existing->category,
+            $specifications,
+            $family_slug !== null && trim($family_slug) !== '' ? trim($family_slug) : $existing->familySlug,
+            $family_name !== null && trim($family_name) !== '' ? trim($family_name) : $existing->familyName,
+            $image !== null && trim($image) !== '' ? trim($image) : $existing->image,
+            $image_credit !== null && trim($image_credit) !== '' ? trim($image_credit) : $existing->imageCredit,
+            $image_source !== null && trim($image_source) !== '' ? trim($image_source) : $existing->imageSource,
+        );
+
+        if ($this->productRepository !== null) {
+            try {
+                $this->productRepository->save($updated);
+            } catch (\Throwable $e) {
+                return $this->json(['error' => 'Failed to update product: ' . $e->getMessage()]);
+            }
+        }
+
+        return $this->json([
+            'status' => 'success',
+            'message' => 'Product updated successfully.',
+            'product' => [
+                'slug' => $updated->slug,
+                'name' => $updated->name,
+                'category' => $updated->category,
+                'family_slug' => $updated->familySlug,
+                'family_name' => $updated->familyName,
+                'image' => $updated->image,
+            ],
+            'canonical_url' => $this->canonicalUrl($slug),
+        ]);
+    }
+
+    #[McpTool(
+        name: 'delete_polish_used_price_product',
+        description: 'Admin-only: Delete a tracked product from the database. Requires Bearer authorization.'
+    )]
+    public function deleteProduct(#[Schema(description: 'Product slug to delete.')] string $slug): string
+    {
+        if ($this->adminAccess?->isGranted() !== true) {
+            return $this->json(['error' => 'Unauthorized: Invalid admin token.']);
+        }
+
+        $existing = $this->productRepository?->get($slug) ?? $this->catalog->get($slug);
+        if ($existing === null) {
+            return $this->json(['error' => 'Unknown product slug: ' . $slug]);
+        }
+
+        if ($this->productRepository !== null) {
+            try {
+                $this->productRepository->delete($slug);
+            } catch (\Throwable $e) {
+                return $this->json(['error' => 'Failed to delete product: ' . $e->getMessage()]);
+            }
+        }
+
+        return $this->json([
+            'status' => 'success',
+            'message' => 'Product deleted: ' . $slug,
         ]);
     }
 

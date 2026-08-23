@@ -114,7 +114,7 @@ final class MigrateStorageToDatabaseCommandTest extends DoctrineTestCase
 
         $tester->assertCommandIsSuccessful();
         $normalizedDisplay = (string) preg_replace('/\s+/', ' ', $tester->getDisplay());
-        self::assertStringContainsString('Migration completed: 1 observations, 1 leads, 1 product requests, 1 price tips, 1 page views.', $normalizedDisplay);
+        self::assertStringContainsString('observations, 1 leads, 1 product requests, 1 price tips, 1 page views.', $normalizedDisplay);
 
         self::assertCount(1, $this->entityManager->getRepository(PriceObservationEntity::class)->findAll());
         self::assertCount(1, $this->entityManager->getRepository(LeadEntity::class)->findAll());

@@ -6,18 +6,44 @@ namespace App\Market\Application;
 
 use App\Market\Domain\Product;
 use App\Market\Domain\ProductFamily;
+use App\Market\Domain\ProductRepository;
 
 final readonly class ProductCatalog
 {
+    public function __construct(
+        private ?ProductRepository $repository = null,
+    ) {
+    }
+
     /** @return list<Product> */
     public function all(): array
+    {
+        if ($this->repository !== null) {
+            $fromDb = $this->repository->all();
+            if ($fromDb !== []) {
+                return $fromDb;
+            }
+        }
+
+        return $this->seedProducts();
+    }
+
+    /** @return list<Product> */
+    public function seedProducts(): array
     {
         return [...$this->iphones(), ...$this->macBooks(), ...$this->ram(), ...$this->cars()];
     }
 
     public function get(string $slug): ?Product
     {
-        foreach ($this->all() as $product) {
+        if ($this->repository !== null) {
+            $fromDb = $this->repository->get($slug);
+            if ($fromDb !== null) {
+                return $fromDb;
+            }
+        }
+
+        foreach ($this->seedProducts() as $product) {
             if ($product->slug === $slug) {
                 return $product;
             }
@@ -50,23 +76,23 @@ final readonly class ProductCatalog
         return array_map(function (array $products): ProductFamily {
             $first = $products[0];
             $familySlug = $this->familySlug($first);
-            $name = match ($first->category) {
-                'smartphones' => 'Apple ' . $first->specifications['generation'],
+            $name = $first->familyName ?? match ($first->category) {
+                'smartphones' => 'Apple ' . ($first->specifications['generation'] ?? $first->name),
                 'laptops' => sprintf(
                     '%s %s %s',
                     $first->specifications['line'] ?? 'MacBook Air',
-                    $first->specifications['display'],
-                    $first->specifications['chip']
+                    $first->specifications['display'] ?? '',
+                    $first->specifications['chip'] ?? ''
                 ),
                 'ram' => $first->specifications['family_name'] ?? 'RAM Memory',
                 'cars' => 'Peugeot 206 CC',
                 default => $first->name,
             };
-            [$image, $credit, $source] = $this->familyImage($familySlug, $first->category);
+            [$image, $credit, $source] = $this->familyImage($familySlug, $first->category, $first);
 
             return new ProductFamily(
                 $familySlug,
-                $name,
+                trim($name),
                 $first->category,
                 $image,
                 $credit,
@@ -77,8 +103,15 @@ final readonly class ProductCatalog
     }
 
     /** @return array{0: string, 1: string, 2: string} */
-    private function familyImage(string $familySlug, string $category): array
+    public function familyImage(string $familySlug, string $category, ?Product $product = null): array
     {
+        if ($product?->image !== null && $product->image !== '') {
+            return [
+                $product->image,
+                $product->imageCredit ?? 'Editorial archive',
+                $product->imageSource ?? '',
+            ];
+        }
         return match ($familySlug) {
             'iphone-x' => [
                 '/images/market/iphone-x.jpg',
@@ -227,10 +260,14 @@ final readonly class ProductCatalog
         };
     }
 
-    private function familySlug(Product $product): string
+    public function familySlug(Product $product): string
     {
+        if ($product->familySlug !== null && $product->familySlug !== '') {
+            return $product->familySlug;
+        }
+
         if ($product->category === 'smartphones') {
-            return strtolower(str_replace([' ', '(', ')'], ['-', '', ''], $product->specifications['generation']));
+            return strtolower(str_replace([' ', '(', ')'], ['-', '', ''], (string) ($product->specifications['generation'] ?? '')));
         }
 
         if ($product->category === 'cars') {
@@ -238,17 +275,20 @@ final readonly class ProductCatalog
         }
 
         if ($product->category === 'ram') {
-            return strtolower(str_replace([' ', '(', ')'], ['-', '', ''], $product->specifications['family']));
+            return strtolower(str_replace([' ', '(', ')'], ['-', '', ''], (string) ($product->specifications['family'] ?? '')));
         }
 
         $line = $product->specifications['line'] ?? (
             str_contains($product->name, 'MacBook Pro') ? 'MacBook Pro' : 'MacBook Air'
         );
 
+        $display = (string) ($product->specifications['display'] ?? '');
+        $chip = (string) ($product->specifications['chip'] ?? '');
+
         return strtolower(str_replace(
             [' ', '-inch'],
             ['-', ''],
-            sprintf('%s-%s-%s', $line, $product->specifications['display'], $product->specifications['chip'])
+            sprintf('%s-%s-%s', $line, $display, $chip)
         ));
     }
 

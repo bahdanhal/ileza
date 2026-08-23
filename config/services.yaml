@@ -49,6 +49,9 @@ services:
     arguments:
       $token: '%env(MARKET_ADMIN_TOKEN)%'
 
+  App\Market\Domain\ProductRepository:
+    alias: App\Market\Infrastructure\DoctrineProductRepository
+
   App\Market\Domain\PriceObservationRepository:
     alias: App\Market\Infrastructure\DoctrinePriceObservationRepository
 
@@ -94,6 +97,7 @@ services:
   App\Controller\Admin\MarketAdminController:
     arguments:
       $secret: '%env(APP_SECRET)%'
+      $projectDir: '%kernel.project_dir%'
 
   app.rate_limit_cache:
     class: Symfony\Component\Cache\Adapter\FilesystemAdapter

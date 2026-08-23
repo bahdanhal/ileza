@@ -1,14 +1,12 @@
 User-agent: *
 Allow: /
-Disallow: /api/
-Disallow: /audit
-Disallow: /geo-audit
-Disallow: /contact
-Disallow: /pl/audyt
-Disallow: /pl/audyt-geo
-Disallow: /pl/kontakt
+Disallow: /admin/
 Disallow: /healthz
 Disallow: /mcp
+Disallow: /request
+Disallow: /zglos
+Disallow: /prices/*/price-tip
+Disallow: /ceny/*/okazja
 
 User-agent: GPTBot
 User-agent: ChatGPT-User
@@ -16,14 +14,12 @@ User-agent: ClaudeBot
 User-agent: PerplexityBot
 User-agent: Google-Extended
 Allow: /
-Disallow: /api/
-Disallow: /audit
-Disallow: /geo-audit
-Disallow: /contact
-Disallow: /pl/audyt
-Disallow: /pl/audyt-geo
-Disallow: /pl/kontakt
+Disallow: /admin/
 Disallow: /healthz
 Disallow: /mcp
+Disallow: /request
+Disallow: /zglos
+Disallow: /prices/*/price-tip
+Disallow: /ceny/*/okazja
 
-Sitemap: https://bahdanhal.pl/sitemap.xml
+Sitemap: https://ileza.pl/sitemap.xml

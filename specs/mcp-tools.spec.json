@@ -2,13 +2,24 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "IleZa.pl Model Context Protocol (MCP) Tools Specification",
   "description": "Formal contract definition for Polish Market & Tax MCP tools exposed to AI agents.",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "endpoint": "/mcp",
   "tools": [
     {
       "name": "list_polish_used_price_products",
       "description": "List product configurations (smartphones, laptops, RAM, cars) tracked for Polish marketplace fair price history.",
       "parameters": []
+    },
+    {
+      "name": "get_polish_used_price_product",
+      "description": "Get full product specification, family grouping, and media details for a product slug.",
+      "parameters": [
+        {
+          "name": "slug",
+          "type": "string",
+          "required": true
+        }
+      ]
     },
     {
       "name": "get_polish_used_price_history",
@@ -88,6 +99,129 @@
           "name": "summary",
           "type": "string",
           "required": false
+        }
+      ]
+    },
+    {
+      "name": "create_polish_used_price_product",
+      "description": "Admin tool: Create a new tracked product configuration in the database.",
+      "parameters": [
+        {
+          "name": "slug",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "category",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "definition",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "family_slug",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "family_name",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "image",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "image_credit",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "image_source",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "specifications_json",
+          "type": "string",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "update_polish_used_price_product",
+      "description": "Admin tool: Update an existing tracked product configuration in the database.",
+      "parameters": [
+        {
+          "name": "slug",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "category",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "definition",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "family_slug",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "family_name",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "image",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "image_credit",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "image_source",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "specifications_json",
+          "type": "string",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "delete_polish_used_price_product",
+      "description": "Admin tool: Delete a tracked product from the database.",
+      "parameters": [
+        {
+          "name": "slug",
+          "type": "string",
+          "required": true
         }
       ]
     }

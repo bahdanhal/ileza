@@ -39,7 +39,7 @@ final class SitemapControllerTest extends TestCase
         self::assertTrue($document->loadXML($content));
     }
 
-    public function testOnlyIncludesProductsWithObservations(): void
+    public function testIncludesProductsWithObservationsAndLastmod(): void
     {
         $catalog = new ProductCatalog();
         $observations = $this->createStub(PriceObservationRepository::class);
@@ -70,6 +70,6 @@ final class SitemapControllerTest extends TestCase
         self::assertStringContainsString($expectedUrl, $content);
         self::assertStringContainsString($expectedPlUrl, $content);
         self::assertStringContainsString('<lastmod>2026-08-21</lastmod>', $content);
-        self::assertStringNotContainsString('peugeot-206-cc-2-0-petrol', $content);
+        self::assertStringContainsString('peugeot-206-cc-2-0-petrol', $content);
     }
 }
