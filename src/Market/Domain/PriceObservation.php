@@ -54,7 +54,7 @@ final readonly class PriceObservation
     }
 
     public const METHODOLOGY_MANUAL =
-        'Manually reviewed snapshot of comparable public asking prices; submitted source links are retained privately for verification only.';
+        'Editorially reviewed snapshot of comparable public asking prices; submitted source links are retained privately for verification only.';
 
     /**
      * @param array<string, mixed> $data

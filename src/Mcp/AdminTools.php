@@ -150,7 +150,7 @@ final readonly class AdminTools
     #[McpTool(
         name: 'list_admin_price_tips',
         // phpcs:ignore Generic.Files.LineLength
-        description: 'Admin-only: List active community-submitted public listing links awaiting manual price review. Requires an Authorization: Bearer header.'
+        description: 'Admin-only: List active community-submitted public listing links awaiting editorial price review. Requires an Authorization: Bearer header.'
     )]
     public function priceTips(
         #[Schema(description: 'Maximum records to return, from 1 to 100.')] int $limit = 50,

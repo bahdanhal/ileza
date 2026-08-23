@@ -11,7 +11,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-#[AsCommand(name: 'app:market:sanitize', description: 'Normalize stored observations to the current manual-review methodology.')]
+#[AsCommand(name: 'app:market:sanitize', description: 'Normalize stored observations to the current editorial-review methodology.')]
 final class SanitizeMarketDataCommand extends Command
 {
     public function __construct(private readonly ProductCatalog $catalog, private readonly PriceObservationRepository $observations)

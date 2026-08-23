@@ -1,43 +1,101 @@
 name: CI & Quality Gate
 
-permissions:
-  contents: read
-
 on:
   push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+  workflow_call:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
 
 jobs:
-  test:
-    name: Verification Gate
+  build:
+    name: Build Test Image
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
       - name: Build Docker Test Image
-        run: docker build --target test -t ileza-test .
+        run: docker buildx build --target test --tag ileza-test --cache-from type=gha --cache-to type=gha,mode=max --output type=docker,dest=/tmp/test-image.tar .
+
+      - name: Upload Test Image Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-image
+          path: /tmp/test-image.tar
+          retention-days: 1
+
+  phpunit:
+    name: PHPUnit Tests
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download Test Image Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: test-image
+          path: /tmp
+
+      - name: Load Docker Image
+        run: docker load -i /tmp/test-image.tar
 
       - name: Run PHPUnit Test Suite
         run: docker run --rm --env-file .env.example -e APP_ENV=test ileza-test vendor/bin/phpunit --fail-on-phpunit-notice
 
+  js-tests:
+    name: JavaScript Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Run JavaScript Test Suites
         run: docker run --rm -v "$PWD:/app" -w /app node:24-alpine sh -lc 'for test in tests/js/*.test.js; do node "$test" || exit 1; done'
 
-      - name: Run PSR-12 Code Style
+  static-analysis:
+    name: Static Analysis & Code Quality
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download Test Image Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: test-image
+          path: /tmp
+
+      - name: Load Docker Image
+        run: docker load -i /tmp/test-image.tar
+
+      - name: Run PSR-12 Code Style Check
         run: docker run --rm ileza-test vendor/bin/phpcs
 
-      - name: Run PHPStan Level 8 Analysis
+      - name: Run PHPStan Static Analysis
         run: docker run --rm ileza-test vendor/bin/phpstan analyse --no-progress --memory-limit=512M
 
-      - name: Lint Twig & YAML
-        run: |
-          docker run --rm ileza-test php bin/console lint:twig templates
-          docker run --rm ileza-test php bin/console lint:yaml translations config
+      - name: Lint Twig Templates
+        run: docker run --rm ileza-test php bin/console lint:twig templates
 
-      - name: Composer Validate & Audit
-        run: |
-          docker run --rm ileza-test composer validate --strict --no-check-publish
-          docker run --rm ileza-test composer audit --locked --no-interaction
+      - name: Lint YAML Configuration
+        run: docker run --rm ileza-test php bin/console lint:yaml translations config
+
+      - name: Validate Composer Config
+        run: docker run --rm ileza-test composer validate --strict --no-check-publish
+
+      - name: Security Audit Dependencies
+        run: docker run --rm ileza-test composer audit --locked --no-interaction

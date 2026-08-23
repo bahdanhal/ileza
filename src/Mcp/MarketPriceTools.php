@@ -23,7 +23,7 @@ final readonly class MarketPriceTools
 
     #[McpTool(
         name: 'list_polish_used_price_products',
-        description: 'List Apple product configurations tracked by Bahdan’s Toolbox for Polish second-hand asking-price history.'
+        description: 'List product configurations tracked by the IleZa.pl editorial team for Polish second-hand asking-price history.'
     )]
     public function listProducts(): string
     {
@@ -43,7 +43,7 @@ final readonly class MarketPriceTools
     #[McpTool(
         name: 'get_polish_used_price_history',
         // phpcs:ignore Generic.Files.LineLength
-        description: 'Get dated, manually reviewed Polish used asking-price observations for one exact product configuration.'
+        description: 'Get dated, editorially reviewed Polish used asking-price observations for one exact product configuration.'
     )]
     public function getHistory(#[Schema(description: 'Product slug returned by list_polish_used_price_products.')] string $slug): string
     {
@@ -65,7 +65,7 @@ final readonly class MarketPriceTools
                 'confidence' => $item->confidence,
             ], $this->priceHistory->forProduct($slug)),
             // phpcs:ignore Generic.Files.LineLength
-            'methodology' => 'Manually reviewed aggregate of comparable public asking prices; not scraped data, completed-sale statistics, a valuation, or purchasing advice.',
+            'methodology' => 'Editorially reviewed aggregate of comparable public asking prices; not scraped data, completed-sale statistics, a valuation, or purchasing advice.',
             'canonical_url' => $this->canonicalUrl($slug),
         ]);
     }

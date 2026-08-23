@@ -58,7 +58,7 @@ home:
         text: "Find redirect mistakes, crawler traps, duplicate URL spaces, canonical problems, and sitemap gaps."
     market:
         title: "Poland used-goods price index"
-        text: "Follow Bahdan’s manually reviewed snapshots of comparable second-hand asking prices, with history and transparent limitations."
+        text: "Follow editorially reviewed snapshots of comparable second-hand asking prices, with history and transparent limitations."
     bimi:
         title: "BIMI Studio & Live Inbox Simulator"
         text: "Prepare strict SVG Tiny 1.2 PS brand marks with safe-zone padding and live inbox simulator for Gmail, Apple Mail, and Yahoo."
@@ -483,14 +483,14 @@ geo:
 market:
     meta:
         title: "Used Gear Prices in Poland · IleZa.pl"
-        description: "Check current asking-price medians and price histories for used electronics and cars in Poland. Data is manually reviewed against comparable samples."
+        description: "Check current asking-price medians and price histories for used electronics and cars in Poland. Data is editorially reviewed against comparable samples."
     product_meta:
         title: "How much does a used %product% cost? Asking Price & History in Poland"
-        description: "Check how much a used %product% costs in Poland. Manually reviewed median asking price, price history, comparable range, and deal checker."
-    eyebrow: "POLAND · ASKING PRICES · MANUALLY REVIEWED"
+        description: "Check how much a used %product% costs in Poland. Editorially reviewed median asking price, price history, comparable range, and deal checker."
+    eyebrow: "POLAND · ASKING PRICES · EDITORIAL REVIEW"
     heading_start: "What does used gear cost in Poland?"
     heading_emphasis: ""
-    lede: "Current asking-price medians and dated histories for Poland’s second-hand market. Every data point is manually reviewed against a comparable sample."
+    lede: "Current asking-price medians and dated histories for Poland’s second-hand market. Every data point is reviewed by the editorial team against a comparable sample."
     category:
         smartphones: "SMARTPHONES"
         laptops: "LAPTOPS"
@@ -498,19 +498,19 @@ market:
         cars: "CARS"
     observed: "Observed"
     awaiting: "First observation pending"
-    awaiting_note: "The history will begin after Bahdan’s next manual market review."
+    awaiting_note: "The history will begin after the next editorial market review."
     open_history: "Open price history"
     method:
         title: "What makes this useful—and honest"
         text: "This is a longitudinal observation series, not a scraped marketplace database and not a claim about completed transactions. Every review uses the same exact product definition."
-        one: "Bahdan manually reviews comparable public listings for the exact configuration. No automated marketplace crawler is used."
+        one: "The IleZa.pl editorial team reviews comparable public listings for the exact configuration. No automated marketplace crawler is used."
         two: "Only an aggregate median, range, sample size and review date are published. Submitted source links stay in a private review queue."
-        three: "Community tips help find unusually good offers, but every published price point remains Bahdan’s manual editorial decision."
-        public: "Bahdan manually reviews a small comparable sample using one fixed product definition. The public page contains only the resulting aggregate range, median, sample size and date. Submitted listing links are private, are never republished or fetched automatically, and are removed after 90 days."
-        verified_by_bahdan: "Every published market point is personally reviewed and calibrated by Bahdan against comparable public listings."
-        verified_badge: "Verified & curated by Bahdan"
+        three: "Community tips help find unusually good offers, but every published price point remains an IleZa.pl editorial decision."
+        public: "The IleZa.pl editorial team reviews a small comparable sample using one fixed product definition. The public page contains only the resulting aggregate range, median, sample size and date. Submitted listing links are private, are never republished or fetched automatically, and are removed after 90 days."
+        verified_editorially: "Every published market point is reviewed and calibrated by the IleZa.pl editorial team against comparable public listings."
+        verified_badge: "Verified by the IleZa.pl editorial team"
     back: "All fair price histories"
-    product_eyebrow: "MANUALLY REVIEWED POLISH ASKING-PRICE HISTORY"
+    product_eyebrow: "EDITORIALLY REVIEWED POLISH ASKING-PRICE HISTORY"
     product_lede: "This page tracks comparable, fully working units on the Polish secondary market over time. New, damaged, parts-only, bundled, locked, and refurbished-as-new offers are excluded consistently."
     median: "Fair Market Median"
     asking_price: "Observed fair asking price"
@@ -518,12 +518,12 @@ market:
     comparable_range: "Typical market price range"
     evidence: "Evidence"
     updated: "Observed"
-    weekly: "Updated after manual review"
+    weekly: "Updated after editorial review"
     month_ago: "1 month ago (30 days)"
     month_change: "30-day change"
     no_month_data: "Gathering 30-day baseline"
     snapshot: "What the latest market valuation says"
-    snapshot_text: "On %date%, Bahdan’s manually reviewed median asking price for %product% in Poland was %median%. The comparable range was %low%–%high%. Individual listings are not republished."
+    snapshot_text: "On %date%, the IleZa.pl editorial team’s reviewed median asking price for %product% in Poland was %median%. The comparable range was %low%–%high%. Individual listings are not republished."
     spec:
         generation: "Generation"
         variant: "Variant"
@@ -558,13 +558,13 @@ market:
     tip:
         eyebrow: "FOUND IT CHEAPER?"
         title: "Help improve this price"
-        text: "Send a public listing for this exact configuration. Bahdan will review it manually before changing any published number."
+        text: "Send a public listing for this exact configuration. The IleZa.pl editorial team will review it before changing any published number."
         url: "Public listing URL"
         email: "Email (optional)"
         submit: "Send price tip"
         note: "Private review only. Query parameters and fragments are removed, the page is never fetched automatically, your IP is hashed, and the tip is deleted after 90 days."
         saving: "Sending…"
-        saved: "Thank you — the listing is in Bahdan’s private review queue."
+        saved: "Thank you — the listing is in the private IleZa.pl editorial review queue."
         invalid: "Enter a valid public HTTP or HTTPS listing URL and, if supplied, a valid email."
         failed: "The price tip could not be saved right now."
         too_many: "Too many price tips from this connection today. Please try again tomorrow."
@@ -583,10 +583,10 @@ market:
             a: "Around 30 days ago, the estimated median was %median%, representing a change of %diff% (%diff_pct%%)."
         estimate:
             q: "Is this a completed-sale price or an appraisal?"
-            a: "No. It is Bahdan’s manually reviewed snapshot of comparable asking prices for one exact configuration on a stated date. It is not a completed-sale statistic or appraisal."
+            a: "No. It is an editorially reviewed snapshot of comparable asking prices for one exact configuration on a stated date. It is not a completed-sale statistic or appraisal."
         sources:
             q: "Does this page publish marketplace listings or names?"
-            a: "No. Only aggregate price fields and a sample count are published. Community-submitted links stay private for manual review and are automatically removed after 90 days."
+            a: "No. Only aggregate price fields and a sample count are published. Community-submitted links stay private for editorial review and are automatically removed after 90 days."
     history: "Price history"
     observations: "observations"
     date: "Date"
@@ -600,10 +600,10 @@ market:
     latest_snapshot: "latest observation"
     no_data:
         title: "The first reviewed price point is not published yet"
-        text: "This page is ready, but it will not invent a starting price. Its history begins only after Bahdan manually reviews a comparable sample."
+        text: "This page is ready, but it will not invent a starting price. Its history begins only after an editorial review of a comparable sample."
     caveat:
         title: "Read the number correctly"
-        text: "These are manually reviewed asking-price snapshots, not scraped data, official statistics, completed-sale prices, a valuation, or purchasing advice. Listings can disappear and condition varies."
+        text: "These are editorially reviewed asking-price snapshots, not scraped data, official statistics, completed-sale prices, a valuation, or purchasing advice. Listings can disappear and condition varies."
     chart:
         title: "Price trend over time"
     checker:
