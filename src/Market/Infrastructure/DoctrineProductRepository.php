@@ -19,20 +19,28 @@ final readonly class DoctrineProductRepository implements ProductRepository
     /** @return list<Product> */
     public function all(): array
     {
-        $repository = $this->entityManager->getRepository(ProductEntity::class);
-        /** @var list<ProductEntity> $entities */
-        $entities = $repository->findBy([], ['id' => 'ASC']);
+        try {
+            $repository = $this->entityManager->getRepository(ProductEntity::class);
+            /** @var list<ProductEntity> $entities */
+            $entities = $repository->findBy([], ['id' => 'ASC']);
 
-        return array_map(static fn (ProductEntity $entity): Product => $entity->toDomain(), $entities);
+            return array_map(static fn (ProductEntity $entity): Product => $entity->toDomain(), $entities);
+        } catch (\Throwable) {
+            return [];
+        }
     }
 
     public function get(string $slug): ?Product
     {
-        $repository = $this->entityManager->getRepository(ProductEntity::class);
-        /** @var ProductEntity|null $entity */
-        $entity = $repository->findOneBy(['slug' => $slug]);
+        try {
+            $repository = $this->entityManager->getRepository(ProductEntity::class);
+            /** @var ProductEntity|null $entity */
+            $entity = $repository->findOneBy(['slug' => $slug]);
 
-        return $entity?->toDomain();
+            return $entity?->toDomain();
+        } catch (\Throwable) {
+            return null;
+        }
     }
 
     public function save(Product $product): void
@@ -76,8 +84,12 @@ final readonly class DoctrineProductRepository implements ProductRepository
 
     public function count(): int
     {
-        $repository = $this->entityManager->getRepository(ProductEntity::class);
+        try {
+            $repository = $this->entityManager->getRepository(ProductEntity::class);
 
-        return (int) $repository->count();
+            return (int) $repository->count();
+        } catch (\Throwable) {
+            return 0;
+        }
     }
 }
