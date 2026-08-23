@@ -82,8 +82,8 @@ final readonly class ProductCatalog
         return match ($familySlug) {
             'iphone-x' => [
                 '/images/market/iphone-x.jpg',
-                'freestocks.org',
-                'https://commons.wikimedia.org/wiki/File:IPhone_6s,_iPhone_8_plus_and_iPhone_X.jpg',
+                'Gregory Varnum',
+                'https://commons.wikimedia.org/wiki/File:Apple_iPhone_X_-_front_(8121).jpg',
             ],
             'iphone-xr' => [
                 '/images/market/iphone-xr.jpg',
@@ -134,6 +134,11 @@ final readonly class ProductCatalog
                 '/images/market/iphone-16.jpg',
                 'メイド理世',
                 'https://commons.wikimedia.org/wiki/File:Back_view_of_iPhone_16_Ultramarine.jpg',
+            ],
+            'iphone-17' => [
+                '/images/market/iphone-17.jpg',
+                'Olgierd Rudak',
+                'https://commons.wikimedia.org/wiki/File:IPhone_17_Pro_(2025-12-28).jpg',
             ],
             'macbook-air-13-m1' => [
                 '/images/market/macbook-air-m1.png',
@@ -294,6 +299,11 @@ final readonly class ProductCatalog
                 'pro' => ['128', '256', '512', '1tb'],
                 'pro-max' => ['256', '512', '1tb'],
             ]],
+            ['gen' => 'iPhone 17', 'variants' => [
+                '' => ['256', '512'],
+                'pro' => ['256', '512', '1tb'],
+                'pro-max' => ['256', '512', '1tb', '2tb'],
+            ]],
         ];
 
         foreach ($generations as $group) {
@@ -304,7 +314,9 @@ final readonly class ProductCatalog
                 $variantName = $variant === '' ? '' : ' ' . ucwords(str_replace('-', ' ', $variant));
 
                 foreach ($capacities as $capacity) {
-                    $storage = $capacity === '1tb' ? '1 TB' : $capacity . ' GB';
+                    $storage = str_ends_with($capacity, 'tb')
+                        ? substr($capacity, 0, -2) . ' TB'
+                        : $capacity . ' GB';
                     $name = sprintf('Apple %s%s %s', $genName, $variantName, $storage);
                     $variantSlugPart = $variant === '' ? '' : '-' . $variant;
                     $storageSlugPart = str_replace(' ', '', strtolower($storage));

@@ -8,6 +8,9 @@ use App\Market\Application\GetProductPriceHistory;
 use App\Market\Application\ProductCatalog;
 use App\Market\Application\RecordProductRequest;
 use App\Market\Application\SubmitCommunityPriceTip;
+use App\Market\Domain\PriceObservation;
+use App\Market\Domain\Product;
+use App\Market\Domain\ProductFamily;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,15 +39,50 @@ final class MarketController extends AbstractController
     )]
     public function home(): Response
     {
-        $families = array_map(fn ($family) => [
-            'family' => $family,
-            'configurations' => array_map(fn ($product) => [
+        /** @var list<array{family: ProductFamily, configurations: list<array{product: Product, latest: ?PriceObservation}>}> $families */
+        $families = array_map(function (ProductFamily $family): array {
+            $configurations = array_map(fn (Product $product): array => [
                 'product' => $product,
                 'latest' => $this->priceHistory->latestForProduct($product->slug),
-            ], $family->configurations),
-        ], $this->catalog->families());
+            ], $family->configurations);
+            usort($configurations, self::compareConfigurationsByPrice(...));
+
+            return [
+                'family' => $family,
+                'configurations' => $configurations,
+            ];
+        }, $this->catalog->families());
+        usort($families, self::compareFamiliesByPrice(...));
 
         return $this->render('market/home.html.twig', ['families' => $families]);
+    }
+
+    /**
+     * @param array{product: Product, latest: ?PriceObservation} $left
+     * @param array{product: Product, latest: ?PriceObservation} $right
+     */
+    private static function compareConfigurationsByPrice(array $left, array $right): int
+    {
+        $priceComparison = ($right['latest']->medianGrosz ?? -1) <=> ($left['latest']->medianGrosz ?? -1);
+
+        return $priceComparison !== 0
+            ? $priceComparison
+            : strcmp($left['product']->name, $right['product']->name);
+    }
+
+    /**
+     * @param array{family: ProductFamily, configurations: list<array{product: Product, latest: ?PriceObservation}>} $left
+     * @param array{family: ProductFamily, configurations: list<array{product: Product, latest: ?PriceObservation}>} $right
+     */
+    private static function compareFamiliesByPrice(array $left, array $right): int
+    {
+        $leftPrice = $left['configurations'][0]['latest']->medianGrosz ?? -1;
+        $rightPrice = $right['configurations'][0]['latest']->medianGrosz ?? -1;
+        $priceComparison = $rightPrice <=> $leftPrice;
+
+        return $priceComparison !== 0
+            ? $priceComparison
+            : strcmp($left['family']->name, $right['family']->name);
     }
 
     #[Route(path: '/pl/', name: 'legacy_polish_market_home', methods: ['GET'])]

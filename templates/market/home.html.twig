@@ -1,5 +1,6 @@
 {% extends 'base.html.twig' %}
 {% macro money(grosz, locale) %}{{ (grosz / 100)|number_format(2, locale == 'pl' ? ',' : '.', locale == 'pl' ? ' ' : ',') }} {{ locale == 'pl' ? 'zł' : 'PLN' }}{% endmacro %}
+{% macro localized_label(label, locale) %}{{- locale == 'pl' ? label|replace({'-inch': '″', ' petrol': ' benzyna'}) : label -}}{% endmacro %}
 {% block title %}{{ 'market.meta.title'|trans }}{% endblock %}
 {% block robots %}<meta name="robots" content="index,follow">{% endblock %}
 {% block description %}<meta name="description" content="{{ 'market.meta.description'|trans }}">{% endblock %}
@@ -27,21 +28,21 @@
             {% for item in families %}
                 {% set initial = item.configurations[0] %}
                 <article class="market-product" data-market-family>
-                    <figure><img src="{{ item.family.image }}" alt="{{ item.family.name }}" width="640" height="480" loading="lazy"><figcaption><a href="{{ item.family.imageSource }}">{{ item.family.imageCredit }}</a> · <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a></figcaption></figure>
+                    <figure><img src="{{ item.family.image }}" alt="{{ _self.localized_label(item.family.name, app.request.locale) }}" width="640" height="480" loading="lazy"><figcaption><a href="{{ item.family.imageSource }}">{{ item.family.imageCredit }}</a> · <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a></figcaption></figure>
                     <div class="market-product-body">
                         <span class="market-category">{{ ('market.category.' ~ item.family.category)|trans }}</span>
-                        <h2>{{ item.family.name }}</h2>
+                        <h2>{{ _self.localized_label(item.family.name, app.request.locale) }}</h2>
                         <label for="configuration-{{ item.family.slug }}">{{ 'market.choose_configuration'|trans }}</label>
                         <select id="configuration-{{ item.family.slug }}" data-market-select>
                             {% for configuration in item.configurations %}
-                                <option value="{{ path('market_product', {_locale: app.request.locale, slug: configuration.product.slug}) }}" data-price="{{ configuration.latest ? _self.money(configuration.latest.medianGrosz, app.request.locale) : 'market.awaiting'|trans }}" data-note="{{ configuration.latest ? ('market.observed'|trans ~ ' ' ~ configuration.latest.observedAt|date(app.request.locale == 'pl' ? 'd.m.Y' : 'M j, Y')) : 'market.awaiting_note'|trans }}">{{ configuration.product.name|replace({(item.family.name ~ ' '): ''}) }}</option>
+                                <option value="{{ path('market_product', {_locale: app.request.locale, slug: configuration.product.slug}) }}" data-price="{{ configuration.latest ? _self.money(configuration.latest.medianGrosz, app.request.locale) : 'market.awaiting'|trans }}" data-note="{{ configuration.latest ? ('market.observed'|trans ~ ' ' ~ configuration.latest.observedAt|date(app.request.locale == 'pl' ? 'd.m.Y' : 'M j, Y')) : 'market.awaiting_note'|trans }}">{{ _self.localized_label(configuration.product.name|replace({(item.family.name ~ ' '): ''}), app.request.locale) }}</option>
                             {% endfor %}
                         </select>
                         <strong data-market-price>{{ initial.latest ? _self.money(initial.latest.medianGrosz, app.request.locale) : 'market.awaiting'|trans }}</strong>
                         <small data-market-note>{{ initial.latest ? ('market.observed'|trans ~ ' ' ~ initial.latest.observedAt|date(app.request.locale == 'pl' ? 'd.m.Y' : 'M j, Y')) : 'market.awaiting_note'|trans }}</small>
                         <div class="market-configurations-list" aria-label="{{ 'market.choose_configuration'|trans }}">
                             {% for configuration in item.configurations %}
-                                <a class="market-config-chip" href="{{ path('market_product', {_locale: app.request.locale, slug: configuration.product.slug}) }}">{{ configuration.product.name|replace({(item.family.name ~ ' '): ''}) }}</a>
+                                <a class="market-config-chip" href="{{ path('market_product', {_locale: app.request.locale, slug: configuration.product.slug}) }}">{{ _self.localized_label(configuration.product.name|replace({(item.family.name ~ ' '): ''}), app.request.locale) }}</a>
                             {% endfor %}
                         </div>
                         <a class="market-open" data-market-link href="{{ path('market_product', {_locale: app.request.locale, slug: initial.product.slug}) }}">{{ 'market.open_history'|trans }} →</a>

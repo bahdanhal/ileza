@@ -30,7 +30,7 @@ final class ProductCatalogTest extends TestCase
         self::assertNull($catalog->familyFor('non-existent-slug'));
     }
 
-    public function testContainsAllIphoneGenerationsFromXTo16(): void
+    public function testContainsAllIphoneGenerationsFromXTo17(): void
     {
         $catalog = new ProductCatalog();
         $expectedGenerations = [
@@ -45,12 +45,28 @@ final class ProductCatalogTest extends TestCase
             'iphone-14',
             'iphone-15',
             'iphone-16',
+            'iphone-17',
         ];
 
         $familySlugs = array_map(static fn ($f) => $f->slug, $catalog->families());
         foreach ($expectedGenerations as $expected) {
             self::assertContains($expected, $familySlugs, "Expected family {$expected} to exist in catalog.");
         }
+    }
+
+    public function testIphone17ContainsCurrentStorageConfigurations(): void
+    {
+        $catalog = new ProductCatalog();
+        $family = array_values(array_filter(
+            $catalog->families(),
+            static fn ($item) => $item->slug === 'iphone-17'
+        ))[0] ?? null;
+
+        self::assertNotNull($family);
+        $slugs = array_map(static fn ($product) => $product->slug, $family->configurations);
+        self::assertContains('iphone-17-256gb', $slugs);
+        self::assertContains('iphone-17-pro-1tb', $slugs);
+        self::assertContains('iphone-17-pro-max-2tb', $slugs);
     }
 
     public function testContainsMacbookProFamilies(): void

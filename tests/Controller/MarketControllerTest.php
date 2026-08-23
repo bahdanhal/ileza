@@ -28,6 +28,26 @@ final class MarketControllerTest extends TestCase
     {
         $catalog = new ProductCatalog();
         $observations = $this->createStub(PriceObservationRepository::class);
+        $observations->method('latest')->willReturnCallback(static function (string $slug): ?PriceObservation {
+            $median = match ($slug) {
+                'macbook-pro-16-m3-max-64-gb-ram-2-tb-ssd' => 900000,
+                'iphone-x-256gb' => 200000,
+                'iphone-x-64gb' => 100000,
+                default => null,
+            };
+
+            return $median === null ? null : new PriceObservation(
+                $slug,
+                new \DateTimeImmutable('2026-08-23'),
+                $median,
+                $median - 10000,
+                $median + 10000,
+                5,
+                'high',
+                '',
+                PriceObservation::METHODOLOGY_MANUAL
+            );
+        });
         $productRequests = $this->createStub(ProductRequestStore::class);
         $priceTips = $this->createStub(PriceTipRepository::class);
         $translator = $this->createStub(TranslatorInterface::class);
@@ -38,7 +58,21 @@ final class MarketControllerTest extends TestCase
         $twig = $this->createMock(Environment::class);
         $twig->expects(self::once())
             ->method('render')
-            ->with('market/home.html.twig', self::isArray())
+            ->with('market/home.html.twig', self::callback(static function (array $context): bool {
+                self::assertSame('macbook-pro-16-m3-max', $context['families'][0]['family']->slug);
+                self::assertSame(
+                    'macbook-pro-16-m3-max-64-gb-ram-2-tb-ssd',
+                    $context['families'][0]['configurations'][0]['product']->slug
+                );
+
+                $iphoneX = array_values(array_filter(
+                    $context['families'],
+                    static fn (array $item): bool => $item['family']->slug === 'iphone-x'
+                ))[0];
+                self::assertSame('iphone-x-256gb', $iphoneX['configurations'][0]['product']->slug);
+
+                return true;
+            }))
             ->willReturn('<html>home</html>');
 
         $container = new Container();
