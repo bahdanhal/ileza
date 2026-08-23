@@ -17,6 +17,12 @@
         <h1>{{ 'market.heading_start'|trans }}</h1>
         <p class="lede">{{ 'market.lede'|trans }}</p>
 
+        <ul class="market-service-strip" aria-label="IleZa service information">
+            <li><strong>{{ families|length }}</strong><span>{{ app.request.locale == 'pl' ? 'kategorie obserwowane' : 'tracked categories' }}</span></li>
+            <li><strong>PLN</strong><span>{{ app.request.locale == 'pl' ? 'ceny z polskiego rynku' : 'Polish market prices' }}</span></li>
+            <li><strong>↻</strong><span>{{ app.request.locale == 'pl' ? 'ręcznie weryfikowane' : 'manually verified' }}</span></li>
+        </ul>
+
         <div class="market-products">
             {% for item in families %}
                 {% set initial = item.configurations[0] %}

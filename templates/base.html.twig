@@ -26,6 +26,7 @@
   <link rel="stylesheet" href="/identity.css">
   <link rel="stylesheet" href="/ui.css">
   {% block stylesheets %}{% endblock %}
+  <link rel="stylesheet" href="/brand-refresh.css">
   <script src="/contact.js" defer></script>
   <script type="application/ld+json">{{ {'@context':'https://schema.org','@graph':[{'@type':'WebSite','@id':'https://ileza.pl/#website','url':'https://ileza.pl/','name':'IleZa.pl','inLanguage':['pl','en'],'publisher':{'@id':'https://ileza.pl/#editorial'},'author':{'@id':'https://ileza.pl/#editorial'},'dateModified':'2026-08-23'},{'@type':'Organization','@id':'https://ileza.pl/#editorial','name':'Redakcja IleZa.pl','url':'https://ileza.pl/'}]}|json_encode(constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_UNESCAPED_UNICODE'))|raw }}</script>
   {% block head_scripts %}{% endblock %}

@@ -1,0 +1,364 @@
+:root {
+  --ink: #182b3b;
+  --paper: #f3f4f1;
+  --panel: #ffffff;
+  --muted: #64717a;
+  --line: #ccd3d4;
+  --orange: #174c65;
+  --blue: #174c65;
+  --green: #28704d;
+  --amber: #a56616;
+}
+
+html {
+  background: var(--paper);
+}
+
+body.ileza-site {
+  background:
+    linear-gradient(rgba(24, 43, 59, .026) 1px, transparent 1px),
+    var(--paper);
+  background-size: 100% 44px;
+  font-family: "Arial Nova", Arial, Helvetica, sans-serif;
+}
+
+.ileza-site ::selection {
+  background: #f2d774;
+  color: #182b3b;
+}
+
+.ileza-site .site-header {
+  border-top: 5px solid #173f54;
+}
+
+.ileza-site .topbar {
+  min-height: 72px;
+  padding-block: 10px;
+  border-bottom: 1px solid #b9c3c6;
+  background: rgba(255, 255, 255, .97);
+  box-shadow: 0 3px 0 rgba(23, 76, 101, .07);
+  backdrop-filter: blur(10px);
+}
+
+.ileza-site .brand {
+  gap: 11px;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -.035em;
+}
+
+.ileza-site .brand-mark {
+  width: 39px;
+  height: 39px;
+  border: 2px solid #173f54;
+  border-radius: 2px;
+  background: #f3d458;
+  color: #173f54;
+  font-size: 12px;
+  box-shadow: 4px 4px 0 #d9e0de;
+}
+
+.ileza-site .brand-purpose {
+  color: #66757c;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.ileza-site .primary-nav a {
+  position: relative;
+  padding: 12px 2px;
+  color: #243b49;
+  font-size: 13px;
+}
+
+.ileza-site .primary-nav a::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 5px;
+  left: 0;
+  height: 2px;
+  background: #f3d458;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 150ms ease;
+}
+
+.ileza-site .primary-nav a:hover::after {
+  transform: scaleX(1);
+}
+
+.ileza-site .language-switch {
+  border-color: #aebabc;
+  border-radius: 2px;
+  background: #eef1ef;
+  color: #173f54;
+}
+
+.ileza-site .tool-context-bar {
+  border-bottom-color: #1e5069;
+  background: #173f54;
+  color: #bed0d8;
+}
+
+.ileza-site .tool-context-bar a,
+.ileza-site .tool-context-bar strong {
+  color: #f8fbfa;
+}
+
+.ileza-site .tool-shell,
+.ileza-site .tool-page-shell,
+.ileza-site .report-shell {
+  max-width: 1180px;
+}
+
+.ileza-site .market-shell {
+  padding-top: 52px;
+}
+
+.ileza-site .market-shell > .eyebrow,
+.ileza-site .market-category {
+  color: #50636c;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+}
+
+.ileza-site .market-shell > .eyebrow::before {
+  content: "●";
+  margin-right: 8px;
+  color: #28704d;
+}
+
+.ileza-site .market-shell h1 {
+  max-width: 880px;
+  font-family: "Arial Nova", Arial, Helvetica, sans-serif;
+  font-size: clamp(43px, 5.6vw, 70px);
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: -.055em;
+}
+
+.ileza-site .market-shell > .lede {
+  max-width: 700px;
+  color: #56666e;
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+.market-service-strip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin: 38px 0 0;
+  padding: 0;
+  border: 1px solid #aebabc;
+  border-bottom: 4px solid #174c65;
+  background: #fff;
+  list-style: none;
+}
+
+.market-service-strip li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 13px;
+  min-height: 76px;
+  padding: 15px 20px;
+  border-right: 1px solid #ccd3d4;
+}
+
+.market-service-strip li:last-child {
+  border-right: 0;
+}
+
+.market-service-strip strong {
+  color: #174c65;
+  font-size: 23px;
+  font-variant-numeric: tabular-nums;
+}
+
+.market-service-strip span {
+  color: #5d6d74;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.ileza-site .market-products {
+  gap: 14px;
+  margin-top: 20px;
+}
+
+.ileza-site .market-product {
+  min-height: 300px;
+  border: 1px solid #bec8ca;
+  border-radius: 2px;
+  box-shadow: 3px 3px 0 #dde1de;
+  transition: border-color 150ms ease, box-shadow 150ms ease, transform 150ms ease;
+}
+
+.ileza-site .market-product:hover {
+  border-color: #174c65;
+  box-shadow: 5px 5px 0 #c8d2d0;
+  transform: translate(-1px, -1px);
+}
+
+.ileza-site .market-product figure {
+  border-right: 1px solid #c7ced0;
+  background: #e8ebe7;
+}
+
+.ileza-site .market-product img {
+  filter: saturate(.88) contrast(.98);
+}
+
+.ileza-site .market-product figcaption {
+  left: 0;
+  bottom: 0;
+  border-radius: 0;
+  background: rgba(24, 43, 59, .84);
+}
+
+.ileza-site .market-product-body {
+  padding: 23px;
+}
+
+.ileza-site .market-product h2 {
+  margin: 13px 0 18px;
+  color: #182b3b;
+  font-size: 23px;
+  font-weight: 750;
+}
+
+.ileza-site .market-product label {
+  color: #52636b;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+
+.ileza-site .market-product select,
+.ileza-site .field input,
+.ileza-site .field select,
+.ileza-site .ui-input,
+.ileza-site .lead-form input,
+.ileza-site .market-request .lead-form > input {
+  border: 1px solid #9fadaf;
+  border-radius: 2px;
+  background: #fff;
+  color: #182b3b;
+}
+
+.ileza-site .market-product select:focus,
+.ileza-site input:focus,
+.ileza-site textarea:focus,
+.ileza-site select:focus {
+  outline: 3px solid rgba(243, 212, 88, .68);
+  outline-offset: 1px;
+}
+
+.ileza-site .market-product strong {
+  color: #173f54;
+  font-size: 29px;
+}
+
+.ileza-site .market-config-chip {
+  border-radius: 2px;
+  background: #f1f3f1;
+  color: #53636b;
+}
+
+.ileza-site .market-config-chip:hover {
+  border-color: #174c65;
+  background: #f7eaa7;
+  color: #173f54;
+}
+
+.ileza-site .market-open {
+  color: #174c65;
+  font-size: 12px;
+  text-decoration: underline;
+  text-decoration-color: #f3d458;
+  text-decoration-thickness: 4px;
+  text-underline-offset: 3px;
+}
+
+.ileza-site .market-request,
+.ileza-site .market-mcp,
+.ileza-site .content-card,
+.ileza-site .calculator,
+.ileza-site .ui-panel,
+.ileza-site .market-chart-card,
+.ileza-site .deal-checker,
+.ileza-site .market-summary,
+.ileza-site .market-empty {
+  border-radius: 2px;
+  box-shadow: 3px 3px 0 #dde1de;
+}
+
+.ileza-site .market-request {
+  margin-top: 42px;
+  border-top: 5px solid #f3d458;
+  background: #fff;
+}
+
+.ileza-site .market-request h2,
+.ileza-site .market-mcp h2,
+.ileza-site .content-card h2,
+.ileza-site .tool-faq h2,
+.ileza-site .chart-header h2,
+.ileza-site .deal-checker h2 {
+  font-family: "Arial Nova", Arial, Helvetica, sans-serif;
+  font-weight: 750;
+  letter-spacing: -.03em;
+}
+
+.ileza-site .lead-row button,
+.ileza-site .ui-button-primary,
+.ileza-site .copy-result {
+  border-radius: 2px;
+  background: #174c65;
+  color: #fff;
+}
+
+.ileza-site .market-method,
+.ileza-site .market-caveat {
+  border-left: 5px solid #f3d458;
+  background: #e7ecea;
+}
+
+.ileza-site .market-mcp code,
+.ileza-site .formula code {
+  border-radius: 2px;
+  background: #173f54;
+}
+
+.ileza-site footer {
+  margin-top: 30px;
+  border-top: 1px solid #bcc6c8;
+  background: #e7ebe8;
+  color: #596970;
+}
+
+@media (max-width: 850px) {
+  .market-service-strip {
+    grid-template-columns: 1fr;
+  }
+
+  .market-service-strip li {
+    border-right: 0;
+    border-bottom: 1px solid #ccd3d4;
+  }
+
+  .market-service-strip li:last-child {
+    border-bottom: 0;
+  }
+
+  .ileza-site .market-product figure {
+    border-right: 0;
+    border-bottom: 1px solid #c7ced0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: .01ms !important; }
+}
