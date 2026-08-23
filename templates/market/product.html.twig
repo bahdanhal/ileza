@@ -4,12 +4,12 @@
 {% block title %}{{ 'market.product_meta.title'|trans({'%product%': product.name}) }}{% endblock %}
 {% block robots %}<meta name="robots" content="{{ latest ? 'index,follow' : 'noindex,follow' }}">{% endblock %}
 {% block description %}<meta name="description" content="{{ 'market.product_meta.description'|trans({'%product%': product.name}) }}">{% endblock %}
-{% set canonical_url = 'https://bahdanhal.pl' ~ (app.request.locale == 'pl' ? '/pl/narzedzia/indeks-cen-uzywanych/' : '/tools/poland-used-price-index/') ~ product.slug %}
+{% set canonical_url = 'https://ileza.pl' ~ (app.request.locale == 'pl' ? '/ceny/' : '/prices/') ~ product.slug %}
 {% block canonical %}
     <link rel="canonical" href="{{ canonical_url }}">
-    <link rel="alternate" hreflang="en" href="https://bahdanhal.pl/tools/poland-used-price-index/{{ product.slug }}">
-    <link rel="alternate" hreflang="pl" href="https://bahdanhal.pl/pl/narzedzia/indeks-cen-uzywanych/{{ product.slug }}">
-    <link rel="alternate" hreflang="x-default" href="https://bahdanhal.pl/tools/poland-used-price-index/{{ product.slug }}">
+    <link rel="alternate" hreflang="en" href="https://ileza.pl/prices/{{ product.slug }}">
+    <link rel="alternate" hreflang="pl" href="https://ileza.pl/ceny/{{ product.slug }}">
+    <link rel="alternate" hreflang="x-default" href="https://ileza.pl/ceny/{{ product.slug }}">
     {% if family and family.image %}
         <meta property="og:image" content="https://bahdanhal.pl{{ family.image }}">
     {% endif %}

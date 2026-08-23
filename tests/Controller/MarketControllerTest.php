@@ -83,7 +83,7 @@ final class MarketControllerTest extends TestCase
 
         $router = $this->createStub(\Symfony\Component\Routing\Generator\UrlGeneratorInterface::class);
         $router->method('generate')->willReturnCallback(function ($name, $params) {
-            return ($params['_locale'] === 'pl' ? '/pl/' : '/');
+            return ($params['_locale'] === 'pl' ? '/' : '/en/');
         });
 
         $container = new Container();
@@ -95,7 +95,7 @@ final class MarketControllerTest extends TestCase
 
         $response = $controller->legacyHome($request);
         self::assertSame(301, $response->getStatusCode());
-        self::assertSame('/pl/', $response->headers->get('Location'));
+        self::assertSame('/', $response->headers->get('Location'));
     }
 
     public function testProductRendersDetailedHistory(): void

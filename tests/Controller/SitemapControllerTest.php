@@ -30,7 +30,8 @@ final class SitemapControllerTest extends TestCase
         $content = (string) $response->getContent();
         self::assertStringContainsString('<?xml-stylesheet type="text/xsl" href="/sitemap.xsl"?>', $content);
         self::assertStringContainsString('<loc>https://ileza.pl/</loc>', $content);
-        self::assertStringContainsString('<loc>https://ileza.pl/pl/</loc>', $content);
+        self::assertStringContainsString('<loc>https://ileza.pl/en/</loc>', $content);
+        self::assertStringContainsString('hreflang="x-default" href="https://ileza.pl/"', $content);
         self::assertStringContainsString('<loc>https://ileza.pl/salary-calculator</loc>', $content);
         self::assertStringContainsString('<loc>https://ileza.pl/kalkulator-wynagrodzen</loc>', $content);
 

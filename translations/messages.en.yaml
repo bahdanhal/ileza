@@ -4,6 +4,7 @@ base:
     brand: "Bahdan’s Toolbox"
     brand_short: "Toolbox"
     by: "by Bahdan Hal"
+    product_label: "Polish price index"
     navigation: "Tools and language"
     nav:
         income: "UoP / UZ / Ud / B2B"
@@ -481,15 +482,15 @@ geo:
 
 market:
     meta:
-        title: "Poland Fair Marketplace Prices · Community Value Guide"
-        description: "Explore fair market prices and asking price histories for electronics and cars in Poland. Check real market values for iPhone, MacBook, or RAM without marketplace scraping."
+        title: "Used Gear Prices in Poland · IleZa.pl"
+        description: "Check current asking-price medians and price histories for used electronics and cars in Poland. Data is manually reviewed against comparable samples."
     product_meta:
         title: "How much does a used %product% cost? Asking Price & History in Poland"
         description: "Check how much a used %product% costs in Poland. Manually reviewed median asking price, price history, comparable range, and deal checker."
-    eyebrow: "POLAND · COMMUNITY PRICE GUIDE · MANUALLY REVIEWED"
-    heading_start: "What is second-hand gear"
-    heading_emphasis: "really worth on the marketplace?"
-    lede: "Fair marketplace prices and dated valuation histories in Poland. Discover what devices actually cost right now and how prices trended over the past month."
+    eyebrow: "POLAND · ASKING PRICES · MANUALLY REVIEWED"
+    heading_start: "What does used gear cost in Poland?"
+    heading_emphasis: ""
+    lede: "Current asking-price medians and dated histories for Poland’s second-hand market. Every data point is manually reviewed against a comparable sample."
     category:
         smartphones: "SMARTPHONES"
         laptops: "LAPTOPS"
@@ -909,5 +910,3 @@ cidr_matrix:
         a1: "CIDR overlap occurs when two or more network subnets share one or more IP addresses, leading to routing conflicts in VPC peering, Kubernetes pods/services, or VPN connections."
         q2: "How does free subnet allocation work?"
         a2: "Given a parent block and target prefix size, the algorithm scans for the first contiguous IP block of that size that does not overlap with any existing assigned subnets."
-
-

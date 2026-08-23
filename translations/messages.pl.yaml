@@ -4,6 +4,7 @@ base:
     brand: "Narzędzia Bahdana"
     brand_short: "Narzędzia"
     by: "autor: Bahdan Hal"
+    product_label: "Indeks cen w Polsce"
     navigation: "Narzędzia i język"
     nav:
         income: "UoP / UZ / Ud / B2B"
@@ -481,15 +482,15 @@ geo:
 
 market:
     meta:
-        title: "Sprawiedliwe Ceny na Marketplace w Polsce · Ile to naprawdę kosztuje"
-        description: "Sprawdź sprawiedliwe ceny rynkowe i historię cen elektroniki i aut w Polsce. Ile kosztuje iPhone, MacBook lub RAM bez scrapowania marketplace."
+        title: "Ceny używanego sprzętu w Polsce · IleZa.pl"
+        description: "Sprawdź aktualne mediany cen ofertowych i historię cen używanej elektroniki i aut w Polsce. Dane są ręcznie weryfikowane na porównywalnych próbach."
     product_meta:
         title: "Ile kosztuje używany %product%? Aktualna cena i historia w Polsce"
         description: "Sprawdź, ile kosztuje używany %product% w Polsce. Aktualna mediana cen ofertowych, wykres zmian, porównywalny zakres cen i kalkulator opłacalności zakupu."
-    eyebrow: "POLSKA · SPOŁECZNOŚCIOWY PRZEWODNIK CEN · RĘCZNA WERYFIKACJA"
-    heading_start: "Ile sprzęt na marketplace"
-    heading_emphasis: "jest naprawdę warty?"
-    lede: "Sprawiedliwe ceny rynkowe i historia wycen w Polsce. Odkryj, ile realnie kosztuje sprzęt na rynku wtórnym i jak zmieniała się jego cena w ubiegłym miesiącu."
+    eyebrow: "POLSKA · CENY OFERTOWE · RĘCZNA WERYFIKACJA"
+    heading_start: "Ile kosztuje używany sprzęt?"
+    heading_emphasis: ""
+    lede: "Aktualne mediany cen ofertowych i ich historia na polskim rynku wtórnym. Każdy punkt danych jest ręcznie sprawdzany na porównywalnej próbie."
     category:
         smartphones: "SMARTFONY"
         laptops: "LAPTOPY"

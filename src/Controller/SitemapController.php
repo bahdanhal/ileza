@@ -21,7 +21,7 @@ final readonly class SitemapController
     public function __invoke(): Response
     {
         $pairs = [
-            ['/', '/pl/'],
+            ['/en/', '/'],
             ['/salary-calculator', '/kalkulator-wynagrodzen'],
         ];
         $entries = [];
@@ -69,7 +69,7 @@ final readonly class SitemapController
             $lastmod,
             $base . $english,
             $base . $polish,
-            $base . $english
+            $base . $polish
         );
     }
 }

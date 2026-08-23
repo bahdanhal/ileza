@@ -30,7 +30,7 @@ final class MarketController extends AbstractController
     }
 
     #[Route(
-        path: ['en' => '/', 'pl' => '/pl/'],
+        path: ['pl' => '/', 'en' => '/en/'],
         name: 'market_home',
         methods: ['GET']
     )]
@@ -45,6 +45,12 @@ final class MarketController extends AbstractController
         ], $this->catalog->families());
 
         return $this->render('market/home.html.twig', ['families' => $families]);
+    }
+
+    #[Route(path: '/pl/', name: 'legacy_polish_market_home', methods: ['GET'])]
+    public function legacyPolishHome(): Response
+    {
+        return $this->redirectToRoute('market_home', ['_locale' => 'pl'], Response::HTTP_MOVED_PERMANENTLY);
     }
 
     #[Route(

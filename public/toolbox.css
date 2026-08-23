@@ -4,13 +4,24 @@
   z-index: 10;
 }
 
+.ileza-site {
+  --ink: #182230;
+  --paper: #f4f5f7;
+  --panel: #ffffff;
+  --muted: #5e6875;
+  --line: #d8dde4;
+  --orange: #245d9c;
+  --blue: #245d9c;
+  background: var(--paper);
+}
+
 .topbar {
   position: relative;
   top: auto;
-  min-height: 72px;
+  min-height: 66px;
   height: auto;
   gap: 24px;
-  padding-block: 12px;
+  padding-block: 10px;
 }
 
 .brand-lockup,
@@ -30,6 +41,30 @@
 
 .brand-credit {
   cursor: default;
+}
+
+.brand-purpose {
+  margin-left: 10px;
+  padding-left: 12px;
+  border-left: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.ileza-site .topbar {
+  background: rgba(255, 255, 255, .94);
+  box-shadow: 0 1px 8px rgba(24, 34, 48, .04);
+}
+
+.ileza-site .brand-mark {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: #245d9c;
+  box-shadow: none;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: -.04em;
 }
 
 .topbar-actions {
@@ -68,8 +103,8 @@
   justify-content: center;
   min-height: 38px;
   border: 1px solid var(--line);
-  border-radius: 999px;
-  background: rgba(17, 29, 47, .72);
+  border-radius: 7px;
+  background: transparent;
   cursor: pointer;
 }
 
@@ -125,6 +160,11 @@
   min-width: 38px;
   padding: 0 10px;
   font-size: 11px;
+}
+
+.ileza-site .language-switch:hover {
+  border-color: var(--orange);
+  color: var(--orange);
 }
 
 .tool-context-bar {
@@ -295,6 +335,10 @@
   }
 
   .brand-credit {
+    display: none;
+  }
+
+  .brand-purpose {
     display: none;
   }
 

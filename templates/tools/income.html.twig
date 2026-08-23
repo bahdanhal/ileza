@@ -4,8 +4,8 @@
 {% block robots %}<meta name="robots" content="index,follow">{% endblock %}
 {% block description %}<meta name="description" content="{{ 'income.meta.description'|trans }}">{% endblock %}
 {% block canonical %}
-  <link rel="canonical" href="{{ app.request.locale == 'pl' ? 'https://bahdanhal.pl/pl/narzedzia/kalkulator-wynagrodzen' : 'https://bahdanhal.pl/tools/poland-employment-calculator' }}">
-  <link rel="alternate" hreflang="en" href="https://bahdanhal.pl/tools/poland-employment-calculator"><link rel="alternate" hreflang="pl" href="https://bahdanhal.pl/pl/narzedzia/kalkulator-wynagrodzen"><link rel="alternate" hreflang="x-default" href="https://bahdanhal.pl/tools/poland-employment-calculator">
+  <link rel="canonical" href="{{ app.request.locale == 'pl' ? 'https://ileza.pl/kalkulator-wynagrodzen' : 'https://ileza.pl/salary-calculator' }}">
+  <link rel="alternate" hreflang="en" href="https://ileza.pl/salary-calculator"><link rel="alternate" hreflang="pl" href="https://ileza.pl/kalkulator-wynagrodzen"><link rel="alternate" hreflang="x-default" href="https://ileza.pl/kalkulator-wynagrodzen">
 {% endblock %}
 {% block stylesheets %}<link rel="stylesheet" href="/tools.css"><link rel="stylesheet" href="/income.css">{% endblock %}
 {% block head_scripts %}

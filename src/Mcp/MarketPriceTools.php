@@ -158,7 +158,7 @@ final readonly class MarketPriceTools
 
     private function canonicalUrl(string $slug): string
     {
-        return 'https://bahdanhal.pl/tools/poland-used-price-index/' . $slug;
+        return 'https://ileza.pl/ceny/' . $slug;
     }
 
     /** @param array<string, mixed> $data */
