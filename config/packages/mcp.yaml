@@ -1,16 +1,16 @@
 mcp:
-  app: 'IleZa.pl'
+  app: 'IleZa.pl Price Radar & Tax MCP'
   version: '1.1.0'
-  description: 'Public toolbox tools plus Bearer-protected administrative submission and market statistics.'
+  description: 'Polish used electronics price radar and net salary/tax calculator, plus Bearer-protected price observations and market statistics.'
   website_url: 'https://ileza.pl/'
   instructions: |
-    Public tools provide audits, calculations and editorially reviewed Polish used-goods observations. Administrative tools require an Authorization: Bearer header and may return private submission data that must never be logged or republished.
+    Public tools provide Polish used-goods price indices, historical trends, and Polish net salary calculations. Administrative tools require an Authorization: Bearer header.
   client_transports:
     http: true
     stdio: true
   http:
     path: '/mcp'
-    allowed_hosts: ['bahdanhal.pl', 'www.bahdanhal.pl', 'bahdan-hal.ovh', 'www.bahdan-hal.ovh', 'localhost', '127.0.0.1']
+    allowed_hosts: ['ileza.pl', 'www.ileza.pl', 'localhost', '127.0.0.1']
     session:
       store: file
       directory: '%kernel.project_dir%/var/mcp-sessions'

@@ -106,6 +106,7 @@ services:
     decorates: mcp.server.controller
     arguments:
       $inner: '@.inner'
+      $sessionStore: '@mcp.session.store'
     public: true
     tags:
       - { name: controller.service_arguments }

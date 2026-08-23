@@ -36,6 +36,7 @@ final class MarketAdminController extends AbstractController
     ) {
     }
 
+    #[Route('/admin', name: 'market_admin_dashboard_root', methods: ['GET'])]
     #[Route('/admin/market', name: 'market_admin_dashboard', methods: ['GET'])]
     public function index(Request $request): Response
     {
@@ -103,13 +104,18 @@ final class MarketAdminController extends AbstractController
         ]);
     }
 
+    #[Route('/admin/login', name: 'market_admin_login_root', methods: ['POST'])]
     #[Route('/admin/market/login', name: 'market_admin_login', methods: ['POST'])]
     public function login(Request $request): Response
     {
         $password = (string) $request->request->get('password', '');
-        $adminToken = (string) ($_ENV['ADMIN_TOKEN'] ?? $this->secret);
+        $adminToken = (string) ($_ENV['ADMIN_TOKEN'] ?? ($_ENV['MARKET_ADMIN_TOKEN'] ?? $this->secret));
 
-        if (hash_equals($adminToken, $password) || hash_equals($this->secret, $password)) {
+        if (
+            hash_equals($adminToken, $password)
+            || hash_equals($this->secret, $password)
+            || (isset($_ENV['MARKET_ADMIN_TOKEN']) && hash_equals((string) $_ENV['MARKET_ADMIN_TOKEN'], $password))
+        ) {
             $response = $this->redirectToRoute('market_admin_dashboard');
             $authHash = hash_hmac('sha256', 'market_admin_authenticated', $this->secret);
             $response->headers->setCookie(
@@ -215,9 +221,15 @@ final class MarketAdminController extends AbstractController
                 $token = $matches[1];
             }
         }
-        $adminToken = (string) ($_ENV['ADMIN_TOKEN'] ?? $this->secret);
+        $adminToken = (string) ($_ENV['ADMIN_TOKEN'] ?? ($_ENV['MARKET_ADMIN_TOKEN'] ?? $this->secret));
 
-        if ($token !== null && $token !== '' && (hash_equals($adminToken, $token) || hash_equals($this->secret, $token))) {
+        if (
+            $token !== null
+            && $token !== ''
+            && (hash_equals($adminToken, $token)
+                || hash_equals($this->secret, $token)
+                || (isset($_ENV['MARKET_ADMIN_TOKEN']) && hash_equals((string) $_ENV['MARKET_ADMIN_TOKEN'], $token)))
+        ) {
             return true;
         }
 
