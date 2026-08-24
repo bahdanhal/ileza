@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace App\Mcp;
 
 use App\Analytics\Application\TrafficAnalytics;
-use App\Lead\Domain\Lead;
-use App\Lead\Domain\LeadRepository;
 use App\Market\Application\GetMarketStatistics;
 use App\Market\Domain\PriceTip;
 use App\Market\Domain\PriceTipRepository;
 use App\Market\Domain\ProductRequestStore;
+use Bahdan\LeadCaptureBundle\Domain\Lead;
+use Bahdan\LeadCaptureBundle\Domain\LeadRepository;
 use Mcp\Capability\Attribute\McpTool;
 use Mcp\Capability\Attribute\Schema;
 
