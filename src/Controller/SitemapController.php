@@ -23,6 +23,12 @@ final readonly class SitemapController
         $pairs = [
             ['/en/', '/'],
             ['/salary-calculator', '/kalkulator-wynagrodzen'],
+            ['/prices/laptops', '/ceny/laptopy'],
+            ['/prices/macbook', '/ceny/macbook'],
+            ['/prices/smartphones', '/ceny/smartfony'],
+            ['/prices/iphone', '/ceny/iphone'],
+            ['/prices/ram', '/ceny/ram'],
+            ['/prices/cars', '/ceny/samochody'],
         ];
         $entries = [];
         foreach ($pairs as [$en, $pl]) {

@@ -1,0 +1,316 @@
+{% extends 'base.html.twig' %}
+{% macro money(grosz, locale) %}{{ (grosz / 100)|number_format(2, locale == 'pl' ? ',' : '.', locale == 'pl' ? ' ' : ',') }} {{ locale == 'pl' ? 'zł' : 'PLN' }}{% endmacro %}
+{% macro smart_money(grosz, locale) %}
+    {%- set pln = grosz / 100 -%}
+    {%- if pln <= 0 -%}
+        0 {{ locale == 'pl' ? 'zł' : 'PLN' }}
+    {%- elseif pln < 100 -%}
+        {%- set rounded = ((pln / 5)|round) * 5 -%}
+        {{ rounded|number_format(0, locale == 'pl' ? ',' : '.', locale == 'pl' ? ' ' : ',') }} {{ locale == 'pl' ? 'zł' : 'PLN' }}
+    {%- elseif pln < 2000 -%}
+        {%- set rounded = ((pln / 10)|round) * 10 -%}
+        {{ rounded|number_format(0, locale == 'pl' ? ',' : '.', locale == 'pl' ? ' ' : ',') }} {{ locale == 'pl' ? 'zł' : 'PLN' }}
+    {%- elseif pln <= 20000 -%}
+        {%- set rounded = ((pln / 100)|round) * 100 -%}
+        {{ rounded|number_format(0, locale == 'pl' ? ',' : '.', locale == 'pl' ? ' ' : ',') }} {{ locale == 'pl' ? 'zł' : 'PLN' }}
+    {%- else -%}
+        {%- set rounded = ((pln / 500)|round) * 500 -%}
+        {{ rounded|number_format(0, locale == 'pl' ? ',' : '.', locale == 'pl' ? ' ' : ',') }} {{ locale == 'pl' ? 'zł' : 'PLN' }}
+    {%- endif -%}
+{% endmacro %}
+{% macro localized_label(label, locale) %}{{- locale == 'pl' ? label|replace({'-inch': '″', ' petrol': ' benzyna'}) : label -}}{% endmacro %}
+{% set hub_title = ('market.hubs.' ~ hub_key)|trans %}
+{% block tool_name %}{{ 'base.context.market'|trans }}{% endblock %}
+{% block title %}{{ ('market.hubs.meta.' ~ hub_key ~ '.title')|trans }}{% endblock %}
+{% block robots %}<meta name="robots" content="index,follow">{% endblock %}
+{% block description %}{{ ('market.hubs.meta.' ~ hub_key ~ '.description')|trans({'%min%': stats.min_price_grosz ? _self.smart_money(stats.min_price_grosz, app.request.locale) : '', '%max%': stats.max_price_grosz ? _self.smart_money(stats.max_price_grosz, app.request.locale) : ''}) }}{% endblock %}
+{% set canonical_url = 'https://ileza.pl' ~ (app.request.locale == 'pl' ? ('/ceny/' ~ hub.canonicalSlugPl) : ('/prices/' ~ hub.canonicalSlugEn)) %}
+{% block canonical %}
+    <link rel="canonical" href="{{ canonical_url }}">
+    <link rel="alternate" hreflang="en" href="https://ileza.pl/prices/{{ hub.canonicalSlugEn }}">
+    <link rel="alternate" hreflang="pl" href="https://ileza.pl/ceny/{{ hub.canonicalSlugPl }}">
+    <link rel="alternate" hreflang="x-default" href="https://ileza.pl/ceny/{{ hub.canonicalSlugPl }}">
+{% endblock %}
+{% block stylesheets %}<link rel="stylesheet" href="/tools.css"><link rel="stylesheet" href="/market.css"><link rel="stylesheet" href="/market-extra.css">{% endblock %}
+{% block language_switch %}
+    <a class="language-switch" href="{{ path('market_hub', {_locale: app.request.locale == 'pl' ? 'en' : 'pl', category: app.request.locale == 'pl' ? hub.canonicalSlugEn : hub.canonicalSlugPl}) }}" hreflang="{{ app.request.locale == 'pl' ? 'en' : 'pl' }}">
+        {{ app.request.locale == 'pl' ? 'EN' : 'PL' }}
+    </a>
+{% endblock %}
+{% block body %}
+    <article class="tool-shell market-shell">
+        <nav class="market-breadcrumbs" aria-label="Breadcrumbs">
+            <ol itemscope itemtype="https://schema.org/BreadcrumbList">
+                <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                    <a itemprop="item" href="{{ path('market_home', {_locale: app.request.locale}) }}">
+                        <span itemprop="name">{{ 'market.breadcrumbs.home'|trans }}</span>
+                    </a>
+                    <meta itemprop="position" content="1">
+                </li>
+                <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+                    <a itemprop="item" href="{{ path('market_home', {_locale: app.request.locale}) }}">
+                        <span itemprop="name">{{ 'market.breadcrumbs.prices'|trans }}</span>
+                    </a>
+                    <meta itemprop="position" content="2">
+                </li>
+                <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" aria-current="page">
+                    <span itemprop="name">{{ hub_title }}</span>
+                    <meta itemprop="position" content="3">
+                </li>
+            </ol>
+        </nav>
+
+        <header class="market-hub-hero">
+            <div class="eyebrow">{{ 'market.hubs.hero_eyebrow'|trans }}</div>
+            <h1 class="market-title">{{ ('market.hubs.meta.' ~ hub_key ~ '.title')|trans }}</h1>
+            <p class="lede">{{ ('market.hubs.meta.' ~ hub_key ~ '.description')|trans({'%min%': stats.min_price_grosz ? _self.smart_money(stats.min_price_grosz, app.request.locale) : '', '%max%': stats.max_price_grosz ? _self.smart_money(stats.max_price_grosz, app.request.locale) : ''}) }}</p>
+
+            <ul class="market-service-strip" aria-label="Category statistics">
+                <li><strong>{{ stats.total_products }}</strong><span>{{ 'market.hubs.models_count'|trans }}</span></li>
+                <li><strong>{{ stats.total_families }}</strong><span>{{ 'market.hubs.families_count'|trans }}</span></li>
+                <li>
+                    <strong>
+                        {% if stats.has_observations and stats.min_price_grosz and stats.max_price_grosz %}
+                            {{ _self.smart_money(stats.min_price_grosz, app.request.locale) }}–{{ _self.smart_money(stats.max_price_grosz, app.request.locale) }}
+                        {% else %}
+                            PLN
+                        {% endif %}
+                    </strong>
+                    <span>{{ 'market.hubs.price_band_label'|trans }}</span>
+                </li>
+                <li><strong>✓</strong><span>{{ 'market.method.verified_badge'|trans }}</span></li>
+            </ul>
+        </header>
+
+        <nav class="market-category-nav" aria-label="{{ 'market.hubs.nav_label'|trans }}">
+            <span class="category-nav-label">{{ 'market.hubs.nav_label'|trans }}</span>
+            <a class="category-nav-pill" href="{{ path('market_home', {_locale: app.request.locale}) }}">{{ 'market.hubs.all'|trans }}</a>
+            {% for h in hubs %}
+                {% set slug = app.request.locale == 'pl' ? h.slugPl : h.slugEn %}
+                <a class="category-nav-pill {{ h.key == hub_key ? 'active' : '' }}" href="{{ path('market_hub', {_locale: app.request.locale, category: slug}) }}">
+                    {{ ('market.hubs.' ~ h.key)|trans }}
+                </a>
+            {% endfor %}
+        </nav>
+
+        {% if movers is not empty %}
+            <section class="market-movers-section">
+                <div class="section-title">
+                    <h2>{{ 'market.movers.category_title'|trans }}</h2>
+                    <span>{{ 'market.movers.subtitle'|trans }}</span>
+                </div>
+                <div class="market-movers-grid">
+                    {% for mover in movers %}
+                        <article class="market-mover-card">
+                            <div class="mover-badge trend-down">
+                                📉 {{ mover.delta_pct }}% ({{ (mover.delta_grosz / 100)|number_format(0) }} zł)
+                            </div>
+                            <div class="mover-body">
+                                <span class="mover-category">{{ ('market.category.' ~ mover.product.category)|trans }}</span>
+                                <h3><a href="{{ path('market_product', {_locale: app.request.locale, slug: mover.product.slug}) }}">{{ _self.localized_label(mover.product.name, app.request.locale) }}</a></h3>
+                                <div class="mover-pricing">
+                                    <div class="mover-price-now">
+                                        <small>{{ 'market.movers.now_label'|trans }}</small>
+                                        <strong>{{ _self.smart_money(mover.latest.medianGrosz, app.request.locale) }}</strong>
+                                    </div>
+                                    <div class="mover-price-was">
+                                        <small>{{ 'market.movers.was_label'|trans }}</small>
+                                        <s>{{ _self.smart_money(mover.one_month_ago.medianGrosz, app.request.locale) }}</s>
+                                    </div>
+                                </div>
+                                <a class="mover-link" href="{{ path('market_product', {_locale: app.request.locale, slug: mover.product.slug}) }}">{{ 'market.open_history'|trans }} →</a>
+                            </div>
+                        </article>
+                    {% endfor %}
+                </div>
+            </section>
+        {% endif %}
+
+        <section class="market-matrix-card">
+            <div class="section-title">
+                <h2>{{ 'market.hubs.matrix_title'|trans }}</h2>
+                <span>{{ 'market.hubs.matrix_subtitle'|trans }}</span>
+            </div>
+            <div class="table-wrap">
+                <table class="market-matrix-table">
+                    <thead>
+                        <tr>
+                            <th>{{ 'market.hubs.col_model'|trans }}</th>
+                            <th>{{ 'market.hubs.col_specs'|trans }}</th>
+                            <th>{{ 'market.hubs.col_median'|trans }}</th>
+                            <th>{{ 'market.hubs.col_range'|trans }}</th>
+                            <th>{{ 'market.hubs.col_trend'|trans }}</th>
+                            <th>{{ 'market.hubs.col_link'|trans }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in matrix %}
+                            <tr>
+                                <td>
+                                    <a class="matrix-product-name" href="{{ path('market_product', {_locale: app.request.locale, slug: row.product.slug}) }}">
+                                        <strong>{{ _self.localized_label(row.product.name, app.request.locale) }}</strong>
+                                    </a>
+                                </td>
+                                <td>
+                                    <div class="matrix-specs-mini">
+                                        {% for k, v in row.product.specifications %}
+                                            {% if k != 'family' and k != 'family_name' and k != 'market' %}
+                                                <span class="matrix-spec-tag">{{ _self.localized_label(v, app.request.locale) }}</span>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="matrix-price-strong">
+                                        {{ row.latest ? _self.smart_money(row.latest.medianGrosz, app.request.locale) : 'market.awaiting'|trans }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="matrix-range">
+                                        {% if row.latest %}
+                                            {{ _self.smart_money(row.latest.lowGrosz, app.request.locale) }}–{{ _self.smart_money(row.latest.highGrosz, app.request.locale) }}
+                                        {% else %}
+                                            —
+                                        {% endif %}
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if row.delta_pct is not null %}
+                                        <span class="trend-badge trend-{{ row.delta_grosz < 0 ? 'down' : (row.delta_grosz > 0 ? 'up' : 'flat') }}">
+                                            {{ row.delta_grosz < 0 ? '📉' : (row.delta_grosz > 0 ? '📈 +' : '🟢 ') }}{{ row.delta_pct }}%
+                                        </span>
+                                    {% else %}
+                                        <span class="trend-badge trend-flat">—</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a class="matrix-btn" href="{{ path('market_product', {_locale: app.request.locale, slug: row.product.slug}) }}">
+                                        {{ 'market.hubs.view_history'|trans }}
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        {% if families is not empty %}
+            <section class="market-products">
+                <div class="section-title" style="grid-column: 1 / -1; margin-bottom: 8px;">
+                    <h2>{{ hub_title }} — {{ 'market.choose_configuration'|trans }}</h2>
+                </div>
+                {% for item in families %}
+                    {% set initial = item.configurations[0] %}
+                    <article class="market-product" data-market-family>
+                        <figure>
+                            <img src="{{ item.family.image }}" alt="{{ _self.localized_label(item.family.name, app.request.locale) }}" width="640" height="480" loading="lazy">
+                            <figcaption><a href="{{ item.family.imageSource }}">{{ item.family.imageCredit }}</a> · <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a></figcaption>
+                        </figure>
+                        <div class="market-product-body">
+                            <span class="market-category">{{ ('market.category.' ~ item.family.category)|trans }}</span>
+                            <h2>{{ _self.localized_label(item.family.name, app.request.locale) }}</h2>
+                            <label for="configuration-{{ item.family.slug }}">{{ 'market.choose_configuration'|trans }}</label>
+                            <select id="configuration-{{ item.family.slug }}" data-market-select>
+                                {% for configuration in item.configurations %}
+                                    <option value="{{ path('market_product', {_locale: app.request.locale, slug: configuration.product.slug}) }}" data-price="{{ configuration.latest ? _self.smart_money(configuration.latest.medianGrosz, app.request.locale) : 'market.awaiting'|trans }}" data-note="{{ configuration.latest ? ('market.observed'|trans ~ ' ' ~ configuration.latest.observedAt|date(app.request.locale == 'pl' ? 'd.m.Y' : 'M j, Y')) : 'market.awaiting_note'|trans }}">{{ _self.localized_label(configuration.product.name|replace({(item.family.name ~ ' '): ''}), app.request.locale) }}</option>
+                                {% endfor %}
+                            </select>
+                            <strong data-market-price>{{ initial.latest ? _self.smart_money(initial.latest.medianGrosz, app.request.locale) : 'market.awaiting'|trans }}</strong>
+                            <small data-market-note>{{ initial.latest ? ('market.observed'|trans ~ ' ' ~ initial.latest.observedAt|date(app.request.locale == 'pl' ? 'd.m.Y' : 'M j, Y')) : 'market.awaiting_note'|trans }}</small>
+                            <div class="market-configurations-list" aria-label="{{ 'market.choose_configuration'|trans }}">
+                                {% for configuration in item.configurations %}
+                                    <a class="market-config-chip" href="{{ path('market_product', {_locale: app.request.locale, slug: configuration.product.slug}) }}">{{ _self.localized_label(configuration.product.name|replace({(item.family.name ~ ' '): ''}), app.request.locale) }}</a>
+                                {% endfor %}
+                            </div>
+                            <a class="market-open" data-market-link href="{{ path('market_product', {_locale: app.request.locale, slug: initial.product.slug}) }}">{{ 'market.open_history'|trans }} →</a>
+                        </div>
+                    </article>
+                {% endfor %}
+            </section>
+        {% endif %}
+
+        <section class="tool-faq">
+            <h2>{{ 'market.hubs.faq_title'|trans }}</h2>
+            <details open>
+                <summary>{{ 'market.hubs.faq_q1'|trans }}</summary>
+                <p>{{ 'market.hubs.faq_a1'|trans }}</p>
+            </details>
+            <details open>
+                <summary>{{ 'market.hubs.faq_q2'|trans }}</summary>
+                <p>{{ 'market.hubs.faq_a2'|trans }}</p>
+            </details>
+        </section>
+
+        <section class="market-mcp">
+            <div>
+                <span class="market-category">{{ 'market.mcp.eyebrow'|trans }}</span>
+                <h2>{{ 'market.mcp.title'|trans }}</h2>
+                <p>{{ 'market.mcp.text'|trans }}</p>
+            </div>
+            <code>https://ileza.pl/mcp</code>
+        </section>
+    </article>
+
+    {% set schema_items = [] %}
+    {% for row in matrix %}
+        {% if row.latest %}
+            {% set schema_items = schema_items|merge([{
+                '@type': 'ListItem',
+                'position': loop.index,
+                'item': {
+                    '@type': 'Product',
+                    'name': row.product.name,
+                    'url': 'https://ileza.pl' ~ (app.request.locale == 'pl' ? '/ceny/' : '/prices/') ~ row.product.slug,
+                    'offers': {
+                        '@type': 'AggregateOffer',
+                        'priceCurrency': 'PLN',
+                        'lowPrice': (row.latest.lowGrosz / 100)|round(2),
+                        'highPrice': (row.latest.highGrosz / 100)|round(2),
+                        'offerCount': row.latest.sampleSize
+                    }
+                }
+            }]) %}
+        {% endif %}
+    {% endfor %}
+
+    <script type="application/ld+json">
+    {{ {
+        '@context': 'https://schema.org',
+        '@graph': [
+            {
+                '@type': 'BreadcrumbList',
+                'itemListElement': [
+                    {
+                        '@type': 'ListItem',
+                        'position': 1,
+                        'name': 'market.breadcrumbs.home'|trans,
+                        'item': 'https://ileza.pl' ~ (app.request.locale == 'pl' ? '/' : '/en/')
+                    },
+                    {
+                        '@type': 'ListItem',
+                        'position': 2,
+                        'name': 'market.breadcrumbs.prices'|trans,
+                        'item': 'https://ileza.pl' ~ (app.request.locale == 'pl' ? '/' : '/en/')
+                    },
+                    {
+                        '@type': 'ListItem',
+                        'position': 3,
+                        'name': hub_title,
+                        'item': canonical_url
+                    }
+                ]
+            },
+            {
+                '@type': 'ItemList',
+                'name': ('market.hubs.meta.' ~ hub_key ~ '.title')|trans,
+                'description': ('market.hubs.meta.' ~ hub_key ~ '.description')|trans({'%min%': stats.min_price_grosz ? _self.smart_money(stats.min_price_grosz, app.request.locale) : '', '%max%': stats.max_price_grosz ? _self.smart_money(stats.max_price_grosz, app.request.locale) : ''}),
+                'url': canonical_url,
+                'numberOfItems': schema_items|length,
+                'itemListElement': schema_items
+            }
+        ]
+    }|json_encode(constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_UNESCAPED_UNICODE'))|raw }}
+    </script>
+{% endblock %}
+{% block scripts %}<script src="/market-index.js" defer></script>{% endblock %}

@@ -610,3 +610,324 @@
     border: 0;
 }
 
+/* =========================================================
+   8. BREADCRUMBS & CATEGORY NAVIGATION (MILESTONE 2)
+   ========================================================= */
+.market-breadcrumbs {
+    margin-bottom: 20px;
+}
+
+.market-breadcrumbs ol {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.market-breadcrumbs li {
+    display: inline-flex;
+    align-items: center;
+    color: var(--muted);
+}
+
+.market-breadcrumbs li + li::before {
+    content: "›";
+    margin: 0 8px;
+    color: var(--muted);
+    font-weight: 400;
+}
+
+.market-breadcrumbs a {
+    color: var(--blue);
+    text-decoration: none;
+    transition: color 0.15s ease;
+}
+
+.market-breadcrumbs a:hover {
+    color: var(--orange);
+    text-decoration: underline;
+}
+
+.market-breadcrumbs [aria-current="page"] {
+    color: var(--ink);
+    font-weight: 700;
+}
+
+.market-category-nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin: 24px 0 32px;
+    padding: 12px 16px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+}
+
+.category-nav-label {
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-right: 4px;
+}
+
+.category-nav-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 14px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    color: var(--ink);
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.15s ease;
+}
+
+.category-nav-pill:hover {
+    border-color: var(--orange);
+    color: var(--orange);
+    background: rgba(255, 122, 0, 0.08);
+}
+
+.category-nav-pill.active {
+    border-color: var(--orange);
+    background: var(--orange);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(255, 122, 0, 0.35);
+}
+
+/* =========================================================
+   9. TOP 30-DAY PRICE DROPS (MARKET MOVERS)
+   ========================================================= */
+.market-movers-section {
+    margin: 32px 0 40px;
+    padding: 24px;
+    background: linear-gradient(180deg, rgba(255, 122, 0, 0.04) 0%, rgba(0, 0, 0, 0.01) 100%), var(--panel);
+    border: 1px solid rgba(255, 122, 0, 0.25);
+    border-radius: 16px;
+    box-shadow: 0 12px 36px rgba(0, 5, 20, 0.12);
+}
+
+.market-movers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.market-mover-card {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    background: #0d1a2d;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 16px;
+    transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.market-mover-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--orange);
+    box-shadow: 0 8px 24px rgba(255, 122, 0, 0.18);
+}
+
+.mover-badge {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 800;
+    padding: 4px 8px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+}
+
+.mover-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.mover-category {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    color: var(--orange);
+    text-transform: uppercase;
+}
+
+.market-mover-card h3 {
+    font-size: 15px;
+    font-weight: 700;
+    margin: 4px 0 12px;
+    line-height: 1.35;
+}
+
+.market-mover-card h3 a {
+    color: #e7eef8;
+    text-decoration: none;
+}
+
+.market-mover-card h3 a:hover {
+    color: var(--orange);
+}
+
+.mover-pricing {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: auto;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.mover-price-now small,
+.mover-price-was small {
+    display: block;
+    font-size: 10px;
+    color: var(--muted);
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.mover-price-now strong {
+    font-size: 16px;
+    font-weight: 900;
+    color: #4ade80;
+}
+
+.mover-price-was s {
+    font-size: 13px;
+    color: var(--muted);
+}
+
+.mover-link {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--blue);
+    text-decoration: none;
+}
+
+.mover-link:hover {
+    color: var(--orange);
+    text-decoration: underline;
+}
+
+/* =========================================================
+   10. CONFIGURATION PRICING MATRIX
+   ========================================================= */
+.market-matrix-card {
+    margin: 36px 0 40px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.025), 0 18px 50px rgba(0, 5, 15, 0.16);
+}
+
+.market-matrix-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-top: 12px;
+}
+
+.market-matrix-table th {
+    text-align: left;
+    padding: 10px 12px;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    border-bottom: 2px solid var(--line);
+}
+
+.market-matrix-table td {
+    padding: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    vertical-align: middle;
+}
+
+.market-matrix-table tr:hover td {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.matrix-product-name {
+    color: #e7eef8;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.matrix-product-name:hover {
+    color: var(--orange);
+    text-decoration: underline;
+}
+
+.matrix-specs-mini {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.matrix-spec-tag {
+    display: inline-block;
+    padding: 2px 6px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 4px;
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 600;
+}
+
+.matrix-price-strong {
+    font-weight: 900;
+    font-size: 14px;
+    color: #4ade80;
+    white-space: nowrap;
+}
+
+.matrix-range {
+    color: var(--muted);
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.matrix-btn {
+    display: inline-block;
+    padding: 4px 10px;
+    background: rgba(90, 169, 255, 0.12);
+    border: 1px solid rgba(90, 169, 255, 0.3);
+    border-radius: 6px;
+    color: var(--blue);
+    font-size: 11px;
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: all 0.15s ease;
+}
+
+.matrix-btn:hover {
+    background: var(--orange);
+    border-color: var(--orange);
+    color: #fff;
+}
+
+.market-hub-hero {
+    margin-bottom: 24px;
+}
+
+

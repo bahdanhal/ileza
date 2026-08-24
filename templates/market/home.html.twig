@@ -96,6 +96,52 @@
             <li><strong>↻</strong><span>{{ app.request.locale == 'pl' ? 'ręcznie weryfikowane' : 'manually verified' }}</span></li>
         </ul>
 
+        {% if hubs is defined and hubs is not empty %}
+            <nav class="market-category-nav" aria-label="{{ 'market.hubs.nav_label'|trans }}">
+                <span class="category-nav-label">{{ 'market.hubs.nav_label'|trans }}</span>
+                <a class="category-nav-pill active" href="{{ path('market_home', {_locale: app.request.locale}) }}">{{ 'market.hubs.all'|trans }}</a>
+                {% for h in hubs %}
+                    {% set slug = app.request.locale == 'pl' ? h.slugPl : h.slugEn %}
+                    <a class="category-nav-pill" href="{{ path('market_hub', {_locale: app.request.locale, category: slug}) }}">
+                        {{ ('market.hubs.' ~ h.key)|trans }}
+                    </a>
+                {% endfor %}
+            </nav>
+        {% endif %}
+
+        {% if top_drops is defined and top_drops is not empty %}
+            <section class="market-movers-section">
+                <div class="section-title">
+                    <h2>{{ 'market.movers.title'|trans }}</h2>
+                    <span>{{ 'market.movers.subtitle'|trans }}</span>
+                </div>
+                <div class="market-movers-grid">
+                    {% for mover in top_drops %}
+                        <article class="market-mover-card">
+                            <div class="mover-badge trend-down">
+                                📉 {{ mover.delta_pct }}% ({{ (mover.delta_grosz / 100)|number_format(0) }} zł)
+                            </div>
+                            <div class="mover-body">
+                                <span class="mover-category">{{ ('market.category.' ~ mover.product.category)|trans }}</span>
+                                <h3><a href="{{ path('market_product', {_locale: app.request.locale, slug: mover.product.slug}) }}">{{ _self.localized_label(mover.product.name, app.request.locale) }}</a></h3>
+                                <div class="mover-pricing">
+                                    <div class="mover-price-now">
+                                        <small>{{ 'market.movers.now_label'|trans }}</small>
+                                        <strong>{{ _self.smart_money(mover.latest.medianGrosz, app.request.locale) }}</strong>
+                                    </div>
+                                    <div class="mover-price-was">
+                                        <small>{{ 'market.movers.was_label'|trans }}</small>
+                                        <s>{{ _self.smart_money(mover.one_month_ago.medianGrosz, app.request.locale) }}</s>
+                                    </div>
+                                </div>
+                                <a class="mover-link" href="{{ path('market_product', {_locale: app.request.locale, slug: mover.product.slug}) }}">{{ 'market.open_history'|trans }} →</a>
+                            </div>
+                        </article>
+                    {% endfor %}
+                </div>
+            </section>
+        {% endif %}
+
         <div class="market-products">
             {% for item in families %}
                 {% set initial = item.configurations[0] %}

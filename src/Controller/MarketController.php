@@ -54,7 +54,13 @@ final class MarketController extends AbstractController
         }, $this->catalog->families());
         usort($families, self::compareFamiliesByPrice(...));
 
-        return $this->render('market/home.html.twig', ['families' => $families]);
+        $topDrops = $this->priceHistory->marketMovers(limit: 4, dropsOnly: true);
+
+        return $this->render('market/home.html.twig', [
+            'families' => $families,
+            'top_drops' => $topDrops,
+            'hubs' => $this->catalog->hubs(),
+        ]);
     }
 
     /**
@@ -83,6 +89,58 @@ final class MarketController extends AbstractController
         return $priceComparison !== 0
             ? $priceComparison
             : strcmp($left['family']->name, $right['family']->name);
+    }
+
+    #[Route(
+        path: [
+            'en' => '/prices/{category}',
+            'pl' => '/ceny/{category}',
+        ],
+        name: 'market_hub',
+        requirements: ['category' => 'laptops|macbook|smartphones|iphone|ram|cars|samochody|laptopy|smartfony'],
+        methods: ['GET'],
+        priority: 20
+    )]
+    public function hub(string $category): Response
+    {
+        $hubInfo = $this->catalog->resolveHub($category);
+        if ($hubInfo === null) {
+            throw $this->createNotFoundException();
+        }
+
+        $categoryKey = $hubInfo['category'];
+        $familyFilter = $hubInfo['familyFilter'];
+        $hubKey = $hubInfo['key'];
+
+        $stats = $this->priceHistory->categoryStatistics($categoryKey, $familyFilter);
+        $matrix = $this->priceHistory->categoryMatrix($categoryKey, $familyFilter);
+        $movers = $this->priceHistory->marketMovers($categoryKey, $familyFilter, limit: 4, dropsOnly: true);
+
+        /** @var list<array{family: ProductFamily, configurations: list<array{product: Product, latest: ?PriceObservation}>}> $families */
+        $families = array_map(function (ProductFamily $family): array {
+            $configurations = array_map(fn (Product $product): array => [
+                'product' => $product,
+                'latest' => $this->priceHistory->latestForProduct($product->slug),
+            ], $family->configurations);
+            usort($configurations, self::compareConfigurationsByPrice(...));
+
+            return [
+                'family' => $family,
+                'configurations' => $configurations,
+            ];
+        }, $this->catalog->familiesForHub($categoryKey, $familyFilter));
+        usort($families, self::compareFamiliesByPrice(...));
+
+        return $this->render('market/hub.html.twig', [
+            'hub' => $hubInfo,
+            'hub_key' => $hubKey,
+            'category_key' => $categoryKey,
+            'stats' => $stats,
+            'matrix' => $matrix,
+            'movers' => $movers,
+            'families' => $families,
+            'hubs' => $this->catalog->hubs(),
+        ]);
     }
 
     #[Route(path: '/pl/', name: 'legacy_polish_market_home', methods: ['GET'])]
@@ -114,12 +172,16 @@ final class MarketController extends AbstractController
             throw $this->createNotFoundException();
         }
 
+        $hubInfo = $this->catalog->resolveHub($detailed['product']->category);
+
         return $this->render('market/product.html.twig', [
             'product' => $detailed['product'],
             'family' => $detailed['family'],
             'history' => $detailed['history'],
             'latest' => $detailed['latest'],
             'one_month_ago' => $detailed['one_month_ago'],
+            'hub_info' => $hubInfo,
+            'hubs' => $this->catalog->hubs(),
         ]);
     }
 

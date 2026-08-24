@@ -102,6 +102,123 @@ final readonly class ProductCatalog
         }, array_values($families));
     }
 
+    /**
+     * @return array{
+     *     key: string,
+     *     category: string,
+     *     familyFilter: ?string,
+     *     canonicalSlugPl: string,
+     *     canonicalSlugEn: string
+     * }|null
+     */
+    public function resolveHub(string $slug): ?array
+    {
+        $normalized = strtolower(trim($slug));
+
+        return match ($normalized) {
+            'laptopy', 'laptops' => [
+                'key' => 'laptops',
+                'category' => 'laptops',
+                'familyFilter' => null,
+                'canonicalSlugPl' => 'laptopy',
+                'canonicalSlugEn' => 'laptops',
+            ],
+            'macbook' => [
+                'key' => 'macbook',
+                'category' => 'laptops',
+                'familyFilter' => 'macbook',
+                'canonicalSlugPl' => 'macbook',
+                'canonicalSlugEn' => 'macbook',
+            ],
+            'smartfony', 'smartphones' => [
+                'key' => 'smartphones',
+                'category' => 'smartphones',
+                'familyFilter' => null,
+                'canonicalSlugPl' => 'smartfony',
+                'canonicalSlugEn' => 'smartphones',
+            ],
+            'iphone' => [
+                'key' => 'iphone',
+                'category' => 'smartphones',
+                'familyFilter' => 'iphone',
+                'canonicalSlugPl' => 'iphone',
+                'canonicalSlugEn' => 'iphone',
+            ],
+            'ram' => [
+                'key' => 'ram',
+                'category' => 'ram',
+                'familyFilter' => null,
+                'canonicalSlugPl' => 'ram',
+                'canonicalSlugEn' => 'ram',
+            ],
+            'samochody', 'cars' => [
+                'key' => 'cars',
+                'category' => 'cars',
+                'familyFilter' => null,
+                'canonicalSlugPl' => 'samochody',
+                'canonicalSlugEn' => 'cars',
+            ],
+            default => null,
+        };
+    }
+
+    /**
+     * @return list<array{
+     *     key: string,
+     *     category: string,
+     *     familyFilter: ?string,
+     *     slugPl: string,
+     *     slugEn: string
+     * }>
+     */
+    public function hubs(): array
+    {
+        return [
+            ['key' => 'laptops', 'category' => 'laptops', 'familyFilter' => null, 'slugPl' => 'laptopy', 'slugEn' => 'laptops'],
+            ['key' => 'macbook', 'category' => 'laptops', 'familyFilter' => 'macbook', 'slugPl' => 'macbook', 'slugEn' => 'macbook'],
+            ['key' => 'smartphones', 'category' => 'smartphones', 'familyFilter' => null, 'slugPl' => 'smartfony', 'slugEn' => 'smartphones'],
+            ['key' => 'iphone', 'category' => 'smartphones', 'familyFilter' => 'iphone', 'slugPl' => 'iphone', 'slugEn' => 'iphone'],
+            ['key' => 'ram', 'category' => 'ram', 'familyFilter' => null, 'slugPl' => 'ram', 'slugEn' => 'ram'],
+            ['key' => 'cars', 'category' => 'cars', 'familyFilter' => null, 'slugPl' => 'samochody', 'slugEn' => 'cars'],
+        ];
+    }
+
+    /**
+     * @return list<Product>
+     */
+    public function productsForHub(string $category, ?string $familyFilter = null): array
+    {
+        return array_values(array_filter($this->all(), function (Product $product) use ($category, $familyFilter): bool {
+            if ($product->category !== $category) {
+                return false;
+            }
+            if ($familyFilter !== null) {
+                return str_contains(strtolower($product->slug), strtolower($familyFilter))
+                    || str_contains(strtolower($product->name), strtolower($familyFilter));
+            }
+
+            return true;
+        }));
+    }
+
+    /**
+     * @return list<ProductFamily>
+     */
+    public function familiesForHub(string $category, ?string $familyFilter = null): array
+    {
+        return array_values(array_filter($this->families(), function (ProductFamily $family) use ($category, $familyFilter): bool {
+            if ($family->category !== $category) {
+                return false;
+            }
+            if ($familyFilter !== null) {
+                return str_contains(strtolower($family->slug), strtolower($familyFilter))
+                    || str_contains(strtolower($family->name), strtolower($familyFilter));
+            }
+
+            return true;
+        }));
+    }
+
     /** @return array{0: string, 1: string, 2: string} */
     public function familyImage(string $familySlug, string $category, ?Product $product = null): array
     {
