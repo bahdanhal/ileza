@@ -42,6 +42,38 @@ final readonly class Grosz
         return $this->amount / 100;
     }
 
+    public function toSmartRoundedPlnValue(): int
+    {
+        $pln = $this->toPln();
+        if ($pln <= 0.0) {
+            return 0;
+        }
+
+        if ($pln < 100.0) {
+            return (int) (round($pln / 5.0) * 5);
+        }
+
+        if ($pln < 2000.0) {
+            return (int) (round($pln / 10.0) * 10);
+        }
+
+        if ($pln <= 20000.0) {
+            return (int) (round($pln / 100.0) * 100);
+        }
+
+        return (int) (round($pln / 500.0) * 500);
+    }
+
+    public function toSmartRoundedPln(string $locale = 'pl'): string
+    {
+        $rounded = $this->toSmartRoundedPlnValue();
+        if ($locale === 'pl') {
+            return number_format($rounded, 0, ',', ' ') . ' zł';
+        }
+
+        return number_format($rounded, 0, '.', ',') . ' PLN';
+    }
+
     public function toFormattedPln(string $locale = 'pl'): string
     {
         $pln = $this->toPln();

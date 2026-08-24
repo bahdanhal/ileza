@@ -1,5 +1,23 @@
 {% extends 'base.html.twig' %}
 {% macro money(grosz, locale) %}{{ (grosz / 100)|number_format(2, locale == 'pl' ? ',' : '.', locale == 'pl' ? ' ' : ',') }} {{ locale == 'pl' ? 'zł' : 'PLN' }}{% endmacro %}
+{% macro smart_money(grosz, locale) %}
+    {%- set pln = grosz / 100 -%}
+    {%- if pln <= 0 -%}
+        0 {{ locale == 'pl' ? 'zł' : 'PLN' }}
+    {%- elseif pln < 100 -%}
+        {%- set rounded = ((pln / 5)|round) * 5 -%}
+        {{ rounded|number_format(0, locale == 'pl' ? ',' : '.', locale == 'pl' ? ' ' : ',') }} {{ locale == 'pl' ? 'zł' : 'PLN' }}
+    {%- elseif pln < 2000 -%}
+        {%- set rounded = ((pln / 10)|round) * 10 -%}
+        {{ rounded|number_format(0, locale == 'pl' ? ',' : '.', locale == 'pl' ? ' ' : ',') }} {{ locale == 'pl' ? 'zł' : 'PLN' }}
+    {%- elseif pln <= 20000 -%}
+        {%- set rounded = ((pln / 100)|round) * 100 -%}
+        {{ rounded|number_format(0, locale == 'pl' ? ',' : '.', locale == 'pl' ? ' ' : ',') }} {{ locale == 'pl' ? 'zł' : 'PLN' }}
+    {%- else -%}
+        {%- set rounded = ((pln / 500)|round) * 500 -%}
+        {{ rounded|number_format(0, locale == 'pl' ? ',' : '.', locale == 'pl' ? ' ' : ',') }} {{ locale == 'pl' ? 'zł' : 'PLN' }}
+    {%- endif -%}
+{% endmacro %}
 {% macro localized_label(label, locale) %}{{- locale == 'pl' ? label|replace({'-inch': '″', ' petrol': ' benzyna'}) : label -}}{% endmacro %}
 {% block title %}{{ 'market.meta.title'|trans }}{% endblock %}
 {% block robots %}<meta name="robots" content="index,follow">{% endblock %}
@@ -18,6 +36,60 @@
         <h1>{{ 'market.heading_start'|trans }}</h1>
         <p class="lede">{{ 'market.lede'|trans }}</p>
 
+        {% set search_products = [] %}
+        {% for item in families %}
+            {% for config in item.configurations %}
+                {% set spec_text = [] %}
+                {% for k, v in config.product.specifications %}
+                    {% set spec_text = spec_text|merge([v]) %}
+                {% endfor %}
+                {% set search_products = search_products|merge([{
+                    slug: config.product.slug,
+                    name: _self.localized_label(config.product.name, app.request.locale),
+                    category: config.product.category,
+                    category_label: ('market.category.' ~ config.product.category)|trans,
+                    price: config.latest ? _self.smart_money(config.latest.medianGrosz, app.request.locale) : 'market.awaiting'|trans,
+                    url: path('market_product', {_locale: app.request.locale, slug: config.product.slug}),
+                    search_text: (config.product.name ~ ' ' ~ spec_text|join(' ') ~ ' ' ~ config.product.category ~ ' ' ~ item.family.name)|lower
+                }]) %}
+            {% endfor %}
+        {% endfor %}
+
+        <div class="market-hero-search" data-hero-search data-products="{{ search_products|json_encode }}" data-locale="{{ app.request.locale }}">
+            <div class="search-input-wrap">
+                <span class="search-icon" aria-hidden="true">🔍</span>
+                <label for="market-hero-input" class="visually-hidden">{{ 'market.search.label'|trans }}</label>
+                <input id="market-hero-input"
+                       type="search"
+                       class="market-hero-input"
+                       placeholder="{{ 'market.search.placeholder'|trans }}"
+                       autocomplete="off"
+                       spellcheck="false"
+                       aria-autocomplete="list"
+                       aria-expanded="false"
+                       aria-controls="market-search-results">
+                <button type="button" class="search-clear-btn" aria-label="Clear search" hidden>✕</button>
+            </div>
+
+            <div class="search-chips-row">
+                <span class="search-chips-label">{{ 'market.search.quick_label'|trans }}</span>
+                <button type="button" class="search-chip" data-search-chip="iPhone 13">iPhone 13</button>
+                <button type="button" class="search-chip" data-search-chip="MacBook Air M1">MacBook Air M1</button>
+                <button type="button" class="search-chip" data-search-chip="DDR5 32GB">DDR5 32GB</button>
+                <button type="button" class="search-chip" data-search-chip="Peugeot 206 CC">Peugeot 206 CC</button>
+            </div>
+
+            <div id="market-search-results"
+                 class="market-search-dropdown"
+                 role="listbox"
+                 aria-label="{{ 'market.search.label'|trans }}"
+                 hidden
+                 data-no-results="{{ 'market.search.no_results'|trans }}"
+                 data-request-prompt="{{ 'market.search.request_prompt'|trans }}"
+                 data-request-cta="{{ 'market.search.request_cta'|trans }}">
+            </div>
+        </div>
+
         <ul class="market-service-strip" aria-label="IleZa service information">
             <li><strong>{{ families|length }}</strong><span>{{ app.request.locale == 'pl' ? 'kategorie obserwowane' : 'tracked categories' }}</span></li>
             <li><strong>PLN</strong><span>{{ app.request.locale == 'pl' ? 'ceny z polskiego rynku' : 'Polish market prices' }}</span></li>
@@ -35,10 +107,10 @@
                         <label for="configuration-{{ item.family.slug }}">{{ 'market.choose_configuration'|trans }}</label>
                         <select id="configuration-{{ item.family.slug }}" data-market-select>
                             {% for configuration in item.configurations %}
-                                <option value="{{ path('market_product', {_locale: app.request.locale, slug: configuration.product.slug}) }}" data-price="{{ configuration.latest ? _self.money(configuration.latest.medianGrosz, app.request.locale) : 'market.awaiting'|trans }}" data-note="{{ configuration.latest ? ('market.observed'|trans ~ ' ' ~ configuration.latest.observedAt|date(app.request.locale == 'pl' ? 'd.m.Y' : 'M j, Y')) : 'market.awaiting_note'|trans }}">{{ _self.localized_label(configuration.product.name|replace({(item.family.name ~ ' '): ''}), app.request.locale) }}</option>
+                                <option value="{{ path('market_product', {_locale: app.request.locale, slug: configuration.product.slug}) }}" data-price="{{ configuration.latest ? _self.smart_money(configuration.latest.medianGrosz, app.request.locale) : 'market.awaiting'|trans }}" data-note="{{ configuration.latest ? ('market.observed'|trans ~ ' ' ~ configuration.latest.observedAt|date(app.request.locale == 'pl' ? 'd.m.Y' : 'M j, Y')) : 'market.awaiting_note'|trans }}">{{ _self.localized_label(configuration.product.name|replace({(item.family.name ~ ' '): ''}), app.request.locale) }}</option>
                             {% endfor %}
                         </select>
-                        <strong data-market-price>{{ initial.latest ? _self.money(initial.latest.medianGrosz, app.request.locale) : 'market.awaiting'|trans }}</strong>
+                        <strong data-market-price>{{ initial.latest ? _self.smart_money(initial.latest.medianGrosz, app.request.locale) : 'market.awaiting'|trans }}</strong>
                         <small data-market-note>{{ initial.latest ? ('market.observed'|trans ~ ' ' ~ initial.latest.observedAt|date(app.request.locale == 'pl' ? 'd.m.Y' : 'M j, Y')) : 'market.awaiting_note'|trans }}</small>
                         <div class="market-configurations-list" aria-label="{{ 'market.choose_configuration'|trans }}">
                             {% for configuration in item.configurations %}

@@ -56,13 +56,43 @@
     return result(budget, budget, social, healthContribution, tax, costs);
   }
 
+  function spolka(budget, options) {
+    const llcCosts = Math.max(0, Number(options.llcCosts ?? 600) || 0);
+    const gross = Math.max(0, budget - llcCosts);
+    const social = 0;
+    const healthContribution = health(gross);
+    const tax = monthlyProgressiveTax(gross);
+    const net = round(gross - healthContribution - tax);
+    return {
+      cost: round(budget),
+      gross: round(gross),
+      social: 0,
+      health: healthContribution,
+      tax: tax,
+      businessCosts: round(llcCosts),
+      net: net
+    };
+  }
+
   function result(cost, gross, social, healthContribution, tax, businessCosts) {
     return { cost: round(cost), gross: round(gross), social: round(social), health: round(healthContribution), tax: round(tax), businessCosts: round(businessCosts), net: round(gross - social - healthContribution - tax - businessCosts) };
   }
 
   function compare(options) {
-    const budget = Math.max(0, Number(options.budget) || 0);
-    return { employment: employment(budget), mandate: mandate(budget, !!options.studentUnder26), work: workContract(budget), b2b: b2b(budget, options) };
+    options = options || {};
+    let budget;
+    if (options.inputMode === 'uop_gross' && options.grossUop !== undefined) {
+      budget = round(Math.max(0, Number(options.grossUop) || 0) * 1.2048);
+    } else {
+      budget = Math.max(0, Number(options.budget) || 0);
+    }
+    return {
+      employment: employment(budget),
+      mandate: mandate(budget, !!options.studentUnder26),
+      work: workContract(budget),
+      b2b: b2b(budget, options),
+      spolka: spolka(budget, options)
+    };
   }
 
   return { compare, progressiveAnnualTax };

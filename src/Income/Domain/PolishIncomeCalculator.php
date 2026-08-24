@@ -10,18 +10,27 @@ final readonly class PolishIncomeCalculator
 {
     /**
      * @param array{
-     *     budget: float|int,
+     *     budget?: float|int,
+     *     grossUop?: float|int,
+     *     inputMode?: string,
      *     zus?: string,
      *     taxation?: string,
      *     lumpRate?: float|int,
      *     costs?: float|int,
+     *     llcCosts?: float|int,
      *     studentUnder26?: bool
      * } $options
      * @return array<string, array{cost: float, gross: float, social: float, health: float, tax: float, businessCosts: float, net: float}>
      */
     public function compare(array $options): array
     {
-        $budget = max(0.0, (float) ($options['budget']));
+        $inputMode = (string) ($options['inputMode'] ?? 'budget');
+        if ($inputMode === 'uop_gross' && isset($options['grossUop'])) {
+            $budget = $this->round(max(0.0, (float) $options['grossUop']) * 1.2048);
+        } else {
+            $budget = max(0.0, (float) ($options['budget'] ?? 0.0));
+        }
+
         $studentUnder26 = (bool) ($options['studentUnder26'] ?? false);
 
         return [
@@ -29,6 +38,7 @@ final readonly class PolishIncomeCalculator
             'mandate' => $this->mandate($budget, $studentUnder26),
             'work' => $this->workContract($budget),
             'b2b' => $this->b2b($budget, $options),
+            'spolka' => $this->spolka($budget, $options),
         ];
     }
 
@@ -126,10 +136,33 @@ final readonly class PolishIncomeCalculator
     }
 
     /**
+     * @param array<string, mixed> $options
      * @return array{cost: float, gross: float, social: float, health: float, tax: float, businessCosts: float, net: float}
      */
-    private function result(float $cost, float $gross, float $social, float $health, float $tax, float $businessCosts): array
+    private function spolka(float $budget, array $options): array
     {
+        $llcCosts = max(0.0, (float) ($options['llcCosts'] ?? 600.0));
+        $gross = max(0.0, $budget - $llcCosts);
+        $social = 0.0;
+        $health = $this->round($gross * 0.09);
+        $tax = $this->monthlyProgressiveTax($gross);
+        $net = $this->round($gross - $health - $tax);
+
+        return $this->result($budget, $gross, $social, $health, $tax, $llcCosts, $net);
+    }
+
+    /**
+     * @return array{cost: float, gross: float, social: float, health: float, tax: float, businessCosts: float, net: float}
+     */
+    private function result(
+        float $cost,
+        float $gross,
+        float $social,
+        float $health,
+        float $tax,
+        float $businessCosts,
+        ?float $net = null
+    ): array {
         return [
             'cost' => $this->round($cost),
             'gross' => $this->round($gross),
@@ -137,7 +170,7 @@ final readonly class PolishIncomeCalculator
             'health' => $this->round($health),
             'tax' => $this->round($tax),
             'businessCosts' => $this->round($businessCosts),
-            'net' => $this->round($gross - $social - $health - $tax - $businessCosts),
+            'net' => $net ?? $this->round($gross - $social - $health - $tax - $businessCosts),
         ];
     }
 

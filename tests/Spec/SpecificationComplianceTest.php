@@ -31,6 +31,13 @@ final class SpecificationComplianceTest extends TestCase
                     $actual['b2b']['net'],
                     "B2B net must match spec vector for: " . $vector['description']
                 );
+                if (isset($vector['expected']['spolka'])) {
+                    self::assertSame(
+                        $vector['expected']['spolka']['net'],
+                        $actual['spolka']['net'],
+                        "Spolka net must match spec vector for: " . $vector['description']
+                    );
+                }
             }
 
             if (isset($vector['tax_brackets'])) {

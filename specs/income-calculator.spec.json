@@ -38,6 +38,13 @@
           "health_deductible_rate": 0.5
         }
       }
+    },
+    "spolka_zoo": {
+      "model": "Board Member Resolution (Powołanie członka zarządu)",
+      "social_zus": 0.0,
+      "health_rate": 0.09,
+      "default_monthly_overhead": 600.0,
+      "taxation": "Progressive tax scale (12% up to 120k PLN, 32% above)"
     }
   },
   "test_vectors": [
@@ -48,6 +55,7 @@
         "taxation": "linear",
         "zus": "standard",
         "costs": 1000.0,
+        "llcCosts": 600.0,
         "studentUnder26": false
       },
       "expected": {
@@ -67,6 +75,15 @@
           "tax": 2181.51,
           "businessCosts": 1000.0,
           "net": 9300.14
+        },
+        "spolka": {
+          "cost": 15000.0,
+          "gross": 14400.0,
+          "social": 0.0,
+          "health": 1296.0,
+          "tax": 2308.0,
+          "businessCosts": 600.0,
+          "net": 10796.0
         }
       }
     },

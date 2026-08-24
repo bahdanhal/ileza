@@ -22,6 +22,8 @@ final class IncomeCalculatorToolsTest extends TestCase
         self::assertSame(2026, $data['assumptions_year']);
         self::assertSame('PLN', $data['currency']);
         self::assertArrayHasKey('comparison', $data);
+        self::assertArrayHasKey('employment', $data['comparison']);
         self::assertArrayHasKey('b2b', $data['comparison']);
+        self::assertArrayHasKey('spolka', $data['comparison']);
     }
 }

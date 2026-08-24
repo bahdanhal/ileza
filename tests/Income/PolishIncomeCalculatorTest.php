@@ -23,11 +23,33 @@ final class PolishIncomeCalculatorTest extends TestCase
         self::assertArrayHasKey('mandate', $comparison);
         self::assertArrayHasKey('work', $comparison);
         self::assertArrayHasKey('b2b', $comparison);
+        self::assertArrayHasKey('spolka', $comparison);
 
         self::assertSame(15000.0, $comparison['employment']['cost']);
         self::assertGreaterThan(0, $comparison['employment']['net']);
         self::assertGreaterThan(0, $comparison['b2b']['net']);
         self::assertSame(1000.0, $comparison['b2b']['businessCosts']);
+
+        self::assertSame(15000.0, $comparison['spolka']['cost']);
+        self::assertSame(0.0, $comparison['spolka']['social']);
+        self::assertSame(600.0, $comparison['spolka']['businessCosts']);
+        self::assertSame(14400.0, $comparison['spolka']['gross']);
+        self::assertSame(1296.0, $comparison['spolka']['health']);
+        self::assertSame(2308.0, $comparison['spolka']['tax']);
+        self::assertSame(10796.0, $comparison['spolka']['net']);
+    }
+
+    public function testUopGrossInputModeConversion(): void
+    {
+        $calculator = new PolishIncomeCalculator();
+        $comparison = $calculator->compare([
+            'inputMode' => 'uop_gross',
+            'grossUop' => 10000.0,
+        ]);
+
+        self::assertSame(12048.0, $comparison['employment']['cost']);
+        self::assertSame(10000.0, $comparison['employment']['gross']);
+        self::assertSame(12048.0, $comparison['spolka']['cost']);
     }
 
     public function testProgressiveTaxBrackets(): void

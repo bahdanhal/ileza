@@ -35,6 +35,13 @@ final class ValueObjectsTest extends TestCase
         self::assertFalse($g1->isZero());
         self::assertTrue(Grosz::fromGrosz(0)->isZero());
         self::assertTrue($g1->equals(Grosz::fromZloty(1500.00)));
+
+        // Smart price rounding tiers
+        self::assertSame('50 zł', Grosz::fromZloty(48.0)->toSmartRoundedPln('pl'));
+        self::assertSame('1 460 zł', Grosz::fromZloty(1458.0)->toSmartRoundedPln('pl'));
+        self::assertSame('3 400 zł', Grosz::fromZloty(3430.0)->toSmartRoundedPln('pl'));
+        self::assertSame('23 500 zł', Grosz::fromZloty(23400.0)->toSmartRoundedPln('pl'));
+        self::assertSame('3,400 PLN', Grosz::fromZloty(3430.0)->toSmartRoundedPln('en'));
     }
 
     public function testHashedIpDeterminismAndSecurity(): void
