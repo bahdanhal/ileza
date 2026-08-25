@@ -490,7 +490,7 @@ market:
     eyebrow: "POLSKA · CENY OFERTOWE · WERYFIKACJA REDAKCYJNA"
     heading_start: "Ile kosztuje używany sprzęt?"
     heading_emphasis: ""
-    lede: "Aktualne mediany cen ofertowych i ich historia na polskim rynku wtórnym. Każdy punkt danych jest weryfikowany przez redakcję na porównywalnej próbie."
+    lede: "Aktualne mediany cen ofertowych i ich historia na polskim rynku wtórnym. Każdy punkt danych jest weryfikowany przez redakcję."
     category:
         smartphones: "SMARTFONY"
         laptops: "LAPTOPY"
