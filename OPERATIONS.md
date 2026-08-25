@@ -64,6 +64,12 @@ docker compose --env-file /secure/path/production.env ps
 docker compose --env-file /secure/path/production.env logs --tail=100 app web migrate
 ```
 
+### Market page performance invariant
+
+The market home page and category hubs render many product configurations. They must preload all required observation histories through `GetProductPriceHistory::preload()` before iterating products. The Doctrine repository then reads the bounded observation set in one query, while `ProductCatalog` reuses its request-local product and family snapshots.
+
+Do not reintroduce per-product `history()` or `latest()` queries inside home or hub loops. Controller tests should expect one `histories()` call and no individual observation lookups. After a related deployment, measure the same route at least three times and compare TTFB with the pre-change production baseline.
+
 ## GitHub Actions deployment
 
 The included deployment workflow is specific to the canonical hosted instance. Public forks should disable or replace it. The `production` GitHub Environment should require reviewer approval and restrict deployments to the protected default branch.
