@@ -9,11 +9,17 @@ use App\Market\Application\GetProductPriceHistory;
 use App\Market\Application\ProductCatalog;
 use App\Market\Application\RecordProductRequest;
 use App\Market\Application\SubmitCommunityPriceTip;
+use App\Market\Application\SubscribePriceAlert;
+use App\Market\Application\UnsubscribePriceAlert;
+use App\Market\Application\VerifyPriceAlert;
+use App\Market\Domain\PriceAlert;
+use App\Market\Domain\PriceAlertRepository;
 use App\Market\Domain\PriceObservation;
 use App\Market\Domain\PriceObservationRepository;
 use App\Market\Domain\PriceTip;
 use App\Market\Domain\PriceTipRepository;
 use App\Market\Domain\ProductRequestStore;
+use App\Tests\Market\MockPriceAlertMailer;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Request;
@@ -50,10 +56,16 @@ final class MarketControllerTest extends TestCase
         });
         $productRequests = $this->createStub(ProductRequestStore::class);
         $priceTips = $this->createStub(PriceTipRepository::class);
+        $priceAlerts = $this->createStub(PriceAlertRepository::class);
+        $mailer = new MockPriceAlertMailer();
         $translator = $this->createStub(TranslatorInterface::class);
 
         $requestLimiter = $this->createRateLimiterFactory();
         $tipLimiter = $this->createRateLimiterFactory();
+        $alertLimiter = $this->createRateLimiterFactory();
+        $subscribeAlert = new SubscribePriceAlert($catalog, $priceAlerts, $mailer);
+        $verifyAlert = new VerifyPriceAlert($priceAlerts);
+        $unsubscribeAlert = new UnsubscribePriceAlert($priceAlerts);
 
         $twig = $this->createMock(Environment::class);
         $twig->expects(self::once())
@@ -85,6 +97,10 @@ final class MarketControllerTest extends TestCase
             $requestLimiter,
             new SubmitCommunityPriceTip($catalog, $priceTips),
             $tipLimiter,
+            $subscribeAlert,
+            $verifyAlert,
+            $unsubscribeAlert,
+            $alertLimiter,
             $translator
         );
         $controller->setContainer($container);
@@ -100,10 +116,16 @@ final class MarketControllerTest extends TestCase
         $observations = $this->createStub(PriceObservationRepository::class);
         $productRequests = $this->createStub(ProductRequestStore::class);
         $priceTips = $this->createStub(PriceTipRepository::class);
+        $priceAlerts = $this->createStub(PriceAlertRepository::class);
+        $mailer = new MockPriceAlertMailer();
         $translator = $this->createStub(TranslatorInterface::class);
 
         $requestLimiter = $this->createRateLimiterFactory();
         $tipLimiter = $this->createRateLimiterFactory();
+        $alertLimiter = $this->createRateLimiterFactory();
+        $subscribeAlert = new SubscribePriceAlert($catalog, $priceAlerts, $mailer);
+        $verifyAlert = new VerifyPriceAlert($priceAlerts);
+        $unsubscribeAlert = new UnsubscribePriceAlert($priceAlerts);
 
         $controller = new MarketController(
             $catalog,
@@ -112,6 +134,10 @@ final class MarketControllerTest extends TestCase
             $requestLimiter,
             new SubmitCommunityPriceTip($catalog, $priceTips),
             $tipLimiter,
+            $subscribeAlert,
+            $verifyAlert,
+            $unsubscribeAlert,
+            $alertLimiter,
             $translator
         );
 
@@ -152,9 +178,15 @@ final class MarketControllerTest extends TestCase
 
         $productRequests = $this->createStub(ProductRequestStore::class);
         $priceTips = $this->createStub(PriceTipRepository::class);
+        $priceAlerts = $this->createStub(PriceAlertRepository::class);
+        $mailer = new MockPriceAlertMailer();
         $translator = $this->createStub(TranslatorInterface::class);
         $requestLimiter = $this->createRateLimiterFactory();
         $tipLimiter = $this->createRateLimiterFactory();
+        $alertLimiter = $this->createRateLimiterFactory();
+        $subscribeAlert = new SubscribePriceAlert($catalog, $priceAlerts, $mailer);
+        $verifyAlert = new VerifyPriceAlert($priceAlerts);
+        $unsubscribeAlert = new UnsubscribePriceAlert($priceAlerts);
 
         $twig = $this->createMock(Environment::class);
         $twig->expects(self::once())
@@ -175,6 +207,10 @@ final class MarketControllerTest extends TestCase
             $requestLimiter,
             new SubmitCommunityPriceTip($catalog, $priceTips),
             $tipLimiter,
+            $subscribeAlert,
+            $verifyAlert,
+            $unsubscribeAlert,
+            $alertLimiter,
             $translator
         );
         $controller->setContainer($container);
@@ -193,11 +229,17 @@ final class MarketControllerTest extends TestCase
             ->with('iPhone 15 Pro', 'test@example.com', '127.0.0.1');
 
         $priceTips = $this->createStub(PriceTipRepository::class);
+        $priceAlerts = $this->createStub(PriceAlertRepository::class);
+        $mailer = new MockPriceAlertMailer();
         $translator = $this->createStub(TranslatorInterface::class);
         $translator->method('trans')->willReturn('Saved');
 
         $requestLimiter = $this->createRateLimiterFactory();
         $tipLimiter = $this->createRateLimiterFactory();
+        $alertLimiter = $this->createRateLimiterFactory();
+        $subscribeAlert = new SubscribePriceAlert($catalog, $priceAlerts, $mailer);
+        $verifyAlert = new VerifyPriceAlert($priceAlerts);
+        $unsubscribeAlert = new UnsubscribePriceAlert($priceAlerts);
 
         $controller = new MarketController(
             $catalog,
@@ -206,6 +248,10 @@ final class MarketControllerTest extends TestCase
             $requestLimiter,
             new SubmitCommunityPriceTip($catalog, $priceTips),
             $tipLimiter,
+            $subscribeAlert,
+            $verifyAlert,
+            $unsubscribeAlert,
+            $alertLimiter,
             $translator
         );
         $container = new Container();
@@ -238,11 +284,17 @@ final class MarketControllerTest extends TestCase
                 new \DateTimeImmutable('+90 days')
             ));
 
+        $priceAlerts = $this->createStub(PriceAlertRepository::class);
+        $mailer = new MockPriceAlertMailer();
         $translator = $this->createStub(TranslatorInterface::class);
         $translator->method('trans')->willReturn('Saved');
 
         $requestLimiter = $this->createRateLimiterFactory();
         $tipLimiter = $this->createRateLimiterFactory();
+        $alertLimiter = $this->createRateLimiterFactory();
+        $subscribeAlert = new SubscribePriceAlert($catalog, $priceAlerts, $mailer);
+        $verifyAlert = new VerifyPriceAlert($priceAlerts);
+        $unsubscribeAlert = new UnsubscribePriceAlert($priceAlerts);
 
         $controller = new MarketController(
             $catalog,
@@ -251,6 +303,10 @@ final class MarketControllerTest extends TestCase
             $requestLimiter,
             new SubmitCommunityPriceTip($catalog, $priceTips),
             $tipLimiter,
+            $subscribeAlert,
+            $verifyAlert,
+            $unsubscribeAlert,
+            $alertLimiter,
             $translator
         );
         $container = new Container();
@@ -263,6 +319,200 @@ final class MarketControllerTest extends TestCase
 
         $response = $controller->submitPriceTip('iphone-13-128gb', $request);
         self::assertSame(200, $response->getStatusCode());
+    }
+
+    public function testSubscribeAlertEndpointSavesSuccessfully(): void
+    {
+        $catalog = new ProductCatalog();
+        $observations = $this->createStub(PriceObservationRepository::class);
+        $productRequests = $this->createStub(ProductRequestStore::class);
+        $priceTips = $this->createStub(PriceTipRepository::class);
+        $priceAlerts = $this->createMock(PriceAlertRepository::class);
+        $priceAlerts->expects(self::once())
+            ->method('subscribe')
+            ->with('iphone-13-128gb', 'user@example.com', 200000, '127.0.0.1', 'pl')
+            ->willReturn(new PriceAlert(
+                1,
+                'iphone-13-128gb',
+                'user@example.com',
+                200000,
+                'token123',
+                'unsub123',
+                false,
+                null,
+                'hash',
+                'pl',
+                new \DateTimeImmutable()
+            ));
+
+        $mailer = new MockPriceAlertMailer();
+        $translator = $this->createStub(TranslatorInterface::class);
+        $translator->method('trans')->willReturn('Alert saved');
+
+        $requestLimiter = $this->createRateLimiterFactory();
+        $tipLimiter = $this->createRateLimiterFactory();
+        $alertLimiter = $this->createRateLimiterFactory();
+
+        $subscribeAlert = new SubscribePriceAlert($catalog, $priceAlerts, $mailer);
+        $verifyAlert = new VerifyPriceAlert($priceAlerts);
+        $unsubscribeAlert = new UnsubscribePriceAlert($priceAlerts);
+
+        $controller = new MarketController(
+            $catalog,
+            new GetProductPriceHistory($catalog, $observations),
+            new RecordProductRequest($productRequests),
+            $requestLimiter,
+            new SubmitCommunityPriceTip($catalog, $priceTips),
+            $tipLimiter,
+            $subscribeAlert,
+            $verifyAlert,
+            $unsubscribeAlert,
+            $alertLimiter,
+            $translator
+        );
+        $container = new Container();
+        $controller->setContainer($container);
+
+        $request = new Request(
+            request: ['email' => 'user@example.com', 'target_price' => '2000'],
+            server: ['REMOTE_ADDR' => '127.0.0.1']
+        );
+        $request->setLocale('pl');
+
+        $response = $controller->subscribeAlert('iphone-13-128gb', $request);
+        self::assertSame(200, $response->getStatusCode());
+    }
+
+    public function testVerifyAlertEndpointRendersSuccess(): void
+    {
+        $catalog = new ProductCatalog();
+        $observations = $this->createStub(PriceObservationRepository::class);
+        $productRequests = $this->createStub(ProductRequestStore::class);
+        $priceTips = $this->createStub(PriceTipRepository::class);
+        $priceAlerts = $this->createMock(PriceAlertRepository::class);
+        $priceAlerts->expects(self::once())
+            ->method('markVerified')
+            ->with('validtoken123')
+            ->willReturn(new PriceAlert(
+                1,
+                'iphone-13-128gb',
+                'user@example.com',
+                200000,
+                'validtoken123',
+                'unsub123',
+                true,
+                new \DateTimeImmutable(),
+                'hash',
+                'pl',
+                new \DateTimeImmutable(),
+                status: PriceAlert::STATUS_ACTIVE
+            ));
+
+        $mailer = new MockPriceAlertMailer();
+        $translator = $this->createStub(TranslatorInterface::class);
+
+        $requestLimiter = $this->createRateLimiterFactory();
+        $tipLimiter = $this->createRateLimiterFactory();
+        $alertLimiter = $this->createRateLimiterFactory();
+        $subscribeAlert = new SubscribePriceAlert($catalog, $priceAlerts, $mailer);
+        $verifyAlert = new VerifyPriceAlert($priceAlerts);
+        $unsubscribeAlert = new UnsubscribePriceAlert($priceAlerts);
+
+        $twig = $this->createMock(Environment::class);
+        $twig->expects(self::once())
+            ->method('render')
+            ->with('market/alert_verified.html.twig', self::callback(static function (array $context): bool {
+                return $context['alert']->isVerified && $context['product']->slug === 'iphone-13-128gb';
+            }))
+            ->willReturn('<html>verified</html>');
+
+        $container = new Container();
+        $container->set('twig', $twig);
+
+        $controller = new MarketController(
+            $catalog,
+            new GetProductPriceHistory($catalog, $observations),
+            new RecordProductRequest($productRequests),
+            $requestLimiter,
+            new SubmitCommunityPriceTip($catalog, $priceTips),
+            $tipLimiter,
+            $subscribeAlert,
+            $verifyAlert,
+            $unsubscribeAlert,
+            $alertLimiter,
+            $translator
+        );
+        $controller->setContainer($container);
+
+        $response = $controller->verifyAlert('validtoken123');
+        self::assertSame(200, $response->getStatusCode());
+        self::assertSame('<html>verified</html>', $response->getContent());
+    }
+
+    public function testUnsubscribeAlertEndpointRendersSuccess(): void
+    {
+        $catalog = new ProductCatalog();
+        $observations = $this->createStub(PriceObservationRepository::class);
+        $productRequests = $this->createStub(ProductRequestStore::class);
+        $priceTips = $this->createStub(PriceTipRepository::class);
+        $priceAlerts = $this->createMock(PriceAlertRepository::class);
+        $priceAlerts->expects(self::once())
+            ->method('markUnsubscribed')
+            ->with('unsubtoken123')
+            ->willReturn(new PriceAlert(
+                1,
+                'iphone-13-128gb',
+                'user@example.com',
+                200000,
+                'validtoken123',
+                'unsubtoken123',
+                false,
+                null,
+                'hash',
+                'pl',
+                new \DateTimeImmutable(),
+                status: PriceAlert::STATUS_UNSUBSCRIBED
+            ));
+
+        $mailer = new MockPriceAlertMailer();
+        $translator = $this->createStub(TranslatorInterface::class);
+
+        $requestLimiter = $this->createRateLimiterFactory();
+        $tipLimiter = $this->createRateLimiterFactory();
+        $alertLimiter = $this->createRateLimiterFactory();
+        $subscribeAlert = new SubscribePriceAlert($catalog, $priceAlerts, $mailer);
+        $verifyAlert = new VerifyPriceAlert($priceAlerts);
+        $unsubscribeAlert = new UnsubscribePriceAlert($priceAlerts);
+
+        $twig = $this->createMock(Environment::class);
+        $twig->expects(self::once())
+            ->method('render')
+            ->with('market/alert_unsubscribed.html.twig', self::callback(static function (array $context): bool {
+                return $context['alert']->status === PriceAlert::STATUS_UNSUBSCRIBED && $context['product']->slug === 'iphone-13-128gb';
+            }))
+            ->willReturn('<html>unsubscribed</html>');
+
+        $container = new Container();
+        $container->set('twig', $twig);
+
+        $controller = new MarketController(
+            $catalog,
+            new GetProductPriceHistory($catalog, $observations),
+            new RecordProductRequest($productRequests),
+            $requestLimiter,
+            new SubmitCommunityPriceTip($catalog, $priceTips),
+            $tipLimiter,
+            $subscribeAlert,
+            $verifyAlert,
+            $unsubscribeAlert,
+            $alertLimiter,
+            $translator
+        );
+        $controller->setContainer($container);
+
+        $response = $controller->unsubscribeAlert('unsubtoken123');
+        self::assertSame(200, $response->getStatusCode());
+        self::assertSame('<html>unsubscribed</html>', $response->getContent());
     }
 
     private function createRateLimiterFactory(): RateLimiterFactory

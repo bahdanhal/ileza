@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+{% block tool_name %}{{ 'market.alert.verified_title'|trans }}{% endblock %}
+{% block title %}{{ 'market.alert.verified_title'|trans }} · IleZa.pl{% endblock %}
+{% block robots %}<meta name="robots" content="noindex,follow">{% endblock %}
+{% block stylesheets %}<link rel="stylesheet" href="/tools.css"><link rel="stylesheet" href="/market.css"><link rel="stylesheet" href="/market-extra.css">{% endblock %}
+{% block body %}
+    <article class="tool-shell market-shell">
+        <div class="market-alert-status-card" style="text-align: center; padding: 48px 24px; max-width: 600px; margin: 40px auto; background: var(--bg-card, #ffffff); border-radius: 16px; border: 1px solid var(--border-color, #e2e8f0); box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+            <div style="font-size: 48px; margin-bottom: 16px;">✅</div>
+            <h1 class="market-title" style="font-size: 24px; margin-bottom: 12px;">{{ 'market.alert.verified_heading'|trans }}</h1>
+            <p class="lede" style="font-size: 16px; color: var(--text-muted, #64748b); margin-bottom: 24px;">
+                {{ 'market.alert.verified_text'|trans({'%product%': product ? product.name : (alert ? alert.productSlug : '')}) }}
+            </p>
+            {% if product %}
+                <div style="margin-top: 24px;">
+                    <a href="{{ path('market_product', {_locale: app.request.locale, slug: product.slug}) }}" class="market-button" style="display: inline-block; background: var(--primary, #0284c7); color: #ffffff; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: 600;">
+                        {{ 'market.alert.view_product'|trans({'%product%': product.name}) }} →
+                    </a>
+                </div>
+            {% else %}
+                <div style="margin-top: 24px;">
+                    <a href="{{ path('market_home', {_locale: app.request.locale}) }}" class="market-button" style="display: inline-block; background: var(--primary, #0284c7); color: #ffffff; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: 600;">
+                        {{ 'market.breadcrumbs.home'|trans }} →
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </article>
+{% endblock %}

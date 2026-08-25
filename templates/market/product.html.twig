@@ -137,7 +137,11 @@
                     {% endif %}
                 </div>
                 <div><span>{{ 'market.range'|trans }}</span><strong>{{ _self.money(latest.lowGrosz, app.request.locale) }}–{{ _self.money(latest.highGrosz, app.request.locale) }}</strong><small>{{ 'market.comparable_range'|trans }}</small></div>
-                <div><span>{{ 'market.updated'|trans }}</span><strong>{{ latest.observedAt|date(app.request.locale == 'pl' ? 'd.m.Y' : 'M j, Y') }}</strong><small>{{ 'market.weekly'|trans }}</small></div>
+                <div>
+                    <span>{{ 'market.updated'|trans }}</span>
+                    <strong>{{ latest.observedAt|date(app.request.locale == 'pl' ? 'd.m.Y' : 'M j, Y') }}</strong>
+                    <div style="margin-top: 4px;"><a href="#price-alert-section" class="market-quick-alert-link">🔔 {{ 'market.alert.cta_short'|trans }}</a></div>
+                </div>
             </section>
 
             {% if history|length >= 2 %}
@@ -218,6 +222,33 @@
         {% else %}
             <section class="market-empty"><h2>{{ 'market.no_data.title'|trans }}</h2><p>{{ 'market.no_data.text'|trans }}</p></section>
         {% endif %}
+
+        <section class="market-request market-price-alert" id="price-alert-section">
+            <div>
+                <span class="market-category">{{ 'market.alert.eyebrow'|trans }}</span>
+                <h2>{{ 'market.alert.title'|trans }}</h2>
+                <p>{{ 'market.alert.text'|trans({'%product%': localized_product_name}) }}</p>
+            </div>
+            <form class="lead-form" method="post" action="{{ path('market_price_alert', {_locale: app.request.locale, slug: product.slug}) }}" data-contact-form data-saving="{{ 'market.alert.saving'|trans }}" data-fallback="{{ 'market.alert.failed'|trans }}">
+                <label for="price-alert-email">{{ 'market.alert.email'|trans }}</label>
+                <input id="price-alert-email" name="email" type="email" maxlength="254" autocomplete="email" placeholder="you@example.com" required>
+
+                <label for="price-alert-target">{{ 'market.alert.threshold_label'|trans }}</label>
+                <div class="lead-row">
+                    {% set suggested_target = latest ? ((latest.medianGrosz * 0.95) / 100)|round : null %}
+                    <select id="price-alert-target" name="target_price" aria-label="{{ 'market.alert.threshold_label'|trans }}">
+                        <option value="">{{ 'market.alert.threshold_any'|trans }}</option>
+                        {% if suggested_target %}
+                            <option value="{{ suggested_target }}" selected>{{ 'market.alert.threshold_suggested'|trans({'%price%': suggested_target}) }}</option>
+                        {% endif %}
+                    </select>
+                    <button type="submit">{{ 'market.alert.submit'|trans }}</button>
+                </div>
+                <label class="lead-trap" aria-hidden="true">{{ 'contact.company'|trans }}<input name="company" tabindex="-1" autocomplete="off"></label>
+                <small>{{ 'market.alert.note'|trans }}</small>
+                <p class="lead-status" data-contact-status aria-live="polite"></p>
+            </form>
+        </section>
 
         <section class="market-request market-price-tip">
             <div>

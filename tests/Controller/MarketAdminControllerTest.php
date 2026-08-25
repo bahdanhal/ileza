@@ -11,6 +11,7 @@ use App\Market\Application\DeletePriceObservation;
 use App\Market\Application\GetMarketStatistics;
 use App\Market\Application\ProductCatalog;
 use App\Market\Application\RecordPriceObservation;
+use App\Market\Domain\PriceAlertRepository;
 use App\Market\Domain\PriceObservation;
 use App\Market\Domain\PriceObservationRepository;
 use App\Market\Domain\PriceTipRepository;
@@ -21,7 +22,6 @@ use App\Market\Infrastructure\JsonPriceTipRepository;
 use App\Market\Infrastructure\JsonProductRequestStore;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Twig\Environment;
 
@@ -34,6 +34,7 @@ final class MarketAdminControllerTest extends TestCase
         $observations = $this->createStub(PriceObservationRepository::class);
         $productRequests = new JsonProductRequestStore(sys_get_temp_dir(), 'secret');
         $priceTips = new JsonPriceTipRepository(sys_get_temp_dir(), 'secret');
+        $priceAlerts = $this->createPriceAlertsStub();
         $secret = 'test-secret-key';
 
         $twig = $this->createMock(Environment::class);
@@ -53,6 +54,7 @@ final class MarketAdminControllerTest extends TestCase
             new DeletePriceObservation($observations),
             $productRequests,
             $priceTips,
+            $priceAlerts,
             $this->trafficAnalytics(),
             $secret,
         );
@@ -72,6 +74,7 @@ final class MarketAdminControllerTest extends TestCase
         $observations = $this->createStub(PriceObservationRepository::class);
         $productRequests = new JsonProductRequestStore(sys_get_temp_dir(), 'secret');
         $priceTips = new JsonPriceTipRepository(sys_get_temp_dir(), 'secret');
+        $priceAlerts = $this->createPriceAlertsStub();
         $secret = 'test-secret-key';
 
         $twig = $this->createMock(Environment::class);
@@ -91,6 +94,7 @@ final class MarketAdminControllerTest extends TestCase
             new DeletePriceObservation($observations),
             $productRequests,
             $priceTips,
+            $priceAlerts,
             $this->trafficAnalytics(),
             $secret,
         );
@@ -109,6 +113,7 @@ final class MarketAdminControllerTest extends TestCase
         $observations = $this->createStub(PriceObservationRepository::class);
         $productRequests = new JsonProductRequestStore(sys_get_temp_dir(), 'secret');
         $priceTips = new JsonPriceTipRepository(sys_get_temp_dir(), 'secret');
+        $priceAlerts = $this->createPriceAlertsStub();
         $secret = 'test-secret-key';
 
         $router = $this->createStub(\Symfony\Component\Routing\Generator\UrlGeneratorInterface::class);
@@ -125,6 +130,7 @@ final class MarketAdminControllerTest extends TestCase
             new DeletePriceObservation($observations),
             $productRequests,
             $priceTips,
+            $priceAlerts,
             $this->trafficAnalytics(),
             $secret,
         );
@@ -156,6 +162,7 @@ final class MarketAdminControllerTest extends TestCase
 
         $productRequests = new JsonProductRequestStore(sys_get_temp_dir(), 'secret');
         $priceTips = new JsonPriceTipRepository(sys_get_temp_dir(), 'secret');
+        $priceAlerts = $this->createPriceAlertsStub();
         $secret = 'test-secret-key';
 
         $router = $this->createStub(\Symfony\Component\Routing\Generator\UrlGeneratorInterface::class);
@@ -172,6 +179,7 @@ final class MarketAdminControllerTest extends TestCase
             new DeletePriceObservation($observations),
             $productRequests,
             $priceTips,
+            $priceAlerts,
             $this->trafficAnalytics(),
             $secret,
         );
@@ -213,6 +221,7 @@ final class MarketAdminControllerTest extends TestCase
         $observations = $this->createStub(PriceObservationRepository::class);
         $productRequests = new JsonProductRequestStore(sys_get_temp_dir(), 'secret');
         $priceTips = new JsonPriceTipRepository(sys_get_temp_dir(), 'secret');
+        $priceAlerts = $this->createPriceAlertsStub();
         $secret = 'test-secret-key';
 
         $router = $this->createStub(\Symfony\Component\Routing\Generator\UrlGeneratorInterface::class);
@@ -229,6 +238,7 @@ final class MarketAdminControllerTest extends TestCase
             new DeletePriceObservation($observations),
             $productRequests,
             $priceTips,
+            $priceAlerts,
             $this->trafficAnalytics(),
             $secret,
             sys_get_temp_dir(),
@@ -273,6 +283,7 @@ final class MarketAdminControllerTest extends TestCase
         $productRequests->method('all')->willReturn([]);
         $priceTips = $this->createStub(PriceTipRepository::class);
         $priceTips->method('all')->willReturn([]);
+        $priceAlerts = $this->createPriceAlertsStub();
         $secret = 'test-secret-key';
 
         $twig = $this->createMock(Environment::class);
@@ -300,6 +311,7 @@ final class MarketAdminControllerTest extends TestCase
             new DeletePriceObservation($observations),
             $productRequests,
             $priceTips,
+            $priceAlerts,
             $this->trafficAnalytics(),
             $secret,
         );
@@ -323,6 +335,7 @@ final class MarketAdminControllerTest extends TestCase
         $productRequests->method('all')->willReturn([]);
         $priceTips = $this->createStub(PriceTipRepository::class);
         $priceTips->method('all')->willReturn([]);
+        $priceAlerts = $this->createPriceAlertsStub();
         $secret = 'test-secret-key';
 
         $twig = $this->createMock(Environment::class);
@@ -342,6 +355,7 @@ final class MarketAdminControllerTest extends TestCase
             new DeletePriceObservation($observations),
             $productRequests,
             $priceTips,
+            $priceAlerts,
             $this->trafficAnalytics(),
             $secret,
         );
@@ -353,6 +367,20 @@ final class MarketAdminControllerTest extends TestCase
 
         self::assertSame(200, $response->getStatusCode());
         self::assertSame('<html>dashboard</html>', $response->getContent());
+    }
+
+    private function createPriceAlertsStub(): PriceAlertRepository
+    {
+        $stub = $this->createStub(PriceAlertRepository::class);
+        $stub->method('all')->willReturn([]);
+        $stub->method('countStatistics')->willReturn([
+            'total' => 0,
+            'active' => 0,
+            'pending' => 0,
+            'unsubscribed' => 0,
+        ]);
+
+        return $stub;
     }
 
     private function trafficAnalytics(): TrafficAnalytics

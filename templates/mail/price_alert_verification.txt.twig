@@ -1,0 +1,23 @@
+{% if locale == 'pl' %}
+Potwierdź powiadomienia o cenie — IleZa.pl
+
+Otrzymaliśmy zgłoszenie subskrypcji alertu cenowego dla modelu: {{ product.name }}.
+Warunek alertu: {{ alert.targetPriceGrosz ? 'Gdy cena spadnie poniżej ' ~ ((alert.targetPriceGrosz / 100)|number_format(0, ',', ' ')) ~ ' zł' : 'Przy każdym spadku ceny' }}.
+
+Aby potwierdzić i aktywować powiadomienia, wejdź pod poniższy link:
+{{ verify_url }}
+
+Jeśli to nie Ty zakładałeś alert, zignoruj tę wiadomość.
+Rezygnacja: {{ unsubscribe_url }}
+{% else %}
+Confirm price drop alert — IleZa.pl
+
+We received a price alert request for: {{ product.name }}.
+Alert threshold: {{ alert.targetPriceGrosz ? 'When price drops below ' ~ ((alert.targetPriceGrosz / 100)|number_format(0, '.', ',')) ~ ' PLN' : 'On any price drop' }}.
+
+To confirm and activate notifications, open the link below:
+{{ verify_url }}
+
+If you did not request this alert, safely ignore this email.
+Unsubscribe: {{ unsubscribe_url }}
+{% endif %}

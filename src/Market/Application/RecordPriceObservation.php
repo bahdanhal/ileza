@@ -12,6 +12,7 @@ final readonly class RecordPriceObservation
     public function __construct(
         private ProductCatalog $catalog,
         private PriceObservationRepository $observations,
+        private ?CheckPriceAlerts $checkPriceAlerts = null,
     ) {
     }
 
@@ -53,6 +54,14 @@ final readonly class RecordPriceObservation
         );
 
         $this->observations->save($observation);
+
+        if ($this->checkPriceAlerts !== null) {
+            try {
+                $this->checkPriceAlerts->execute($slug);
+            } catch (\Throwable) {
+                // Background alert check failure should not block observation persistence
+            }
+        }
 
         return $observation;
     }

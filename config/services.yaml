@@ -107,10 +107,25 @@ services:
       $contactLeadDirectory: '%contact.lead_directory%'
       $analyticsDataDirectory: '%analytics.data_directory%'
 
+  App\Market\Domain\PriceAlertRepository:
+    alias: App\Market\Infrastructure\DoctrinePriceAlertRepository
+
+  App\Market\Application\PriceAlertMailerInterface:
+    alias: App\Market\Infrastructure\Mail\TransactionalPriceAlertMailer
+
+  App\Market\Infrastructure\DoctrinePriceAlertRepository:
+    arguments:
+      $secret: '%env(APP_SECRET)%'
+
+  App\Market\Infrastructure\Mail\TransactionalPriceAlertMailer:
+    arguments:
+      $logDirectory: '%contact.lead_directory%'
+
   App\Controller\MarketController:
     arguments:
       $productRequestLimiter: '@limiter.product_request'
       $priceTipLimiter: '@limiter.price_tip'
+      $priceAlertLimiter: '@limiter.price_alert'
 
   App\Controller\Admin\MarketAdminController:
     arguments:

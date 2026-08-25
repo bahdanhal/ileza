@@ -10,10 +10,14 @@ use App\Market\Application\GetProductPriceHistory;
 use App\Market\Application\ProductCatalog;
 use App\Market\Application\RecordProductRequest;
 use App\Market\Application\SubmitCommunityPriceTip;
-use App\Market\Domain\PriceObservation;
+use App\Market\Application\SubscribePriceAlert;
+use App\Market\Application\UnsubscribePriceAlert;
+use App\Market\Application\VerifyPriceAlert;
+use App\Market\Domain\PriceAlertRepository;
 use App\Market\Domain\PriceObservationRepository;
 use App\Market\Domain\PriceTipRepository;
 use App\Market\Domain\ProductRequestStore;
+use App\Tests\Market\MockPriceAlertMailer;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\RateLimiter\RateLimiterFactory;
@@ -29,10 +33,16 @@ final class MarketHubControllerTest extends TestCase
         $observations = $this->createStub(PriceObservationRepository::class);
         $productRequests = $this->createStub(ProductRequestStore::class);
         $priceTips = $this->createStub(PriceTipRepository::class);
+        $priceAlerts = $this->createStub(PriceAlertRepository::class);
+        $mailer = new MockPriceAlertMailer();
         $translator = $this->createStub(TranslatorInterface::class);
 
         $requestLimiter = $this->createRateLimiterFactory();
         $tipLimiter = $this->createRateLimiterFactory();
+        $alertLimiter = $this->createRateLimiterFactory();
+        $subscribePriceAlert = new SubscribePriceAlert($catalog, $priceAlerts, $mailer);
+        $verifyPriceAlert = new VerifyPriceAlert($priceAlerts);
+        $unsubscribePriceAlert = new UnsubscribePriceAlert($priceAlerts);
 
         $twig = $this->createMock(Environment::class);
         $twig->expects(self::once())
@@ -60,6 +70,10 @@ final class MarketHubControllerTest extends TestCase
             $requestLimiter,
             new SubmitCommunityPriceTip($catalog, $priceTips),
             $tipLimiter,
+            $subscribePriceAlert,
+            $verifyPriceAlert,
+            $unsubscribePriceAlert,
+            $alertLimiter,
             $translator
         );
         $controller->setContainer($container);
@@ -75,10 +89,16 @@ final class MarketHubControllerTest extends TestCase
         $observations = $this->createStub(PriceObservationRepository::class);
         $productRequests = $this->createStub(ProductRequestStore::class);
         $priceTips = $this->createStub(PriceTipRepository::class);
+        $priceAlerts = $this->createStub(PriceAlertRepository::class);
+        $mailer = new MockPriceAlertMailer();
         $translator = $this->createStub(TranslatorInterface::class);
 
         $requestLimiter = $this->createRateLimiterFactory();
         $tipLimiter = $this->createRateLimiterFactory();
+        $alertLimiter = $this->createRateLimiterFactory();
+        $subscribePriceAlert = new SubscribePriceAlert($catalog, $priceAlerts, $mailer);
+        $verifyPriceAlert = new VerifyPriceAlert($priceAlerts);
+        $unsubscribePriceAlert = new UnsubscribePriceAlert($priceAlerts);
 
         $twig = $this->createMock(Environment::class);
         $twig->expects(self::once())
@@ -102,6 +122,10 @@ final class MarketHubControllerTest extends TestCase
             $requestLimiter,
             new SubmitCommunityPriceTip($catalog, $priceTips),
             $tipLimiter,
+            $subscribePriceAlert,
+            $verifyPriceAlert,
+            $unsubscribePriceAlert,
+            $alertLimiter,
             $translator
         );
         $controller->setContainer($container);

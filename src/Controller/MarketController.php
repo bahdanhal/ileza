@@ -8,6 +8,9 @@ use App\Market\Application\GetProductPriceHistory;
 use App\Market\Application\ProductCatalog;
 use App\Market\Application\RecordProductRequest;
 use App\Market\Application\SubmitCommunityPriceTip;
+use App\Market\Application\SubscribePriceAlert;
+use App\Market\Application\UnsubscribePriceAlert;
+use App\Market\Application\VerifyPriceAlert;
 use App\Market\Domain\PriceObservation;
 use App\Market\Domain\Product;
 use App\Market\Domain\ProductFamily;
@@ -28,6 +31,10 @@ final class MarketController extends AbstractController
         private readonly RateLimiterFactory $productRequestLimiter,
         private readonly SubmitCommunityPriceTip $submitPriceTip,
         private readonly RateLimiterFactory $priceTipLimiter,
+        private readonly SubscribePriceAlert $subscribePriceAlert,
+        private readonly VerifyPriceAlert $verifyPriceAlert,
+        private readonly UnsubscribePriceAlert $unsubscribePriceAlert,
+        private readonly RateLimiterFactory $priceAlertLimiter,
         private readonly TranslatorInterface $translator,
     ) {
     }
@@ -286,5 +293,108 @@ final class MarketController extends AbstractController
         }
 
         return $this->json(['ok' => true, 'message' => $this->translator->trans('market.tip.saved')]);
+    }
+
+    #[Route(
+        path: ['en' => '/prices/{slug}/alert', 'pl' => '/ceny/{slug}/alert'],
+        name: 'market_price_alert',
+        requirements: ['slug' => '[a-z0-9-]+'],
+        methods: ['POST'],
+        priority: 20,
+    )]
+    #[Route(
+        path: ['en' => '/tools/poland-used-price-index/{slug}/alert', 'pl' => '/pl/narzedzia/indeks-cen-uzywanych/{slug}/alert'],
+        name: 'legacy_market_price_alert',
+        requirements: ['slug' => '[a-z0-9-]+'],
+        methods: ['POST'],
+        priority: 15,
+    )]
+    public function subscribeAlert(string $slug, Request $request): JsonResponse
+    {
+        $origin = $request->headers->get('Origin');
+        if ($origin !== null && parse_url($origin, PHP_URL_HOST) !== $request->getHost()) {
+            return $this->json(['error' => $this->translator->trans('market.alert.invalid')], 403);
+        }
+        if (trim((string) $request->request->get('company')) !== '') {
+            return $this->json(['ok' => true, 'message' => $this->translator->trans('market.alert.saved')]);
+        }
+        if ($this->catalog->get($slug) === null) {
+            return $this->json(['error' => $this->translator->trans('market.alert.invalid')], 404);
+        }
+        $limitKey = ($request->getClientIp() ?? 'unknown') . '|' . gmdate('Y-m-d');
+        if (!$this->priceAlertLimiter->create($limitKey)->consume()->isAccepted()) {
+            return $this->json(['error' => $this->translator->trans('market.alert.too_many')], 429);
+        }
+
+        $email = trim((string) $request->request->get('email'));
+        $targetPriceRaw = trim((string) $request->request->get('target_price', ''));
+        $targetPriceGrosz = null;
+
+        if ($targetPriceRaw !== '' && is_numeric($targetPriceRaw)) {
+            $targetPricePln = (float) $targetPriceRaw;
+            if ($targetPricePln > 0) {
+                $targetPriceGrosz = (int) round($targetPricePln * 100);
+            }
+        }
+
+        try {
+            $this->subscribePriceAlert->execute(
+                $slug,
+                $email,
+                $targetPriceGrosz,
+                $request->getClientIp() ?? 'unknown',
+                $request->getLocale(),
+            );
+        } catch (\InvalidArgumentException) {
+            return $this->json(['error' => $this->translator->trans('market.alert.invalid')], 422);
+        } catch (\Throwable) {
+            return $this->json(['error' => $this->translator->trans('market.alert.failed')], 503);
+        }
+
+        return $this->json(['ok' => true, 'message' => $this->translator->trans('market.alert.saved')]);
+    }
+
+    #[Route(
+        path: ['en' => '/prices/alert/verify/{token}', 'pl' => '/ceny/alert/potwierdz/{token}'],
+        name: 'market_price_alert_verify',
+        requirements: ['token' => '[a-f0-9]{32,64}'],
+        methods: ['GET'],
+        priority: 25,
+    )]
+    public function verifyAlert(string $token): Response
+    {
+        $alert = $this->verifyPriceAlert->execute($token);
+        if ($alert === null) {
+            throw $this->createNotFoundException('Verification token is invalid or has expired.');
+        }
+
+        $product = $this->catalog->get($alert->productSlug);
+
+        return $this->render('market/alert_verified.html.twig', [
+            'alert' => $alert,
+            'product' => $product,
+        ]);
+    }
+
+    #[Route(
+        path: ['en' => '/prices/alert/unsubscribe/{token}', 'pl' => '/ceny/alert/rezygnuj/{token}'],
+        name: 'market_price_alert_unsubscribe',
+        requirements: ['token' => '[a-f0-9]{32,64}'],
+        methods: ['GET'],
+        priority: 25,
+    )]
+    public function unsubscribeAlert(string $token): Response
+    {
+        $alert = $this->unsubscribePriceAlert->execute($token);
+        if ($alert === null) {
+            throw $this->createNotFoundException('Unsubscribe token is invalid or has expired.');
+        }
+
+        $product = $this->catalog->get($alert->productSlug);
+
+        return $this->render('market/alert_unsubscribed.html.twig', [
+            'alert' => $alert,
+            'product' => $product,
+        ]);
     }
 }

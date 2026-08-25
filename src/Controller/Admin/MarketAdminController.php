@@ -9,6 +9,8 @@ use App\Market\Application\DeletePriceObservation;
 use App\Market\Application\GetMarketStatistics;
 use App\Market\Application\ProductCatalog;
 use App\Market\Application\RecordPriceObservation;
+use App\Market\Domain\PriceAlert;
+use App\Market\Domain\PriceAlertRepository;
 use App\Market\Domain\PriceObservation;
 use App\Market\Domain\PriceTip;
 use App\Market\Domain\PriceTipRepository;
@@ -34,6 +36,7 @@ final class MarketAdminController extends AbstractController
         private readonly DeletePriceObservation $deleteObservation,
         private readonly ProductRequestStore $productRequests,
         private readonly PriceTipRepository $priceTips,
+        private readonly PriceAlertRepository $priceAlerts,
         private readonly TrafficAnalytics $trafficAnalytics,
         private readonly string $secret,
         private readonly string $projectDir = '',
@@ -69,6 +72,8 @@ final class MarketAdminController extends AbstractController
 
         $requests = $this->productRequests->all();
         $priceTips = $this->priceTips->all();
+        $priceAlerts = $this->priceAlerts->all();
+        $alertStats = $this->priceAlerts->countStatistics();
         $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
         $sevenDaysAgo = $now->modify('-7 days');
         $traffic = $this->trafficAnalytics->summary($now);
@@ -86,6 +91,8 @@ final class MarketAdminController extends AbstractController
             'families' => $this->catalog->families(),
             'requests' => $requests,
             'price_tips' => $priceTips,
+            'price_alerts' => $priceAlerts,
+            'alert_stats' => $alertStats,
             'traffic' => $traffic,
             'statistics' => [
                 'requests_last_7_days' => count(array_filter(
@@ -100,6 +107,8 @@ final class MarketAdminController extends AbstractController
                 'catalog_coverage_percent' => $stats['catalog_coverage_percent'],
                 'observation_points' => $stats['observation_points'],
                 'stale_products' => count($stats['stale_products']),
+                'active_alerts' => $alertStats['active'],
+                'total_alerts' => $alertStats['total'],
             ],
             'current_category' => $category,
             'search' => $search,

@@ -480,6 +480,40 @@
                 </table>
             </div>
         </section>
+
+        <section class="section" style="margin-top: 32px;">
+            <div class="section-title">
+                <h2>Price Drop Alerts ({{ price_alerts|length }})</h2>
+                <span style="font-size: 12px; color: var(--muted);">{{ alert_stats.active }} active · {{ alert_stats.pending }} pending verification · {{ alert_stats.unsubscribed }} unsubscribed</span>
+            </div>
+            <div class="table-wrap" style="max-height: 320px; overflow-y: auto;">
+                <table class="admin-table">
+                    <thead><tr><th>Created</th><th>Product</th><th>Email</th><th>Threshold</th><th>Status</th><th>Last Notified</th></tr></thead>
+                    <tbody>
+                    {% for alert in price_alerts %}
+                        <tr>
+                            <td>{{ alert.createdAt|date('Y-m-d H:i') }}</td>
+                            <td><code>{{ alert.productSlug }}</code></td>
+                            <td>{{ alert.email }}</td>
+                            <td>{{ alert.targetPriceGrosz ? ((alert.targetPriceGrosz / 100)|number_format(0, '.', ' ')) ~ ' PLN' : 'Any drop' }}</td>
+                            <td>
+                                {% if alert.status == 'active' and alert.isVerified %}
+                                    <span class="badge" style="background: rgba(99, 214, 170, 0.15); color: #63d6aa;">Active</span>
+                                {% elseif alert.status == 'unsubscribed' %}
+                                    <span class="badge" style="background: rgba(148, 163, 184, 0.15); color: #94a3b8;">Unsubscribed</span>
+                                {% else %}
+                                    <span class="badge" style="background: rgba(251, 191, 36, 0.15); color: #fbbf24;">Pending verify</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ alert.lastNotifiedAt ? alert.lastNotifiedAt|date('Y-m-d H:i') ~ ' (' ~ ((alert.lastNotifiedPriceGrosz / 100)|number_format(0, '.', ' ')) ~ ' PLN)' : '—' }}</td>
+                        </tr>
+                    {% else %}
+                        <tr><td colspan="6" style="text-align: center; color: var(--muted); padding: 24px;">No price alert subscriptions yet.</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
     </section>
 
     <script>

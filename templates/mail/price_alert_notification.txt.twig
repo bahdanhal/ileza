@@ -1,0 +1,33 @@
+{% if locale == 'pl' %}
+Spadek ceny: {{ product.name }} — IleZa.pl
+
+Zanotowaliśmy nowy przegląd rynku wtórnego dla obserwowanego przez Ciebie modelu: {{ product.name }}.
+
+Aktualna mediana: {{ ((latest.medianGrosz / 100)|number_format(0, ',', ' ')) }} zł
+{% if previous and previous.medianGrosz > latest.medianGrosz %}
+Poprzednio: {{ ((previous.medianGrosz / 100)|number_format(0, ',', ' ')) }} zł (spadek o {{ (((previous.medianGrosz - latest.medianGrosz) / 100)|number_format(0, ',', ' ')) }} zł)
+{% endif %}
+Typowy zakres ofert: {{ ((latest.lowGrosz / 100)|number_format(0, ',', ' ')) }} zł – {{ ((latest.highGrosz / 100)|number_format(0, ',', ' ')) }} zł
+
+Zobacz historię cen i kalkulator opłacalności:
+{{ product_url }}
+
+Rezygnacja z powiadomień:
+{{ unsubscribe_url }}
+{% else %}
+Price drop: {{ product.name }} — IleZa.pl
+
+A new market valuation has been recorded for your tracked item: {{ product.name }}.
+
+Current median: {{ ((latest.medianGrosz / 100)|number_format(0, '.', ',')) }} PLN
+{% if previous and previous.medianGrosz > latest.medianGrosz %}
+Previous: {{ ((previous.medianGrosz / 100)|number_format(0, '.', ',')) }} PLN (drop of {{ (((previous.medianGrosz - latest.medianGrosz) / 100)|number_format(0, '.', ',')) }} PLN)
+{% endif %}
+Observed range: {{ ((latest.lowGrosz / 100)|number_format(0, '.', ',')) }} PLN – {{ ((latest.highGrosz / 100)|number_format(0, '.', ',')) }} PLN
+
+View complete price history chart:
+{{ product_url }}
+
+Unsubscribe from price alerts:
+{{ unsubscribe_url }}
+{% endif %}
