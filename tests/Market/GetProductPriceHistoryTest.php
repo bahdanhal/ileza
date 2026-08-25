@@ -44,7 +44,10 @@ final class GetProductPriceHistoryTest extends TestCase
             PriceObservation::METHODOLOGY_MANUAL
         );
 
-        $repository->method('history')->with('iphone-13-128gb')->willReturn([$latestObs, $pastObs]);
+        $repository->expects(self::once())
+            ->method('history')
+            ->with('iphone-13-128gb')
+            ->willReturn([$latestObs, $pastObs]);
 
         $service = new GetProductPriceHistory($catalog, $repository);
         $result = $service->detailedHistory('iphone-13-128gb');

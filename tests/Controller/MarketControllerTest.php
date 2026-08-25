@@ -170,7 +170,7 @@ final class MarketControllerTest extends TestCase
     {
         $catalog = new ProductCatalog();
         $observations = $this->createMock(PriceObservationRepository::class);
-        $observations->method('history')->with('iphone-13-128gb')->willReturn([
+        $observations->expects(self::once())->method('history')->with('iphone-13-128gb')->willReturn([
             new PriceObservation(
                 'iphone-13-128gb',
                 new \DateTimeImmutable('2026-08-20'),
