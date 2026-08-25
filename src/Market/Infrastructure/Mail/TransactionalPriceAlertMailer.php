@@ -20,6 +20,7 @@ final readonly class TransactionalPriceAlertMailer implements PriceAlertMailerIn
         private string $senderName = 'IleZa.pl',
         private string $baseUrl = 'https://ileza.pl',
         private string $logDirectory = '',
+        private ?SmtpTransportInterface $smtpTransport = null,
     ) {
     }
 
@@ -100,19 +101,31 @@ final readonly class TransactionalPriceAlertMailer implements PriceAlertMailerIn
 
     private function dispatchEmail(string $recipient, string $subject, string $htmlBody, string $textBody): bool
     {
-        // Safe logging / file persistence for environments without SMTP
+        $smtpSent = false;
+        if ($this->smtpTransport !== null) {
+            $smtpSent = $this->smtpTransport->send(
+                $this->senderEmail,
+                $this->senderName,
+                $recipient,
+                $subject,
+                $htmlBody,
+                $textBody
+            );
+        }
+
+        // Safe logging / file persistence for backup audit and environments without SMTP
         if ($this->logDirectory !== '' && is_dir($this->logDirectory)) {
             $logEntry = json_encode([
                 'timestamp' => gmdate('c'),
                 'from' => sprintf('%s <%s>', $this->senderName, $this->senderEmail),
                 'recipient' => $recipient,
                 'subject' => $subject,
+                'smtp_sent' => $smtpSent,
                 'text_preview' => mb_substr($textBody, 0, 200),
             ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . "\n";
             file_put_contents($this->logDirectory . '/dispatched_emails.jsonl', $logEntry, FILE_APPEND | LOCK_EX);
         }
 
-        // Return true as delivery completed
-        return true;
+        return $smtpSent || $this->smtpTransport === null;
     }
 }

@@ -4,10 +4,24 @@ parameters:
   env(ANALYTICS_DATA_DIRECTORY): '/app/var/analytics-data'
   env(ANALYTICS_RETENTION_DAYS): '90'
   env(MARKET_ADMIN_TOKEN): ''
+  env(SMTP_HOST): ''
+  env(SMTP_PORT): '587'
+  env(SMTP_USERNAME): ''
+  env(SMTP_PASSWORD): ''
+  env(SMTP_ENCRYPTION): 'tls'
+  env(MAILER_SENDER_EMAIL): 'powiadomienia@ileza.pl'
+  env(MAILER_SENDER_NAME): 'IleZa.pl'
   contact.lead_directory: '%env(CONTACT_LEAD_DIRECTORY)%'
   market.data_directory: '%env(MARKET_DATA_DIRECTORY)%'
   analytics.data_directory: '%env(ANALYTICS_DATA_DIRECTORY)%'
   analytics.retention_days: '%env(int:ANALYTICS_RETENTION_DAYS)%'
+  smtp.host: '%env(SMTP_HOST)%'
+  smtp.port: '%env(int:SMTP_PORT)%'
+  smtp.username: '%env(SMTP_USERNAME)%'
+  smtp.password: '%env(SMTP_PASSWORD)%'
+  smtp.encryption: '%env(SMTP_ENCRYPTION)%'
+  mailer.sender_email: '%env(MAILER_SENDER_EMAIL)%'
+  mailer.sender_name: '%env(MAILER_SENDER_NAME)%'
 
 services:
   _defaults:
@@ -117,9 +131,23 @@ services:
     arguments:
       $secret: '%env(APP_SECRET)%'
 
+  App\Market\Infrastructure\Mail\SmtpTransportInterface:
+    alias: App\Market\Infrastructure\Mail\SmtpTransport
+
+  App\Market\Infrastructure\Mail\SmtpTransport:
+    arguments:
+      $host: '%smtp.host%'
+      $port: '%smtp.port%'
+      $username: '%smtp.username%'
+      $password: '%smtp.password%'
+      $encryption: '%smtp.encryption%'
+
   App\Market\Infrastructure\Mail\TransactionalPriceAlertMailer:
     arguments:
+      $senderEmail: '%mailer.sender_email%'
+      $senderName: '%mailer.sender_name%'
       $logDirectory: '%contact.lead_directory%'
+      $smtpTransport: '@App\Market\Infrastructure\Mail\SmtpTransport'
 
   App\Controller\MarketController:
     arguments:
