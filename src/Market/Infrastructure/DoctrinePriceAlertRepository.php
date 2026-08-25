@@ -153,7 +153,7 @@ final readonly class DoctrinePriceAlertRepository implements PriceAlertRepositor
         return array_map($this->toDomain(...), $entities);
     }
 
-    public function updateNotificationState(int $alertId, \DateTimeImmutable $notifiedAt, int $notifiedPriceGrosz): void
+    public function updateNotificationState(int $alertId, \DateTimeImmutable $notifiedAt, int $notifiedPriceGrosz, bool $flush = true): void
     {
         $repository = $this->entityManager->getRepository(PriceAlertEntity::class);
         /** @var PriceAlertEntity|null $entity */
@@ -162,8 +162,15 @@ final readonly class DoctrinePriceAlertRepository implements PriceAlertRepositor
         if ($entity !== null) {
             $entity->setLastNotifiedAt($notifiedAt);
             $entity->setLastNotifiedPriceGrosz($notifiedPriceGrosz);
-            $this->entityManager->flush();
+            if ($flush) {
+                $this->entityManager->flush();
+            }
         }
+    }
+
+    public function flush(): void
+    {
+        $this->entityManager->flush();
     }
 
     /**
@@ -171,25 +178,36 @@ final readonly class DoctrinePriceAlertRepository implements PriceAlertRepositor
      */
     public function countStatistics(): array
     {
-        $repository = $this->entityManager->getRepository(PriceAlertEntity::class);
-        $all = $repository->findAll();
+        $qb = $this->entityManager->createQueryBuilder();
+        /** @var list<array{status: string, isVerified: bool, cnt: int|string}> $rows */
+        $rows = $qb->select('a.status, a.isVerified, COUNT(a.id) AS cnt')
+            ->from(PriceAlertEntity::class, 'a')
+            ->groupBy('a.status, a.isVerified')
+            ->getQuery()
+            ->getArrayResult();
 
+        $total = 0;
         $active = 0;
         $pending = 0;
         $unsubscribed = 0;
 
-        foreach ($all as $entity) {
-            if ($entity->getStatus() === PriceAlert::STATUS_ACTIVE && $entity->isVerified()) {
-                $active++;
-            } elseif ($entity->getStatus() === PriceAlert::STATUS_UNSUBSCRIBED) {
-                $unsubscribed++;
+        foreach ($rows as $row) {
+            $cnt = (int) $row['cnt'];
+            $total += $cnt;
+            $status = (string) $row['status'];
+            $isVerified = (bool) $row['isVerified'];
+
+            if ($status === PriceAlert::STATUS_ACTIVE && $isVerified) {
+                $active += $cnt;
+            } elseif ($status === PriceAlert::STATUS_UNSUBSCRIBED) {
+                $unsubscribed += $cnt;
             } else {
-                $pending++;
+                $pending += $cnt;
             }
         }
 
         return [
-            'total' => count($all),
+            'total' => $total,
             'active' => $active,
             'pending' => $pending,
             'unsubscribed' => $unsubscribed,

@@ -82,16 +82,18 @@ final readonly class DoctrinePriceObservationRepository implements PriceObservat
 
     public function delete(string $productSlug, string $date): void
     {
-        $repository = $this->entityManager->getRepository(PriceObservationEntity::class);
-        /** @var list<PriceObservationEntity> $entities */
-        $entities = $repository->findBy(['productSlug' => $productSlug]);
+        $dayStart = new \DateTimeImmutable($date . ' 00:00:00', new \DateTimeZone('UTC'));
+        $dayEnd = new \DateTimeImmutable($date . ' 23:59:59', new \DateTimeZone('UTC'));
 
-        foreach ($entities as $entity) {
-            if ($entity->getObservedAt()->format('Y-m-d') === $date) {
-                $this->entityManager->remove($entity);
-            }
-        }
-
-        $this->entityManager->flush();
+        $this->entityManager->createQueryBuilder()
+            ->delete(PriceObservationEntity::class, 'o')
+            ->where('o.productSlug = :slug')
+            ->andWhere('o.observedAt >= :start')
+            ->andWhere('o.observedAt <= :end')
+            ->setParameter('slug', $productSlug)
+            ->setParameter('start', $dayStart)
+            ->setParameter('end', $dayEnd)
+            ->getQuery()
+            ->execute();
     }
 }

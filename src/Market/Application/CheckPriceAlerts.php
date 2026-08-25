@@ -70,7 +70,7 @@ final readonly class CheckPriceAlerts
                         $this->mailer->sendPriceDropNotification($alert, $product, $latest, $previous);
                         if ($alert->id !== null) {
                             $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
-                            $this->priceAlerts->updateNotificationState($alert->id, $now, $latest->medianGrosz);
+                            $this->priceAlerts->updateNotificationState($alert->id, $now, $latest->medianGrosz, false);
                         }
                     }
                     $notificationsSent++;
@@ -84,6 +84,10 @@ final readonly class CheckPriceAlerts
                     'notified' => $shouldNotify,
                 ];
             }
+        }
+
+        if (!$dryRun && $notificationsSent > 0) {
+            $this->priceAlerts->flush();
         }
 
         return [

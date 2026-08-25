@@ -136,7 +136,8 @@ final class MarketAdminControllerTest extends TestCase
         );
         $controller->setContainer($container);
 
-        $request = new Request(request: ['password' => 'test-secret-key']);
+        $validToken = hash_hmac('sha256', 'csrf:market_admin_login', $secret);
+        $request = new Request(request: ['password' => 'test-secret-key', '_token' => $validToken]);
         $response = $controller->login($request);
 
         self::assertSame(302, $response->getStatusCode());
@@ -186,6 +187,7 @@ final class MarketAdminControllerTest extends TestCase
         $controller->setContainer($container);
 
         $authCookie = hash_hmac('sha256', 'market_admin_authenticated', $secret);
+        $validToken = hash_hmac('sha256', 'csrf:market_admin_save_observation', $secret);
         $request = new Request(
             request: [
                 'product_slug' => 'iphone-13-128gb',
@@ -195,6 +197,7 @@ final class MarketAdminControllerTest extends TestCase
                 'high_pln' => '2400',
                 'sample_size' => '6',
                 'confidence' => 'high',
+                '_token' => $validToken,
             ],
             cookies: ['market_admin_auth' => $authCookie]
         );
@@ -248,6 +251,7 @@ final class MarketAdminControllerTest extends TestCase
         $authCookie = hash_hmac('sha256', 'market_admin_authenticated', $secret);
 
         // Save
+        $saveToken = hash_hmac('sha256', 'csrf:market_admin_save_product', $secret);
         $saveRequest = new Request(
             request: [
                 'slug' => 'iphone-16-pro-256gb',
@@ -258,6 +262,7 @@ final class MarketAdminControllerTest extends TestCase
                 'family_name' => 'Apple iPhone 16 Pro',
                 'image_url' => '/images/market/iphone-16.jpg',
                 'specifications' => '{"storage":"256 GB"}',
+                '_token' => $saveToken,
             ],
             cookies: ['market_admin_auth' => $authCookie]
         );
@@ -265,12 +270,64 @@ final class MarketAdminControllerTest extends TestCase
         self::assertSame(302, $saveResponse->getStatusCode());
 
         // Delete
+        $deleteToken = hash_hmac('sha256', 'csrf:market_admin_delete_product', $secret);
         $deleteRequest = new Request(
-            request: ['slug' => 'iphone-16-pro-256gb'],
+            request: [
+                'slug' => 'iphone-16-pro-256gb',
+                '_token' => $deleteToken,
+            ],
             cookies: ['market_admin_auth' => $authCookie]
         );
         $deleteResponse = $controller->deleteProduct($deleteRequest);
         self::assertSame(302, $deleteResponse->getStatusCode());
+    }
+
+    public function testRejectsCookieAuthenticatedActionWithInvalidCsrf(): void
+    {
+        $catalog = new ProductCatalog();
+        $prodRepo = $this->createStub(ProductRepository::class);
+        $observations = $this->createStub(PriceObservationRepository::class);
+        $productRequests = new JsonProductRequestStore(sys_get_temp_dir(), 'secret');
+        $priceTips = new JsonPriceTipRepository(sys_get_temp_dir(), 'secret');
+        $priceAlerts = $this->createPriceAlertsStub();
+        $secret = 'test-secret-key';
+
+        $router = $this->createStub(\Symfony\Component\Routing\Generator\UrlGeneratorInterface::class);
+        $router->method('generate')->willReturn('/admin/market');
+
+        $container = new Container();
+        $container->set('router', $router);
+
+        $controller = new MarketAdminController(
+            $catalog,
+            $prodRepo,
+            new GetMarketStatistics($catalog, $observations),
+            new RecordPriceObservation($catalog, $observations),
+            new DeletePriceObservation($observations),
+            $productRequests,
+            $priceTips,
+            $priceAlerts,
+            $this->trafficAnalytics(),
+            $secret,
+        );
+        $controller->setContainer($container);
+
+        $authCookie = hash_hmac('sha256', 'market_admin_authenticated', $secret);
+        $request = new Request(
+            request: [
+                'product_slug' => 'iphone-13-128gb',
+                'observed_at' => '2026-08-22',
+                'median_pln' => '2150',
+                'low_pln' => '1900',
+                'high_pln' => '2400',
+                'sample_size' => '6',
+                '_token' => 'invalid-token',
+            ],
+            cookies: ['market_admin_auth' => $authCookie]
+        );
+
+        $response = $controller->saveObservation($request);
+        self::assertSame(302, $response->getStatusCode());
     }
 
     public function testAuthenticatedDashboardWithBearerHeader(): void

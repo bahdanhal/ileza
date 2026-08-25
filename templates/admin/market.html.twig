@@ -206,6 +206,7 @@
                 <h2>⚡ Editorial Price Entry</h2>
                 <p style="font-size: 13px; color: var(--muted); margin-bottom: 16px;">Directly write or update market observation for a product configuration.</p>
                 <form method="post" action="{{ path('market_admin_save_observation') }}">
+                    <input type="hidden" name="_token" value="{{ admin_csrf_token('market_admin_save_observation') }}">
                     <div class="admin-form-group">
                         <label for="entry-slug">Product</label>
                         <select id="entry-slug" name="product_slug" required>
@@ -261,6 +262,7 @@
                 </div>
                 <p style="font-size: 13px; color: var(--muted); margin-bottom: 16px;">Add or edit product configurations, specifications, and upload photos.</p>
                 <form id="product-form" method="post" action="{{ path('market_admin_save_product') }}" enctype="multipart/form-data">
+                    <input type="hidden" name="_token" value="{{ admin_csrf_token('market_admin_save_product') }}">
                     <div class="admin-form-row">
                         <div class="admin-form-group">
                             <label for="prod-slug">Slug (URL identifier)</label>
@@ -412,6 +414,7 @@
                                     specifications: p.specifications|default({})
                                 }|json_encode|e('html_attr') }});'>Edit</button>
                                 <form method="post" action="{{ path('market_admin_delete_product') }}" style="display: inline;" onsubmit="return confirm('Delete product {{ p.slug }}?');">
+                                    <input type="hidden" name="_token" value="{{ admin_csrf_token('market_admin_delete_product') }}">
                                     <input type="hidden" name="slug" value="{{ p.slug }}">
                                     <button type="submit" class="admin-btn admin-btn-danger" style="padding: 4px 8px; font-size: 11px;">✕</button>
                                 </form>

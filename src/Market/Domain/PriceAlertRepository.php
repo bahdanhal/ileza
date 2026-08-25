@@ -32,7 +32,9 @@ interface PriceAlertRepository
      */
     public function all(): array;
 
-    public function updateNotificationState(int $alertId, \DateTimeImmutable $notifiedAt, int $notifiedPriceGrosz): void;
+    public function updateNotificationState(int $alertId, \DateTimeImmutable $notifiedAt, int $notifiedPriceGrosz, bool $flush = true): void;
+
+    public function flush(): void;
 
     /**
      * @return array{total: int, active: int, pending: int, unsubscribed: int}

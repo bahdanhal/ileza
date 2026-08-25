@@ -17,6 +17,7 @@ use App\Market\Domain\PriceTipRepository;
 use App\Market\Domain\Product;
 use App\Market\Domain\ProductRepository;
 use App\Market\Domain\ProductRequestStore;
+use App\Market\Infrastructure\Security\SvgSanitizer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -40,6 +41,7 @@ final class MarketAdminController extends AbstractController
         private readonly TrafficAnalytics $trafficAnalytics,
         private readonly string $secret,
         private readonly string $projectDir = '',
+        private readonly SvgSanitizer $svgSanitizer = new SvgSanitizer(),
     ) {
     }
 
@@ -125,6 +127,15 @@ final class MarketAdminController extends AbstractController
         $adminToken = (string) ($_ENV['ADMIN_TOKEN'] ?? ($_ENV['MARKET_ADMIN_TOKEN'] ?? $this->secret));
 
         if (
+            !$this->isHeaderAuthenticated($request)
+            && !$this->isCsrfTokenValid('market_admin_login', (string) $request->request->get('_token'))
+        ) {
+            return $this->render('admin/login.html.twig', [
+                'error' => 'Invalid or expired CSRF token.',
+            ]);
+        }
+
+        if (
             hash_equals($adminToken, $password)
             || hash_equals($this->secret, $password)
             || (isset($_ENV['MARKET_ADMIN_TOKEN']) && hash_equals((string) $_ENV['MARKET_ADMIN_TOKEN'], $password))
@@ -167,6 +178,13 @@ final class MarketAdminController extends AbstractController
     {
         if (!$this->isAuthenticated($request)) {
             return $this->json(['error' => 'Unauthorized'], 401);
+        }
+
+        if (
+            !$this->isHeaderAuthenticated($request)
+            && !$this->isCsrfTokenValid('market_admin_save_observation', (string) $request->request->get('_token'))
+        ) {
+            return $this->redirectToRoute('market_admin_dashboard', ['error' => 'Invalid or expired CSRF token.']);
         }
 
         $slug = trim((string) $request->request->get('product_slug'));
@@ -213,6 +231,13 @@ final class MarketAdminController extends AbstractController
             return $this->json(['error' => 'Unauthorized'], 401);
         }
 
+        if (
+            !$this->isHeaderAuthenticated($request)
+            && !$this->isCsrfTokenValid('market_admin_delete_observation', (string) $request->request->get('_token'))
+        ) {
+            return $this->redirectToRoute('market_admin_dashboard', ['error' => 'Invalid or expired CSRF token.']);
+        }
+
         $slug = trim((string) $request->request->get('product_slug'));
         $date = trim((string) $request->request->get('date'));
 
@@ -230,6 +255,13 @@ final class MarketAdminController extends AbstractController
     {
         if (!$this->isAuthenticated($request)) {
             return $this->json(['error' => 'Unauthorized'], 401);
+        }
+
+        if (
+            !$this->isHeaderAuthenticated($request)
+            && !$this->isCsrfTokenValid('market_admin_save_product', (string) $request->request->get('_token'))
+        ) {
+            return $this->redirectToRoute('market_admin_dashboard', ['error' => 'Invalid or expired CSRF token.']);
         }
 
         $slug = strtolower(trim((string) $request->request->get('slug')));
@@ -279,19 +311,33 @@ final class MarketAdminController extends AbstractController
                 return $this->redirectToRoute('market_admin_dashboard', ['error' => 'Invalid image format. Allowed: JPG, PNG, WEBP, SVG.']);
             }
 
-            $ext = match ($mime) {
-                'image/jpeg' => 'jpg',
-                'image/png' => 'png',
-                'image/webp' => 'webp',
-                default => 'svg',
-            };
-            $filename = $slug . '-' . time() . '.' . $ext;
             $targetDir = ($this->projectDir !== '' ? $this->projectDir : sys_get_temp_dir()) . '/public/images/market';
             if (!is_dir($targetDir)) {
                 mkdir($targetDir, 0777, true);
             }
-            $imageFile->move($targetDir, $filename);
-            $finalImage = '/images/market/' . $filename;
+
+            if ($mime === 'image/svg+xml') {
+                $rawSvg = file_get_contents($imageFile->getPathname());
+                if ($rawSvg === false) {
+                    return $this->redirectToRoute('market_admin_dashboard', ['error' => 'Unable to read uploaded SVG.']);
+                }
+                $cleanSvg = $this->svgSanitizer->sanitize($rawSvg);
+                if ($cleanSvg === null) {
+                    return $this->redirectToRoute('market_admin_dashboard', ['error' => 'Invalid or unsafe SVG file detected.']);
+                }
+                $filename = $slug . '-' . time() . '.svg';
+                file_put_contents($targetDir . '/' . $filename, $cleanSvg);
+                $finalImage = '/images/market/' . $filename;
+            } else {
+                $ext = match ($mime) {
+                    'image/jpeg' => 'jpg',
+                    'image/png' => 'png',
+                    default => 'webp',
+                };
+                $filename = $slug . '-' . time() . '.' . $ext;
+                $imageFile->move($targetDir, $filename);
+                $finalImage = '/images/market/' . $filename;
+            }
         }
 
         $product = new Product(
@@ -323,6 +369,13 @@ final class MarketAdminController extends AbstractController
             return $this->json(['error' => 'Unauthorized'], 401);
         }
 
+        if (
+            !$this->isHeaderAuthenticated($request)
+            && !$this->isCsrfTokenValid('market_admin_delete_product', (string) $request->request->get('_token'))
+        ) {
+            return $this->redirectToRoute('market_admin_dashboard', ['error' => 'Invalid or expired CSRF token.']);
+        }
+
         $slug = trim((string) $request->request->get('slug'));
         if ($slug === '') {
             return $this->redirectToRoute('market_admin_dashboard', ['error' => 'Product slug is required.']);
@@ -337,7 +390,7 @@ final class MarketAdminController extends AbstractController
         return $this->redirectToRoute('market_admin_dashboard', ['status' => 'Deleted product: ' . $slug]);
     }
 
-    private function isAuthenticated(Request $request): bool
+    private function isHeaderAuthenticated(Request $request): bool
     {
         $token = $request->headers->get('X-Admin-Token');
         if ($token === null || $token === '') {
@@ -348,13 +401,16 @@ final class MarketAdminController extends AbstractController
         }
         $adminToken = (string) ($_ENV['ADMIN_TOKEN'] ?? ($_ENV['MARKET_ADMIN_TOKEN'] ?? $this->secret));
 
-        if (
-            $token !== null
+        return $token !== null
             && $token !== ''
             && (hash_equals($adminToken, $token)
                 || hash_equals($this->secret, $token)
-                || (isset($_ENV['MARKET_ADMIN_TOKEN']) && hash_equals((string) $_ENV['MARKET_ADMIN_TOKEN'], $token)))
-        ) {
+                || (isset($_ENV['MARKET_ADMIN_TOKEN']) && hash_equals((string) $_ENV['MARKET_ADMIN_TOKEN'], $token)));
+    }
+
+    private function isAuthenticated(Request $request): bool
+    {
+        if ($this->isHeaderAuthenticated($request)) {
             return true;
         }
 
@@ -365,5 +421,16 @@ final class MarketAdminController extends AbstractController
         }
 
         return false;
+    }
+
+    protected function isCsrfTokenValid(string $id, #[\SensitiveParameter] ?string $token): bool
+    {
+        if ($token === null || $token === '') {
+            return false;
+        }
+
+        $expected = hash_hmac('sha256', 'csrf:' . $id, $this->secret);
+
+        return hash_equals($expected, $token);
     }
 }

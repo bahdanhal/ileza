@@ -28,6 +28,20 @@ final readonly class SmtpTransport implements SmtpTransportInterface
             return false;
         }
 
+        // Sanitize and validate email addresses to prevent CRLF injection
+        $cleanFromEmail = str_replace(["\r", "\n", "\0", '<', '>'], '', trim($fromEmail));
+        $cleanToEmail = str_replace(["\r", "\n", "\0", '<', '>'], '', trim($toEmail));
+
+        if (
+            filter_var($cleanFromEmail, FILTER_VALIDATE_EMAIL) === false
+            || filter_var($cleanToEmail, FILTER_VALIDATE_EMAIL) === false
+        ) {
+            return false;
+        }
+
+        $cleanFromName = str_replace(["\r", "\n", "\0"], '', trim($fromName));
+        $cleanSubject = str_replace(["\r", "\n", "\0"], '', trim($subject));
+
         $remoteSocket = sprintf('tcp://%s:%d', $this->host, $this->port);
         $context = stream_context_create([
             'ssl' => [
@@ -111,14 +125,14 @@ final readonly class SmtpTransport implements SmtpTransportInterface
             }
 
             // 5. MAIL FROM
-            $this->sendCommand($socket, sprintf('MAIL FROM:<%s>', $fromEmail));
+            $this->sendCommand($socket, sprintf('MAIL FROM:<%s>', $cleanFromEmail));
             $response = $this->readResponse($socket);
             if (!str_starts_with($response, '250')) {
                 return false;
             }
 
             // 6. RCPT TO
-            $this->sendCommand($socket, sprintf('RCPT TO:<%s>', $toEmail));
+            $this->sendCommand($socket, sprintf('RCPT TO:<%s>', $cleanToEmail));
             $response = $this->readResponse($socket);
             if (!str_starts_with($response, '250') && !str_starts_with($response, '251')) {
                 return false;
@@ -133,14 +147,14 @@ final readonly class SmtpTransport implements SmtpTransportInterface
 
             // 8. Send MIME payload
             $boundary = '=_ileza_' . md5(uniqid((string) mt_rand(), true));
-            $encodedSubject = '=?UTF-8?B?' . base64_encode($subject) . '?=';
-            $encodedFromName = '=?UTF-8?B?' . base64_encode($fromName) . '?=';
+            $encodedSubject = '=?UTF-8?B?' . base64_encode($cleanSubject) . '?=';
+            $encodedFromName = '=?UTF-8?B?' . base64_encode($cleanFromName) . '?=';
             $messageId = sprintf('<%s.%s@ileza.pl>', uniqid('alert_', true), bin2hex(random_bytes(4)));
             $dateHeader = gmdate('r');
 
             $headers = [
-                sprintf('From: %s <%s>', $encodedFromName, $fromEmail),
-                sprintf('To: <%s>', $toEmail),
+                sprintf('From: %s <%s>', $encodedFromName, $cleanFromEmail),
+                sprintf('To: <%s>', $cleanToEmail),
                 sprintf('Subject: %s', $encodedSubject),
                 sprintf('Date: %s', $dateHeader),
                 sprintf('Message-ID: %s', $messageId),
