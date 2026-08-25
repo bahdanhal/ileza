@@ -49,6 +49,11 @@ final class DoctrinePriceObservationRepositoryTest extends DoctrineTestCase
         self::assertSame(205000, $history[0]->medianGrosz);
         self::assertSame(210000, $history[1]->medianGrosz);
 
+        $histories = $repository->histories(['iphone-13-128gb', 'missing-product']);
+        self::assertSame(['iphone-13-128gb', 'missing-product'], array_keys($histories));
+        self::assertCount(2, $histories['iphone-13-128gb']);
+        self::assertSame([], $histories['missing-product']);
+
         $latest = $repository->latest('iphone-13-128gb');
         self::assertNotNull($latest);
         self::assertSame(205000, $latest->medianGrosz);

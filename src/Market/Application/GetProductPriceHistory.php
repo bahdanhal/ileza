@@ -9,11 +9,14 @@ use App\Market\Domain\PriceObservationRepository;
 use App\Market\Domain\Product;
 use App\Market\Domain\ProductFamily;
 
-final readonly class GetProductPriceHistory
+final class GetProductPriceHistory
 {
+    /** @var array<string, list<PriceObservation>> */
+    private array $historyCache = [];
+
     public function __construct(
-        private ProductCatalog $catalog,
-        private PriceObservationRepository $observations,
+        private readonly ProductCatalog $catalog,
+        private readonly PriceObservationRepository $observations,
     ) {
     }
 
@@ -22,12 +25,37 @@ final readonly class GetProductPriceHistory
      */
     public function forProduct(string $slug): array
     {
-        return $this->observations->history($slug);
+        if (!array_key_exists($slug, $this->historyCache)) {
+            $this->historyCache[$slug] = $this->observations->history($slug);
+        }
+
+        return $this->historyCache[$slug];
     }
 
     public function latestForProduct(string $slug): ?PriceObservation
     {
+        if (array_key_exists($slug, $this->historyCache)) {
+            return $this->historyCache[$slug][0] ?? null;
+        }
+
         return $this->observations->latest($slug);
+    }
+
+    /** @param list<string> $productSlugs */
+    public function preload(array $productSlugs): void
+    {
+        $missing = array_values(array_filter(
+            array_unique($productSlugs),
+            fn (string $slug): bool => !array_key_exists($slug, $this->historyCache),
+        ));
+        if ($missing === []) {
+            return;
+        }
+
+        $histories = $this->observations->histories($missing);
+        foreach ($missing as $slug) {
+            $this->historyCache[$slug] = $histories[$slug] ?? [];
+        }
     }
 
     /**
@@ -46,7 +74,7 @@ final readonly class GetProductPriceHistory
             return null;
         }
 
-        $history = $this->observations->history($slug);
+        $history = $this->forProduct($slug);
         $family = $this->catalog->familyFor($slug);
         $latest = $history[0] ?? null;
 

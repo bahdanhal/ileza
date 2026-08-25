@@ -58,6 +58,16 @@ final readonly class JsonPriceObservationRepository implements PriceObservationR
         return $history;
     }
 
+    public function histories(array $productSlugs): array
+    {
+        $histories = [];
+        foreach (array_values(array_unique($productSlugs)) as $productSlug) {
+            $histories[$productSlug] = $this->history($productSlug);
+        }
+
+        return $histories;
+    }
+
     public function latest(string $productSlug): ?PriceObservation
     {
         return $this->history($productSlug)[0] ?? null;

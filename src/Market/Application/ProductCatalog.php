@@ -8,24 +8,34 @@ use App\Market\Domain\Product;
 use App\Market\Domain\ProductFamily;
 use App\Market\Domain\ProductRepository;
 
-final readonly class ProductCatalog
+final class ProductCatalog
 {
+    /** @var list<Product>|null */
+    private ?array $products = null;
+
+    /** @var list<ProductFamily>|null */
+    private ?array $productFamilies = null;
+
     public function __construct(
-        private ?ProductRepository $repository = null,
+        private readonly ?ProductRepository $repository = null,
     ) {
     }
 
     /** @return list<Product> */
     public function all(): array
     {
+        if ($this->products !== null) {
+            return $this->products;
+        }
+
         if ($this->repository !== null) {
             $fromDb = $this->repository->all();
             if ($fromDb !== []) {
-                return $fromDb;
+                return $this->products = $fromDb;
             }
         }
 
-        return $this->seedProducts();
+        return $this->products = $this->seedProducts();
     }
 
     /** @return list<Product> */
@@ -36,6 +46,16 @@ final readonly class ProductCatalog
 
     public function get(string $slug): ?Product
     {
+        if ($this->products !== null) {
+            foreach ($this->products as $product) {
+                if ($product->slug === $slug) {
+                    return $product;
+                }
+            }
+
+            return null;
+        }
+
         if ($this->repository !== null) {
             $fromDb = $this->repository->get($slug);
             if ($fromDb !== null) {
@@ -68,12 +88,16 @@ final readonly class ProductCatalog
     /** @return list<ProductFamily> */
     public function families(): array
     {
+        if ($this->productFamilies !== null) {
+            return $this->productFamilies;
+        }
+
         $families = [];
         foreach ($this->all() as $product) {
             $families[$this->familySlug($product)][] = $product;
         }
 
-        return array_map(function (array $products): ProductFamily {
+        return $this->productFamilies = array_map(function (array $products): ProductFamily {
             $first = $products[0];
             $familySlug = $this->familySlug($first);
             $name = $first->familyName ?? match ($first->category) {

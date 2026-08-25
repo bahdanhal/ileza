@@ -5,10 +5,37 @@ declare(strict_types=1);
 namespace App\Tests\Market;
 
 use App\Market\Application\ProductCatalog;
+use App\Market\Domain\Product;
+use App\Market\Domain\ProductRepository;
 use PHPUnit\Framework\TestCase;
 
 final class ProductCatalogTest extends TestCase
 {
+    public function testCachesRepositoryProductsAndDerivedFamiliesForTheRequest(): void
+    {
+        $product = new Product(
+            'test-product',
+            'Test Product',
+            'Test definition',
+            'smartphones',
+            familySlug: 'test-family',
+            familyName: 'Test Family',
+            image: '/images/test.jpg',
+            imageCredit: 'Test Credit',
+            imageSource: 'https://example.com/image',
+        );
+        $repository = $this->createMock(ProductRepository::class);
+        $repository->expects(self::once())->method('all')->willReturn([$product]);
+        $repository->expects(self::never())->method('get');
+
+        $catalog = new ProductCatalog($repository);
+
+        self::assertSame([$product], $catalog->all());
+        self::assertSame([$product], $catalog->all());
+        self::assertSame($product, $catalog->get('test-product'));
+        self::assertSame($catalog->families(), $catalog->families());
+    }
+
     public function testPeugeotFamilyContainsBothEngineVariants(): void
     {
         $catalog = new ProductCatalog();

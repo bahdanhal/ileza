@@ -11,6 +11,12 @@ interface PriceObservationRepository
     /** @return list<PriceObservation> */
     public function history(string $productSlug): array;
 
+    /**
+     * @param list<string> $productSlugs
+     * @return array<string, list<PriceObservation>>
+     */
+    public function histories(array $productSlugs): array;
+
     public function latest(string $productSlug): ?PriceObservation;
 
     public function delete(string $productSlug, string $date): void;

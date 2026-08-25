@@ -65,4 +65,38 @@ final class GetProductPriceHistoryTest extends TestCase
 
         self::assertNull($result);
     }
+
+    public function testPreloadsMultipleHistoriesOnceAndReusesThem(): void
+    {
+        $catalog = new ProductCatalog();
+        $repository = $this->createMock(PriceObservationRepository::class);
+        $observation = new PriceObservation(
+            'iphone-13-128gb',
+            new \DateTimeImmutable('2026-08-20 12:00:00', new \DateTimeZone('UTC')),
+            200000,
+            180000,
+            220000,
+            6,
+            'high',
+            '',
+            PriceObservation::METHODOLOGY_MANUAL
+        );
+
+        $repository->expects(self::once())
+            ->method('histories')
+            ->with(['iphone-13-128gb', 'missing-product'])
+            ->willReturn([
+                'iphone-13-128gb' => [$observation],
+                'missing-product' => [],
+            ]);
+        $repository->expects(self::never())->method('history');
+        $repository->expects(self::never())->method('latest');
+
+        $service = new GetProductPriceHistory($catalog, $repository);
+        $service->preload(['iphone-13-128gb', 'missing-product']);
+
+        self::assertSame($observation, $service->latestForProduct('iphone-13-128gb'));
+        self::assertSame([], $service->forProduct('missing-product'));
+        $service->preload(['iphone-13-128gb']);
+    }
 }

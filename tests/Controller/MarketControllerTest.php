@@ -33,27 +33,35 @@ final class MarketControllerTest extends TestCase
     public function testHomeRendersWithFamilies(): void
     {
         $catalog = new ProductCatalog();
-        $observations = $this->createStub(PriceObservationRepository::class);
-        $observations->method('latest')->willReturnCallback(static function (string $slug): ?PriceObservation {
-            $median = match ($slug) {
-                'macbook-pro-16-m3-max-64-gb-ram-2-tb-ssd' => 900000,
-                'iphone-x-256gb' => 200000,
-                'iphone-x-64gb' => 100000,
-                default => null,
-            };
+        $observations = $this->createMock(PriceObservationRepository::class);
+        $observations->expects(self::once())
+            ->method('histories')
+            ->willReturnCallback(static function (array $slugs): array {
+                $histories = array_fill_keys($slugs, []);
+                foreach (
+                    [
+                        'macbook-pro-16-m3-max-64-gb-ram-2-tb-ssd' => 900000,
+                        'iphone-x-256gb' => 200000,
+                        'iphone-x-64gb' => 100000,
+                    ] as $slug => $median
+                ) {
+                    $histories[$slug] = [new PriceObservation(
+                        $slug,
+                        new \DateTimeImmutable('2026-08-23'),
+                        $median,
+                        $median - 10000,
+                        $median + 10000,
+                        5,
+                        'high',
+                        '',
+                        PriceObservation::METHODOLOGY_MANUAL
+                    )];
+                }
 
-            return $median === null ? null : new PriceObservation(
-                $slug,
-                new \DateTimeImmutable('2026-08-23'),
-                $median,
-                $median - 10000,
-                $median + 10000,
-                5,
-                'high',
-                '',
-                PriceObservation::METHODOLOGY_MANUAL
-            );
-        });
+                return $histories;
+            });
+        $observations->expects(self::never())->method('history');
+        $observations->expects(self::never())->method('latest');
         $productRequests = $this->createStub(ProductRequestStore::class);
         $priceTips = $this->createStub(PriceTipRepository::class);
         $priceAlerts = $this->createStub(PriceAlertRepository::class);

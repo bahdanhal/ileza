@@ -46,6 +46,9 @@ final class MarketController extends AbstractController
     )]
     public function home(): Response
     {
+        $catalogFamilies = $this->catalog->families();
+        $this->priceHistory->preload($this->productSlugs($catalogFamilies));
+
         /** @var list<array{family: ProductFamily, configurations: list<array{product: Product, latest: ?PriceObservation}>}> $families */
         $families = array_map(function (ProductFamily $family): array {
             $configurations = array_map(fn (Product $product): array => [
@@ -58,7 +61,7 @@ final class MarketController extends AbstractController
                 'family' => $family,
                 'configurations' => $configurations,
             ];
-        }, $this->catalog->families());
+        }, $catalogFamilies);
         usort($families, self::compareFamiliesByPrice(...));
 
         $topDrops = $this->priceHistory->marketMovers(limit: 4, dropsOnly: true);
@@ -98,6 +101,22 @@ final class MarketController extends AbstractController
             : strcmp($left['family']->name, $right['family']->name);
     }
 
+    /**
+     * @param list<ProductFamily> $families
+     * @return list<string>
+     */
+    private function productSlugs(array $families): array
+    {
+        $slugs = [];
+        foreach ($families as $family) {
+            foreach ($family->configurations as $product) {
+                $slugs[] = $product->slug;
+            }
+        }
+
+        return $slugs;
+    }
+
     #[Route(
         path: [
             'en' => '/prices/{category}',
@@ -119,6 +138,9 @@ final class MarketController extends AbstractController
         $familyFilter = $hubInfo['familyFilter'];
         $hubKey = $hubInfo['key'];
 
+        $catalogFamilies = $this->catalog->familiesForHub($categoryKey, $familyFilter);
+        $this->priceHistory->preload($this->productSlugs($catalogFamilies));
+
         $stats = $this->priceHistory->categoryStatistics($categoryKey, $familyFilter);
         $matrix = $this->priceHistory->categoryMatrix($categoryKey, $familyFilter);
         $movers = $this->priceHistory->marketMovers($categoryKey, $familyFilter, limit: 4, dropsOnly: true);
@@ -135,7 +157,7 @@ final class MarketController extends AbstractController
                 'family' => $family,
                 'configurations' => $configurations,
             ];
-        }, $this->catalog->familiesForHub($categoryKey, $familyFilter));
+        }, $catalogFamilies);
         usort($families, self::compareFamiliesByPrice(...));
 
         return $this->render('market/hub.html.twig', [

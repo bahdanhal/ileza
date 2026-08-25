@@ -57,20 +57,33 @@ final readonly class DoctrinePriceObservationRepository implements PriceObservat
             ['observedAt' => 'DESC']
         );
 
-        return array_map(
-            static fn (PriceObservationEntity $entity): PriceObservation => new PriceObservation(
-                $entity->getProductSlug(),
-                $entity->getObservedAt(),
-                $entity->getMedianGrosz(),
-                $entity->getLowGrosz(),
-                $entity->getHighGrosz(),
-                $entity->getSampleSize(),
-                $entity->getConfidence(),
-                $entity->getSummary() ?? '',
-                $entity->getMethodology(),
-            ),
-            $entities
-        );
+        return array_map(self::toDomain(...), $entities);
+    }
+
+    public function histories(array $productSlugs): array
+    {
+        $productSlugs = array_values(array_unique($productSlugs));
+        if ($productSlugs === []) {
+            return [];
+        }
+
+        $histories = array_fill_keys($productSlugs, []);
+        /** @var list<PriceObservationEntity> $entities */
+        $entities = $this->entityManager->createQueryBuilder()
+            ->select('o')
+            ->from(PriceObservationEntity::class, 'o')
+            ->where('o.productSlug IN (:slugs)')
+            ->setParameter('slugs', $productSlugs)
+            ->orderBy('o.productSlug', 'ASC')
+            ->addOrderBy('o.observedAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+
+        foreach ($entities as $entity) {
+            $histories[$entity->getProductSlug()][] = self::toDomain($entity);
+        }
+
+        return $histories;
     }
 
     public function latest(string $productSlug): ?PriceObservation
@@ -95,5 +108,20 @@ final readonly class DoctrinePriceObservationRepository implements PriceObservat
             ->setParameter('end', $dayEnd)
             ->getQuery()
             ->execute();
+    }
+
+    private static function toDomain(PriceObservationEntity $entity): PriceObservation
+    {
+        return new PriceObservation(
+            $entity->getProductSlug(),
+            $entity->getObservedAt(),
+            $entity->getMedianGrosz(),
+            $entity->getLowGrosz(),
+            $entity->getHighGrosz(),
+            $entity->getSampleSize(),
+            $entity->getConfidence(),
+            $entity->getSummary() ?? '',
+            $entity->getMethodology(),
+        );
     }
 }

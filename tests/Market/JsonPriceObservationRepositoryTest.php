@@ -39,6 +39,10 @@ final class JsonPriceObservationRepositoryTest extends TestCase
         self::assertSame(149000, $history[0]->medianGrosz);
         self::assertSame(160000, $history[1]->medianGrosz);
         self::assertSame(149000, $repository->latest('iphone-14-128gb')?->medianGrosz);
+
+        $histories = $repository->histories(['iphone-14-128gb', 'missing-product']);
+        self::assertCount(2, $histories['iphone-14-128gb']);
+        self::assertSame([], $histories['missing-product']);
     }
 
     private function observation(string $date, int $median): PriceObservation
