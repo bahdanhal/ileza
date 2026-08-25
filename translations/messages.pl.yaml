@@ -7,7 +7,7 @@ base:
     product_label: "Indeks cen w Polsce"
     navigation: "Narzędzia i język"
     nav:
-        income: "UoP / UZ / Ud / B2B"
+        income: "UoP / UZ / UoD / B2B"
         geo: "Analizator GEO"
         seo: "Analizator SEO"
         market: "Ceny używanych rzeczy"
@@ -69,7 +69,7 @@ home:
         title: "Nginx i Apache ➔ Caddyfile Converter"
         text: "Konwertuj bloki serwera Nginx oraz Apache .htaccess na czysty, czytelny Caddyfile w czasie rzeczywistym, z inteligentnymi podpowiedziami i gotowymi presetami."
     cidr_matrix:
-        title: "Wizualna Matryca CIDR i Nachodzenia Podsieci"
+        title: "Wizualna Matryca CIDR i Nakładania się Podsieci"
         text: "Analizuj bloki CIDR IPv4/IPv6, wykrywaj kolizje podsieci, wizualizuj struktury drzewiaste 2D i znajduj wolne podsieci."
     pkpass:
         title: "Inspektor i debugger Apple Wallet (.pkpass)"
@@ -546,7 +546,7 @@ market:
     movers:
         title: "🔥 Największe spadki cen (30 dni)"
         category_title: "🔥 Największe spadki cen w tej kategorii (30 dni)"
-        subtitle: "Egzemplarze z największym spadkiem mediany ceny ofertowej w ciągu ostatnich 30 dni."
+        subtitle: "Modele z największym spadkiem mediany ceny ofertowej w ciągu ostatnich 30 dni."
         drop_badge: "↓ %pct%% (%diff% zł) w 30 dni"
         was_label: "30 dni temu:"
         now_label: "Aktualna mediana:"
@@ -581,7 +581,7 @@ market:
     product_eyebrow: "REDAKCYJNIE ZWERYFIKOWANA HISTORIA CEN W POLSCE"
     product_lede: "Ta strona śledzi w czasie porównywalne, w pełni sprawne egzemplarze na polskim rynku wtórnym. Oferty nowe, uszkodzone, na części, zablokowane, w zestawach i odnowione jako nowe są konsekwentnie wykluczane."
     median: "Mediana rynkowa"
-    asking_price: "Sprawiedliwa cena ofertowa"
+    asking_price: "Szacunkowa cena ofertowa"
     range: "Porównywalny zakres"
     comparable_range: "Typowy przedział cenowy"
     evidence: "Próba badawcza"
@@ -591,7 +591,7 @@ market:
     month_change: "Zmiana w 30 dni"
     no_month_data: "Zbieranie historii 30 dni"
     snapshot: "Co mówi najnowsza wycena rynkowa"
-    snapshot_text: "W dniu %date% zweryfikowana przez redakcję IleZa.pl mediana ceny ofertowej %product% wynosiła %median%. Porównywalny zakres to %low%–%high%. Pojedyncze ogłoszenia nie są publikowane."
+    snapshot_text: "W dniu %date% zweryfikowana przez redakcję IleZa.pl mediana cen ofertowych dla %product% wynosiła %median%. Porównywalny zakres to %low% – %high%. Pojedyncze ogłoszenia nie są publikowane."
     spec:
         generation: "Generacja"
         variant: "Wariant"
@@ -624,7 +624,7 @@ market:
         failed: "Nie udało się teraz zapisać zgłoszenia."
         too_many: "Zbyt wiele zgłoszeń z tego połączenia. Spróbuj ponownie jutro."
     tip:
-        eyebrow: "ZNALEŹLIŚCIE TANIEJ?"
+        eyebrow: "ZNALAZŁEŚ TANIEJ?"
         title: "Pomóż poprawić tę cenę"
         text: "Podeślij publiczne ogłoszenie dokładnie tej konfiguracji. Redakcja IleZa.pl sprawdzi je przed zmianą opublikowanej wartości."
         url: "Link do publicznego ogłoszenia"
@@ -673,7 +673,7 @@ market:
         title: "Często zadawane pytania o ceny"
         price_now:
             q: "Ile kosztuje %product% na marketplace w Polsce?"
-            a: "Aktualna szacowana mediana rynkowa dla sprawnego %product% wynosi %median%, a typowy przedział ofert to %low%–%high%."
+            a: "Aktualna szacowana mediana rynkowa dla sprawnego %product% wynosi %median%, a typowy przedział ofert to %low% – %high%."
         month_ago:
             q: "Ile %product% kosztował miesiąc temu?"
             a: "Około 30 dni temu szacowana mediana wynosiła %median%, co oznacza zmianę o %diff% (%diff_pct%%)."
@@ -715,10 +715,10 @@ market:
 
 income:
     meta:
-        title: "Kalkulator wynagrodzeń 2026 · Porównanie UoP, UZ, Ud, B2B i Sp. z o.o."
-        description: "Porównaj zarobki na rękę z tego samego budżetu pracodawcy lub kwoty brutto dla umowy o pracę (UoP), zlecenia (UZ), o dzieło (Ud), B2B oraz powołania w Sp. z o.o. w 2026 roku."
+        title: "Kalkulator wynagrodzeń 2026 · Porównanie UoP, UZ, UoD, B2B i Sp. z o.o."
+        description: "Porównaj zarobki na rękę z tego samego budżetu pracodawcy lub kwoty brutto dla umowy o pracę (UoP), zlecenia (UZ), o dzieło (UoD), B2B oraz powołania w Sp. z o.o. w 2026 roku."
     eyebrow: "POLSKA · FORMY ZATRUDNIENIA · 2026"
-    heading: "Kalkulator UoP / UZ / Ud / B2B / Sp. z o.o."
+    heading: "Kalkulator UoP / UZ / UoD / B2B / Sp. z o.o."
     lede: "Porównaj, ile trafia do Ciebie z tego samego miesięcznego budżetu firmy lub stawki brutto UoP. Zobacz obok siebie kwotę brutto, składki społeczne i zdrowotne, PIT, koszty firmy oraz szacowaną wypłatę."
     verified: "Zasady sprawdzone"
     types:
@@ -761,9 +761,9 @@ income:
         title: "Wspólne założenia porównania"
         text: "To porównanie planistyczne, a nie program kadrowo-płacowy. Zakłada tę samą kwotę przez 12 miesięcy i stosuje skalę oraz typowe składki z 2026 r."
         one: "UoP obejmuje składki pracownika i szacowane obciążenia pracodawcy przy składce wypadkowej 1,67%; KUP pracownika to 250 zł/mies."
-        two: "UZ zakłada pełne oskładkowanie z dobrowolnym chorobowym, chyba że zaznaczysz studenta do 26 lat; uwzględniamy roczny limit ulgi dla młodych. Ud stosuje 20% KUP bez ZUS i zdrowotnej."
+        two: "UZ zakłada pełne oskładkowanie z dobrowolnym chorobowym, chyba że zaznaczysz studenta do 26 lat; uwzględniamy roczny limit ulgi dla młodych. UoD stosuje 20% KUP bez ZUS i składki zdrowotnej."
         three: "B2B pomija VAT jako zwykle neutralny, używa wybranego ZUS i podatku oraz nie modeluje urlopu, księgowości, każdej ulgi i rozliczenia rocznego."
-        four: "Spółka z o.o. modeluje wynagrodzenie członka zarządu z powołania (uchwała wspólników): brak składek społecznych ZUS, składka zdrowotna 9%, skala podatkowa 12%/32% oraz koszty stałe prowadzenia spółki."
+        four: "Spółka z o.o. modeluje wynagrodzenie członka zarządu z powołania (uchwała wspólników): brak składek na ubezpieczenia społeczne, składka zdrowotna 9%, skala podatkowa 12%/32% oraz koszty stałe prowadzenia spółki."
     sources:
         title: "Oficjalne źródła 2026"
         text: "Parametry wynikają z aktualnych informacji polskiego rządu i ZUS, sprawdzonych w dniu podanym wyżej."
@@ -775,8 +775,8 @@ income:
         disclaimer: "Wyłącznie szacunek informacyjny. Rzeczywistą umowę sprawdź w programie kadrowo-księgowym lub u polskiego specjalisty."
     faq:
         title: "Często zadawane pytania o formy zatrudnienia w Polsce"
-        q1: "Czym różnią się formy UoP, UZ, Ud, B2B i Spółka z o.o.?"
-        a1: "Umowa o pracę (UoP) zapewnia pełne prawa pracownicze i płatny urlop. Umowa zlecenie (UZ) to elastyczna umowa cywilnoprawna ze składkami społecznymi (zwolniona dla studentów do 26 lat). Umowa o dzieło (Ud) dotyczy wykonania określonego dzieła i nie podlega ZUS. B2B to jednoosobowa działalność gospodarcza z bezpośrednim fakturowaniem. Spółka z o.o. (powołanie członka zarządu) pozwala na wypłatę bez ZUS społecznego z 9% zdrowotną i podatkiem dochodowym według skali."
+        q1: "Czym różnią się formy UoP, UZ, UoD, B2B i Spółka z o.o.?"
+        a1: "Umowa o pracę (UoP) zapewnia pełne prawa pracownicze i płatny urlop. Umowa zlecenie (UZ) to elastyczna umowa cywilnoprawna ze składkami społecznymi (zwolniona dla studentów do 26 lat). Umowa o dzieło (UoD) dotyczy wykonania określonego dzieła i nie podlega ubezpieczeniom społecznym ani zdrowotnemu. B2B to jednoosobowa działalność gospodarcza z bezpośrednim fakturowaniem. Spółka z o.o. (powołanie członka zarządu) pozwala na wypłatę bez składek na ubezpieczenia społeczne, ze składką zdrowotną 9% i podatkiem dochodowym według skali."
         q2: "Dlaczego porównanie wychodzi od budżetu firmy lub przelicza brutto UoP?"
         a2: "Punktem wyjścia jest łączny koszt, jaki zleceniodawca lub pracodawca przeznacza na stanowisko (Budżet = Brutto UoP × 1.2048). Pozwala to na rzetelne i przejrzyste porównanie kwoty na rękę przy identycznym nakładzie finansowym."
         q3: "Jak działa składka zdrowotna na B2B w 2026 roku?"
@@ -986,10 +986,10 @@ pkpass:
 
 cidr_matrix:
     meta:
-        title: "Wizualna Matryca CIDR i Nachodzenia Podsieci · Kalkulator IP Online"
+        title: "Wizualna Matryca CIDR i Nakładania się Podsieci · Kalkulator IP Online"
         description: "Parsuj bloki CIDR IPv4/IPv6, wykrywaj kolizje i nakładanie się zakresów IP, wizualizuj podziały przestrzeni adresowej 2D i alokuj wolne podsieci."
     eyebrow: "SIEĆ · CIDR I PODSIECI"
-    heading: "Wizualna Matryca CIDR i Nachodzenia Podsieci"
+    heading: "Wizualna Matryca CIDR i Nakładania się Podsieci"
     lede: "Wykrywaj konflikty adresacji IP w VPC AWS, klastrach Kubernetes i sieciach VPN, wizualizuj podziały adresów i automatycznie alokuj wolne podsieci."
     form:
         title: "Dane wejściowe bloków CIDR"
