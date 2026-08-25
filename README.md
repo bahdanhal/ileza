@@ -1,6 +1,10 @@
 # IleZa.pl (`ileza`)
 
-Poland's used electronics price radar and salary/income calculator, deployed at [ileza.pl](https://ileza.pl/).
+**Live website:** [IleZa.pl — used electronics prices and Polish salary calculator](https://ileza.pl/)
+
+Manually verified second-hand electronics price intelligence for Poland, paired with a private browser-based salary and income calculator.
+
+**Related projects:** [Bahdan Hal — software engineering consulting](https://bahdanhal.pl/) · [Stackhal — free developer and DevOps tools](https://stackhal.com/)
 
 ---
 
