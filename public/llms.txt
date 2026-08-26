@@ -1,30 +1,26 @@
-# Bahdan's Toolbox
+# IleZa.pl — Used Tech Price Radar & Polish Salary Calculator
 
-> Personal site and free bilingual tools by backend engineer Bahdan Hal: Polish employment comparison, technical SEO and GEO audits, and dated editorial fair-price histories.
+> Free Polish used-tech / electronics price radar, dated editorial fair-price histories, and full Polish employment contract calculator by Bahdan Hal.
 
 ## Primary pages
 
-- [About Bahdan Hal](https://bahdanhal.pl/): backend work, infrastructure, AI integrations and contact profiles
-- [Toolbox in English](https://bahdanhal.pl/tools): overview of all tools
-- [Toolbox in Polish](https://bahdanhal.pl/pl/narzedzia): polska wersja zestawu narzędzi
-- [Nginx to Caddy Converter](https://bahdanhal.pl/tools/caddy-transpiler): real-time transpiler converting Nginx server blocks and Apache .htaccess to clean Caddyfiles
-- [Konwerter Caddyfile](https://bahdanhal.pl/pl/narzedzia/konwerter-caddyfile): polska wersja konwertera Nginx i Apache do Caddyfile
-- [BIMI Studio & SVG Tiny 1.2 PS](https://bahdanhal.pl/tools/bimi-studio): BIMI logo sanitizer, safe-zone validator and live email inbox simulator
-- [BIMI Studio PL](https://bahdanhal.pl/pl/narzedzia/bimi-studio): polska wersja konwertera BIMI SVG Tiny 1.2 PS
-- [Domain Inspector](https://bahdanhal.pl/tools/domain-inspector): 1-click email security verification for DMARC, BIMI, MTA-STS, TLS-RPT, and SPF
-- [Inspektor domen](https://bahdanhal.pl/pl/narzedzia/inspektor-domen): polska wersja inspektora bezpieczeństwa domen
 - [Editorial fair-price index](https://ileza.pl/en/): manual judgments about what products are reasonably worth, with dated histories
-- [Redakcyjny indeks uczciwych cen](https://ileza.pl/): polska wersja indeksu
-- [GEO analyzer](https://bahdanhal.pl/tools/geo-audit): deterministic generative-engine-readiness checks
-- [SEO analyzer](https://bahdanhal.pl/tools/seo-audit): technical crawling and indexability checks
-- [UoP / UZ / Ud / B2B calculator](https://bahdanhal.pl/tools/poland-employment-calculator): Polish contract take-home comparison
+- [Redakcyjny indeks uczciwych cen](https://ileza.pl/): polska wersja indeksu (iPhone, MacBook, RAM, GPU, konsole)
+- [Kalkulator wynagrodzeń 2026](https://ileza.pl/kalkulator-wynagrodzen): porównanie kosztu pracodawcy i wypłaty netto dla UoP, zlecenie, o dzieło, B2B oraz Spółki z o.o. (powołanie zarządu)
+- [Baza wiedzy i poradniki](https://ileza.pl/blog/): poradniki zakupowe, checklisty weryfikacji sprzętu i analizy opłacalności
+
+## Ecosystem applications
+
+- [Bahdan Hal Portfolio](https://bahdanhal.pl/): engineering consulting and backend architecture
+- [StackHal](https://stackhal.com/): developer tools and web infrastructure diagnostics
 
 ## Data access
 
-- Public read-only MCP endpoint: `https://bahdanhal.pl/mcp`
-- MCP tools list exact tracked product configurations and return dated price history.
-- No account or API key is required.
+- Public read-only MCP endpoint: `https://ileza.pl/mcp`
+- Public MCP tools: `list_polish_used_price_products`, `get_polish_used_price_product`, `get_polish_used_price_history`, `calculate_polish_income_comparison`.
+- No account or API key is required for public tools.
 
 ## Important limitations
 
 Fair-price values are subjective manual editorial judgments, not statistical samples, scraped listings, algorithmic valuations, completed-sale statistics, or purchasing advice. Visitors may privately submit a public sales-page link as additional context; links are never fetched automatically or published, and seller data or page text is not retained.
+

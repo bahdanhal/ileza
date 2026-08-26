@@ -5,38 +5,27 @@ declare(strict_types=1);
 namespace App\Tests\Mcp;
 
 use App\Analytics\Application\TrafficAnalytics;
-use App\Analytics\Infrastructure\JsonlPageViewRepository;
+use App\Analytics\Infrastructure\DoctrinePageViewRepository;
 use App\Lead\Domain\Lead;
 use App\Lead\Domain\LeadRepository;
-use App\Lead\Infrastructure\JsonlLeadRepository;
+use App\Lead\Infrastructure\DoctrineLeadRepository;
+use App\Market\Application\GetMarketStatistics;
 use App\Market\Application\ProductCatalog;
 use App\Market\Domain\PriceObservation;
 use App\Market\Domain\PriceObservationRepository;
-use App\Market\Infrastructure\JsonPriceObservationRepository;
-use App\Market\Infrastructure\JsonPriceTipRepository;
-use App\Market\Infrastructure\JsonProductRequestStore;
 use App\Market\Domain\PriceTipRepository;
 use App\Market\Domain\ProductRequestStore;
+use App\Market\Infrastructure\DoctrinePriceObservationRepository;
+use App\Market\Infrastructure\DoctrinePriceTipRepository;
+use App\Market\Infrastructure\DoctrineProductRequestStore;
 use App\Mcp\AdminAccess;
 use App\Mcp\AdminTools;
-use PHPUnit\Framework\TestCase;
+use App\Tests\DoctrineTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-final class AdminToolsTest extends TestCase
+final class AdminToolsTest extends DoctrineTestCase
 {
-    private string $directory;
-
-    protected function setUp(): void
-    {
-        $this->directory = sys_get_temp_dir() . '/admin-mcp-test-' . bin2hex(random_bytes(5));
-    }
-
-    protected function tearDown(): void
-    {
-        $this->removeDirectory($this->directory);
-    }
-
     public function testAllAdminToolsFailClosedWithoutBearerToken(): void
     {
         $tools = $this->tools(false);
@@ -55,7 +44,7 @@ final class AdminToolsTest extends TestCase
 
     public function testAdminCanReadSubmissionsAndAggregateStatistics(): void
     {
-        $leadRepository = new JsonlLeadRepository($this->directory . '/leads');
+        $leadRepository = new DoctrineLeadRepository($this->entityManager);
         $leadRepository->save(Lead::create(
             'person@example.com',
             '+48 500 000 000',
@@ -64,10 +53,10 @@ final class AdminToolsTest extends TestCase
             'landing',
         ));
 
-        $productRequests = new JsonProductRequestStore($this->directory . '/market', 'secret');
+        $productRequests = new DoctrineProductRequestStore($this->entityManager, 'secret');
         $productRequests->save('PlayStation 5 Slim', 'person@example.com', '198.51.100.5');
 
-        $priceTips = new JsonPriceTipRepository($this->directory . '/market', 'secret');
+        $priceTips = new DoctrinePriceTipRepository($this->entityManager, 'secret');
         $priceTips->submit(
             'iphone-13-128gb',
             'https://example.com/listing/123?tracking=removed',
@@ -75,7 +64,7 @@ final class AdminToolsTest extends TestCase
             '198.51.100.5',
         );
 
-        $observations = new JsonPriceObservationRepository($this->directory . '/market');
+        $observations = new DoctrinePriceObservationRepository($this->entityManager);
         $observations->save(new PriceObservation(
             'iphone-13-128gb',
             new \DateTimeImmutable('now'),
@@ -130,29 +119,14 @@ final class AdminToolsTest extends TestCase
 
         return new AdminTools(
             new AdminAccess($requestStack, 'admin-test-token'),
-            $leads ?? new JsonlLeadRepository($this->directory . '/leads'),
-            $requests ?? new JsonProductRequestStore($this->directory . '/market', 'secret'),
-            $tips ?? new JsonPriceTipRepository($this->directory . '/market', 'secret'),
-            new \App\Market\Application\GetMarketStatistics(
+            $leads ?? new DoctrineLeadRepository($this->entityManager),
+            $requests ?? new DoctrineProductRequestStore($this->entityManager, 'secret'),
+            $tips ?? new DoctrinePriceTipRepository($this->entityManager, 'secret'),
+            new GetMarketStatistics(
                 new ProductCatalog(),
-                $observations ?? new JsonPriceObservationRepository($this->directory . '/market')
+                $observations ?? new DoctrinePriceObservationRepository($this->entityManager)
             ),
-            new TrafficAnalytics(new JsonlPageViewRepository($this->directory . '/analytics', 90)),
+            new TrafficAnalytics(new DoctrinePageViewRepository($this->entityManager, 90)),
         );
-    }
-
-    private function removeDirectory(string $directory): void
-    {
-        if (!is_dir($directory)) {
-            return;
-        }
-        foreach (scandir($directory) ?: [] as $entry) {
-            if ($entry === '.' || $entry === '..') {
-                continue;
-            }
-            $path = $directory . '/' . $entry;
-            is_dir($path) ? $this->removeDirectory($path) : @unlink($path);
-        }
-        @rmdir($directory);
     }
 }

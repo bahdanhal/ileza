@@ -42,14 +42,4 @@ final class ToolsController extends AbstractController
     {
         return $this->redirectToRoute('market_home', ['_locale' => $request->getLocale()], Response::HTTP_MOVED_PERMANENTLY);
     }
-
-    #[Route(
-        path: ['en' => '/tools/polish-vat-calculator', 'pl' => '/pl/narzedzia/kalkulator-vat'],
-        name: 'legacy_vat_calculator',
-        methods: ['GET']
-    )]
-    public function legacyVatCalculator(Request $request): Response
-    {
-        return $this->redirectToRoute('income_calculator', ['_locale' => $request->getLocale()], Response::HTTP_MOVED_PERMANENTLY);
-    }
 }

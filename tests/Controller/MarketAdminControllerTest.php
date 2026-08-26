@@ -18,8 +18,6 @@ use App\Market\Domain\PriceTipRepository;
 use App\Market\Domain\Product;
 use App\Market\Domain\ProductRepository;
 use App\Market\Domain\ProductRequestStore;
-use App\Market\Infrastructure\JsonPriceTipRepository;
-use App\Market\Infrastructure\JsonProductRequestStore;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,8 +30,8 @@ final class MarketAdminControllerTest extends TestCase
         $catalog = new ProductCatalog();
         $prodRepo = $this->createStub(ProductRepository::class);
         $observations = $this->createStub(PriceObservationRepository::class);
-        $productRequests = new JsonProductRequestStore(sys_get_temp_dir(), 'secret');
-        $priceTips = new JsonPriceTipRepository(sys_get_temp_dir(), 'secret');
+        $productRequests = $this->createStub(ProductRequestStore::class);
+        $priceTips = $this->createStub(PriceTipRepository::class);
         $priceAlerts = $this->createPriceAlertsStub();
         $secret = 'test-secret-key';
 
@@ -72,8 +70,8 @@ final class MarketAdminControllerTest extends TestCase
         $catalog = new ProductCatalog();
         $prodRepo = $this->createStub(ProductRepository::class);
         $observations = $this->createStub(PriceObservationRepository::class);
-        $productRequests = new JsonProductRequestStore(sys_get_temp_dir(), 'secret');
-        $priceTips = new JsonPriceTipRepository(sys_get_temp_dir(), 'secret');
+        $productRequests = $this->createStub(ProductRequestStore::class);
+        $priceTips = $this->createStub(PriceTipRepository::class);
         $priceAlerts = $this->createPriceAlertsStub();
         $secret = 'test-secret-key';
 
@@ -111,8 +109,8 @@ final class MarketAdminControllerTest extends TestCase
         $catalog = new ProductCatalog();
         $prodRepo = $this->createStub(ProductRepository::class);
         $observations = $this->createStub(PriceObservationRepository::class);
-        $productRequests = new JsonProductRequestStore(sys_get_temp_dir(), 'secret');
-        $priceTips = new JsonPriceTipRepository(sys_get_temp_dir(), 'secret');
+        $productRequests = $this->createStub(ProductRequestStore::class);
+        $priceTips = $this->createStub(PriceTipRepository::class);
         $priceAlerts = $this->createPriceAlertsStub();
         $secret = 'test-secret-key';
 
@@ -160,8 +158,8 @@ final class MarketAdminControllerTest extends TestCase
                     && $obs->highGrosz === 240000;
             }));
 
-        $productRequests = new JsonProductRequestStore(sys_get_temp_dir(), 'secret');
-        $priceTips = new JsonPriceTipRepository(sys_get_temp_dir(), 'secret');
+        $productRequests = $this->createStub(ProductRequestStore::class);
+        $priceTips = $this->createStub(PriceTipRepository::class);
         $priceAlerts = $this->createPriceAlertsStub();
         $secret = 'test-secret-key';
 
@@ -220,8 +218,8 @@ final class MarketAdminControllerTest extends TestCase
             ->with('iphone-16-pro-256gb');
 
         $observations = $this->createStub(PriceObservationRepository::class);
-        $productRequests = new JsonProductRequestStore(sys_get_temp_dir(), 'secret');
-        $priceTips = new JsonPriceTipRepository(sys_get_temp_dir(), 'secret');
+        $productRequests = $this->createStub(ProductRequestStore::class);
+        $priceTips = $this->createStub(PriceTipRepository::class);
         $priceAlerts = $this->createPriceAlertsStub();
         $secret = 'test-secret-key';
 
@@ -285,8 +283,8 @@ final class MarketAdminControllerTest extends TestCase
         $catalog = new ProductCatalog();
         $prodRepo = $this->createStub(ProductRepository::class);
         $observations = $this->createStub(PriceObservationRepository::class);
-        $productRequests = new JsonProductRequestStore(sys_get_temp_dir(), 'secret');
-        $priceTips = new JsonPriceTipRepository(sys_get_temp_dir(), 'secret');
+        $productRequests = $this->createStub(ProductRequestStore::class);
+        $priceTips = $this->createStub(PriceTipRepository::class);
         $priceAlerts = $this->createPriceAlertsStub();
         $secret = 'test-secret-key';
 

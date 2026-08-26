@@ -101,20 +101,6 @@ services:
     arguments:
       $secret: '%env(APP_SECRET)%'
 
-  App\Market\Infrastructure\JsonPriceObservationRepository:
-    arguments:
-      $directory: '%market.data_directory%'
-
-  App\Market\Infrastructure\JsonProductRequestStore:
-    arguments:
-      $directory: '%market.data_directory%'
-      $secret: '%env(APP_SECRET)%'
-
-  App\Market\Infrastructure\JsonPriceTipRepository:
-    arguments:
-      $directory: '%market.data_directory%'
-      $secret: '%env(APP_SECRET)%'
-
   App\Command\MigrateStorageToDatabaseCommand:
     arguments:
       $marketDataDirectory: '%market.data_directory%'
