@@ -39,8 +39,8 @@ final class SvgSanitizerTest extends TestCase
 
     public function testStripsEventHandlers(): void
     {
-        //phpcs:ignore
-        $svg = '<svg xmlns="http://www.w3.org/2000/svg" onload="alert(1)"><g onclick="evil()"><rect width="10" height="10" onerror="bad()"/></g></svg>';
+        $svg = '<svg xmlns="http://www.w3.org/2000/svg" onload="alert(1)">'
+            . '<g onclick="evil()"><rect width="10" height="10" onerror="bad()"/></g></svg>';
         $clean = $this->sanitizer->sanitize($svg);
 
         self::assertNotNull($clean);
@@ -60,7 +60,9 @@ final class SvgSanitizerTest extends TestCase
 
     public function testStripsMaliciousStyleTagsAndImportDirectives(): void
     {
-        $svg = '<svg xmlns="http://www.w3.org/2000/svg"><style>@import url("http://evil.com/xss.css"); .a { fill: red; }</style><rect width="10" height="10"/></svg>';
+        $svg = '<svg xmlns="http://www.w3.org/2000/svg">'
+            . '<style>@import url("http://evil.com/xss.css"); .a { fill: red; }</style>'
+            . '<rect width="10" height="10"/></svg>';
         $clean = $this->sanitizer->sanitize($svg);
 
         self::assertNotNull($clean);

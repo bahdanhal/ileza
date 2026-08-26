@@ -19,6 +19,9 @@ final readonly class SvgSanitizer
         'base',
     ];
 
+    private const string DANGEROUS_CSS_PATTERN =
+        '/(expression\s*\(|javascript\s*:|behavior\s*:|@import|url\s*\(\s*["\']?(?:javascript:|data:|http:|\/\/))/i';
+
     /**
      * Sanitizes SVG content and returns clean XML, or null if the SVG is malformed or dangerous.
      */
@@ -64,12 +67,7 @@ final readonly class SvgSanitizer
 
                 if ($tagName === 'style') {
                     $styleContent = rawurldecode($child->textContent);
-                    if (
-                        preg_match(
-                            //phpcs:ignore
-                            '/(expression\s*\(|javascript\s*:|behavior\s*:|@import|url\s*\(\s*["\']?(?:javascript:|data:|http:|\/\/))/i',
-                            $styleContent,
-                        )) {
+                    if (preg_match(self::DANGEROUS_CSS_PATTERN, $styleContent)) {
                         $toRemove[] = $child;
                         continue;
                     }
@@ -107,7 +105,7 @@ final readonly class SvgSanitizer
             // Strip style attributes containing dangerous CSS expressions or imports
             if ($name === 'style') {
                 $styleDecoded = rawurldecode($value);
-                if (preg_match('/(expression\s*\(|javascript\s*:|behavior\s*:|@import|url\s*\(\s*["\']?(?:javascript:|data:|http:|\/\/))/i', $styleDecoded)) {
+                if (preg_match(self::DANGEROUS_CSS_PATTERN, $styleDecoded)) {
                     $attrsToRemove[] = $attr->nodeName;
                 }
             }
