@@ -42,7 +42,8 @@ final readonly class SmtpTransport implements SmtpTransportInterface
         $cleanFromName = str_replace(["\r", "\n", "\0"], '', trim($fromName));
         $cleanSubject = str_replace(["\r", "\n", "\0"], '', trim($subject));
 
-        $remoteSocket = sprintf('tcp://%s:%d', $this->host, $this->port);
+        $isSsl = strtolower($this->encryption) === 'ssl' || $this->port === 465;
+        $remoteSocket = sprintf('%s://%s:%d', $isSsl ? 'ssl' : 'tcp', $this->host, $this->port);
         $context = stream_context_create([
             'ssl' => [
                 'verify_peer' => true,
@@ -81,8 +82,8 @@ final readonly class SmtpTransport implements SmtpTransportInterface
                 return false;
             }
 
-            // 3. STARTTLS if required / supported
-            if (in_array(strtolower($this->encryption), ['tls', 'starttls'], true) || $this->port === 587) {
+            // 3. STARTTLS if required / supported and not already wrapped in SSL
+            if (!$isSsl && (in_array(strtolower($this->encryption), ['tls', 'starttls'], true) || $this->port === 587)) {
                 $this->sendCommand($socket, 'STARTTLS');
                 $response = $this->readResponse($socket);
                 if (!str_starts_with($response, '220')) {

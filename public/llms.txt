@@ -17,7 +17,7 @@
 ## Data access
 
 - Public read-only MCP endpoint: `https://ileza.pl/mcp`
-- Public MCP tools: `list_polish_used_price_products`, `get_polish_used_price_product`, `get_polish_used_price_history`, `calculate_polish_income_comparison`.
+- Public MCP tools: `list_polish_fair_price_products`, `get_polish_fair_price_product`, `get_polish_fair_price_history`, `calculate_polish_income_comparison`.
 - No account or API key is required for public tools.
 
 ## Important limitations

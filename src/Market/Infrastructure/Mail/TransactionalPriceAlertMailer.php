@@ -76,9 +76,13 @@ final readonly class TransactionalPriceAlertMailer implements PriceAlertMailerIn
             ? max(0, $previousObservation->medianGrosz - $latestObservation->medianGrosz)
             : 0;
 
+        $priceFormatted = $locale === 'pl'
+            ? number_format($latestObservation->medianGrosz / 100, 0, ',', ' ') . ' zł'
+            : number_format($latestObservation->medianGrosz / 100, 0, '.', ',') . ' PLN';
+
         $subject = $this->translator->trans('market.mail.drop.subject', [
             '%product%' => $product->name,
-            '%price%' => number_format($latestObservation->medianGrosz / 100, 0, ',', ' ') . ' zł',
+            '%price%' => $priceFormatted,
         ], 'messages', $locale);
 
         $context = [

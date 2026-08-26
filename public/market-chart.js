@@ -23,7 +23,7 @@
 
         let areaPath = `M ${getX(0)} ${getY(data[0].high_pln)}`;
         data.forEach((d, i) => { areaPath += ` L ${getX(i)} ${getY(d.high_pln)}`; });
-        for (let i = data.length - 1; i >= 0; i--) { areaPath += ` L ${getX(i)} ${getY(d.low_pln)}`; }
+        for (let i = data.length - 1; i >= 0; i--) { areaPath += ` L ${getX(i)} ${getY(data[i].low_pln)}`; }
         areaPath += ' Z';
 
         const medianPath = data.map((d, i) => `${i === 0 ? 'M' : 'L'} ${getX(i)} ${getY(d.median_pln)}`).join(' ');

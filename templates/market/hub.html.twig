@@ -298,7 +298,7 @@
         {% if row.latest %}
             {% set schema_items = schema_items|merge([{
                 '@type': 'ListItem',
-                'position': loop.index,
+                'position': schema_items|length + 1,
                 'item': {
                     '@type': 'WebPage',
                     'name': row.product.name,

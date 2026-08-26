@@ -38,9 +38,12 @@ final readonly class DoctrinePriceAlertRepository implements PriceAlertRepositor
 
         if ($existing !== null) {
             $existing->setTargetPriceGrosz($targetPriceGrosz);
-            if (!$existing->isVerified()) {
+            if (!$existing->isVerified() || $existing->getStatus() === PriceAlert::STATUS_UNSUBSCRIBED) {
                 $verificationToken = bin2hex(random_bytes(32));
                 $existing->setVerificationToken($verificationToken);
+                $existing->setVerified(false);
+                $existing->setVerifiedAt(null);
+                $existing->setStatus(PriceAlert::STATUS_PENDING);
             }
             $this->entityManager->flush();
 

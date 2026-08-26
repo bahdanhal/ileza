@@ -47,8 +47,8 @@ graph TD
    - Client IPs and visitor tracking are irreversibly hashed with HMAC-SHA256.
 
 4. **Model Context Protocol (MCP) Integration**
-   - Public tools: `list_polish_used_price_products`, `get_polish_used_price_product`, `get_polish_used_price_history`, `calculate_polish_income_comparison`.
-   - Admin tools: `get_admin_dashboard_statistics`, `list_admin_contact_leads`, `list_admin_product_requests`, `list_admin_price_tips`, `create_polish_used_price_product`, `update_polish_used_price_product`, `delete_polish_used_price_product`, `update_polish_used_price_observation`.
+   - Public tools: `list_polish_fair_price_products`, `get_polish_fair_price_product`, `get_polish_fair_price_history`, `calculate_polish_income_comparison`.
+   - Admin tools: `get_admin_dashboard_statistics`, `list_admin_contact_leads`, `list_admin_product_requests`, `list_admin_price_tips`, `create_polish_fair_price_product`, `update_polish_fair_price_product`, `delete_polish_fair_price_product`, `update_polish_fair_price_observation`.
 
 ---
 

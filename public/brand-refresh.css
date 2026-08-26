@@ -149,7 +149,7 @@ body.ileza-site {
 
 .market-service-strip {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   margin: 38px 0 0;
   padding: 0;
   border: 1px solid #aebabc;

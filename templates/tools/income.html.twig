@@ -14,19 +14,19 @@
     '@graph': [
       {
         '@type': 'WebApplication',
-        '@id': (app.request.locale == 'pl' ? 'https://bahdanhal.pl/pl/narzedzia/kalkulator-wynagrodzen#app' : 'https://bahdanhal.pl/tools/poland-employment-calculator#app'),
+        '@id': (app.request.locale == 'pl' ? 'https://ileza.pl/kalkulator-wynagrodzen#app' : 'https://ileza.pl/salary-calculator#app'),
         'name': 'income.heading'|trans,
         'description': 'income.meta.description'|trans,
-        'url': (app.request.locale == 'pl' ? 'https://bahdanhal.pl/pl/narzedzia/kalkulator-wynagrodzen' : 'https://bahdanhal.pl/tools/poland-employment-calculator'),
+        'url': (app.request.locale == 'pl' ? 'https://ileza.pl/kalkulator-wynagrodzen' : 'https://ileza.pl/salary-calculator'),
         'applicationCategory': 'FinanceApplication',
         'operatingSystem': 'Any',
-        'offers': {'@type': 'Offer', 'price': '0', 'priceCurrency': 'USD'},
-        'author': {'@id': 'https://bahdanhal.pl/#bahdan'},
-        'publisher': {'@id': 'https://bahdanhal.pl/#bahdan'}
+        'offers': {'@type': 'Offer', 'price': '0', 'priceCurrency': 'PLN'},
+        'author': {'@id': 'https://ileza.pl/#editorial'},
+        'publisher': {'@id': 'https://ileza.pl/#editorial'}
       },
       {
         '@type': 'FAQPage',
-        '@id': (app.request.locale == 'pl' ? 'https://bahdanhal.pl/pl/narzedzia/kalkulator-wynagrodzen#faq' : 'https://bahdanhal.pl/tools/poland-employment-calculator#faq'),
+        '@id': (app.request.locale == 'pl' ? 'https://ileza.pl/kalkulator-wynagrodzen#faq' : 'https://ileza.pl/salary-calculator#faq'),
         'inLanguage': app.request.locale,
         'mainEntity': [
           {'@type': 'Question', 'name': 'income.faq.q1'|trans, 'acceptedAnswer': {'@type': 'Answer', 'text': 'income.faq.a1'|trans}},
