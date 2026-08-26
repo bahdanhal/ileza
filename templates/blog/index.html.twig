@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+{% block tool_name %}{{ 'blog.context'|trans }}{% endblock %}
+{% block title %}{{ 'blog.meta.title'|trans }}{% endblock %}
+{% block description %}<meta name="description" content="{{ 'blog.meta.description'|trans }}">{% endblock %}
+{% block canonical %}
+    <link rel="canonical" href="https://ileza.pl{{ app.request.locale == 'pl' ? '/blog/' : '/en/blog/' }}">
+    <link rel="alternate" hreflang="en" href="https://ileza.pl/en/blog/">
+    <link rel="alternate" hreflang="pl" href="https://ileza.pl/blog/">
+    <link rel="alternate" hreflang="x-default" href="https://ileza.pl/blog/">
+{% endblock %}
+{% block stylesheets %}<link rel="stylesheet" href="/tools.css"><link rel="stylesheet" href="/blog.css">{% endblock %}
+{% block language_switch %}
+    <a class="language-switch" href="{{ path('blog_index', {_locale: app.request.locale == 'pl' ? 'en' : 'pl'}) }}" hreflang="{{ app.request.locale == 'pl' ? 'en' : 'pl' }}">{{ app.request.locale == 'pl' ? 'EN' : 'PL' }}</a>
+{% endblock %}
+{% block body %}
+    <main class="tool-shell blog-shell">
+        <header class="blog-hero">
+            <span class="eyebrow">{{ 'blog.eyebrow'|trans }}</span>
+            <h1>{{ 'blog.heading'|trans }}</h1>
+            <p>{{ 'blog.lede'|trans }}</p>
+        </header>
+
+        <section class="blog-grid" aria-label="{{ 'blog.articles_label'|trans }}">
+            {% for article in articles %}
+                <article class="blog-card">
+                    <span>{{ article.publishedAt|date(app.request.locale == 'pl' ? 'd.m.Y' : 'M j, Y') }} · {{ 'blog.reading_time'|trans({'%minutes%': article.readingMinutes}) }}</span>
+                    <h2><a href="{{ path('blog_article', {_locale: app.request.locale, slug: article.slug}) }}">{{ article.title }}</a></h2>
+                    <p>{{ article.description }}</p>
+                    <a class="blog-read" href="{{ path('blog_article', {_locale: app.request.locale, slug: article.slug}) }}">{{ 'blog.read_article'|trans }} →</a>
+                </article>
+            {% endfor %}
+        </section>
+    </main>
+{% endblock %}

@@ -11,6 +11,7 @@ base:
         geo: "Analizator GEO"
         seo: "Analizator SEO"
         market: "Ceny używanych rzeczy"
+        blog: "Poradniki"
         bimi: "BIMI Studio"
         domain_inspector: "Inspektor domen"
         caddy_transpiler: "Konwerter Caddyfile"
@@ -480,6 +481,21 @@ geo:
         two: "Jednoznacznie pokaż główną odpowiedź, autora, datę i źródła wspierające."
         three: "Dodaj poprawne dane uporządkowane zgodne z widoczną treścią, a potem mierz rzeczywiste odesłania i cytowania zamiast polegać wyłącznie na punktacji."
 
+blog:
+    context: "Poradniki zakupowe"
+    meta:
+        title: "Poradniki zakupu używanego sprzętu · IleZa.pl"
+        description: "Praktyczne poradniki zakupu używanego sprzętu Apple, pamięci RAM i komputerów połączone z aktualnymi cenami w Polsce."
+    eyebrow: "KUPUJ MĄDRZEJ · UŻYWAJ SPRZĘTU DŁUŻEJ"
+    heading: "Praktyczne poradniki zakupu używanego sprzętu"
+    lede: "Konkretne checklisty i analizy opłacalności pomagające wybrać konfigurację, sprawdzić urządzenie i zaplanować modernizację."
+    articles_label: "Poradniki zakupowe"
+    guide_eyebrow: "PORADNIK ILEZA.PL"
+    reading_time: "%minutes% min czytania"
+    read_article: "Czytaj poradnik"
+    published: "Opublikowano"
+    live_price: "Aktualna cena z katalogu"
+
 market:
     meta:
         title: "Ceny używanego sprzętu w Polsce · IleZa.pl"
@@ -543,6 +559,25 @@ market:
             cars:
                 title: "Ceny używanych samochodów w Polsce (Peugeot 206 CC) · IleZa.pl"
                 description: "Weryfikowane mediany cen ofertowych używanych aut w Polsce na przykładzie Peugeot 206 CC. Sprawdź typowy przedział cenowy."
+    facets:
+        title: "Filtruj konfiguracje"
+        results: "%count% pasujących konfiguracji"
+        brand: "Marka"
+        price: "Cena"
+        ram: "Pamięć RAM"
+        chip: "Układ"
+        condition: "Stan"
+        any: "Dowolny"
+        used_functional: "Używany, w pełni sprawny"
+        apply: "Zastosuj filtry"
+        clear: "Wyczyść filtry"
+        empty: "Żadna konfiguracja nie pasuje do tych filtrów."
+        pagination: "Strony katalogu"
+        price_options:
+            under_100: "Poniżej 100 zł"
+            100_2000: "100–2 000 zł"
+            2000_20000: "2 000–20 000 zł"
+            over_20000: "Powyżej 20 000 zł"
     movers:
         title: "🔥 Największe spadki cen (30 dni)"
         category_title: "🔥 Największe spadki cen w tej kategorii (30 dni)"

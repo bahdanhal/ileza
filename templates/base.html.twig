@@ -48,6 +48,7 @@
       <div class="topbar-actions">
         <nav class="primary-nav" aria-label="{{ 'base.navigation'|trans }}">
           <a href="{{ path('market_home', {_locale: app.request.locale}) }}">{{ 'base.nav.market'|trans }}</a>
+          <a href="{{ path('blog_index', {_locale: app.request.locale}) }}">{{ 'base.nav.blog'|trans }}</a>
           <a href="{{ path('income_calculator', {_locale: app.request.locale}) }}">{{ 'base.nav.income'|trans }}</a>
         </nav>
         {% block language_switch %}

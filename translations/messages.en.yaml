@@ -11,6 +11,7 @@ base:
         geo: "GEO analyzer"
         seo: "SEO analyzer"
         market: "Used goods prices"
+        blog: "Buying guides"
         bimi: "BIMI Studio"
         domain_inspector: "Domain inspector"
         caddy_transpiler: "Caddyfile Transpiler"
@@ -480,6 +481,21 @@ geo:
         two: "Make the core answer, author, date and supporting sources unmistakable on the page."
         three: "Add accurate structured data that matches visible content, then monitor real referrals and citations rather than relying on this score alone."
 
+blog:
+    context: "Buying guides"
+    meta:
+        title: "Used-tech buying guides · IleZa.pl"
+        description: "Practical, editorial buying guides for used Apple hardware, memory, and PCs, connected to live Polish market prices."
+    eyebrow: "BUY BETTER · KEEP HARDWARE LONGER"
+    heading: "Practical used-tech buying guides"
+    lede: "Clear checklists and value analysis for choosing configurations, inspecting devices, and deciding when an upgrade is worthwhile."
+    articles_label: "Buying guides"
+    guide_eyebrow: "ILEZA.PL BUYING GUIDE"
+    reading_time: "%minutes% min read"
+    read_article: "Read guide"
+    published: "Published"
+    live_price: "Live price from the catalog"
+
 market:
     meta:
         title: "Used Gear Prices in Poland · IleZa.pl"
@@ -543,6 +559,25 @@ market:
             cars:
                 title: "Used Car Prices in Poland (Peugeot 206 CC) · IleZa.pl"
                 description: "Verified fair asking prices for second-hand cars in Poland. Peugeot 206 CC price range and history."
+    facets:
+        title: "Filter configurations"
+        results: "%count% matching configurations"
+        brand: "Brand"
+        price: "Price"
+        ram: "Memory"
+        chip: "Chip"
+        condition: "Condition"
+        any: "Any"
+        used_functional: "Used, fully functional"
+        apply: "Apply filters"
+        clear: "Clear filters"
+        empty: "No configurations match these filters."
+        pagination: "Catalog pages"
+        price_options:
+            under_100: "Under PLN 100"
+            100_2000: "PLN 100–2,000"
+            2000_20000: "PLN 2,000–20,000"
+            over_20000: "Over PLN 20,000"
     movers:
         title: "🔥 Top 30-Day Price Drops"
         category_title: "🔥 Top 30-Day Price Drops in this Category"

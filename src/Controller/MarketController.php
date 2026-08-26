@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Market\Application\BrowseCatalog;
 use App\Market\Application\GetProductPriceHistory;
 use App\Market\Application\ProductCatalog;
 use App\Market\Application\RecordProductRequest;
@@ -36,6 +37,7 @@ final class MarketController extends AbstractController
         private readonly UnsubscribePriceAlert $unsubscribePriceAlert,
         private readonly RateLimiterFactory $priceAlertLimiter,
         private readonly TranslatorInterface $translator,
+        private readonly ?BrowseCatalog $browseCatalog = null,
     ) {
     }
 
@@ -127,7 +129,7 @@ final class MarketController extends AbstractController
         methods: ['GET'],
         priority: 20
     )]
-    public function hub(string $category): Response
+    public function hub(string $category, ?Request $request = null): Response
     {
         $hubInfo = $this->catalog->resolveHub($category);
         if ($hubInfo === null) {
@@ -145,19 +147,28 @@ final class MarketController extends AbstractController
         $matrix = $this->priceHistory->categoryMatrix($categoryKey, $familyFilter);
         $movers = $this->priceHistory->marketMovers($categoryKey, $familyFilter, limit: 4, dropsOnly: true);
 
-        /** @var list<array{family: ProductFamily, configurations: list<array{product: Product, latest: ?PriceObservation}>}> $families */
-        $families = array_map(function (ProductFamily $family): array {
-            $configurations = array_map(fn (Product $product): array => [
-                'product' => $product,
-                'latest' => $this->priceHistory->latestForProduct($product->slug),
-            ], $family->configurations);
-            usort($configurations, self::compareConfigurationsByPrice(...));
+        $browse = ($this->browseCatalog ?? new BrowseCatalog())->execute($matrix, $request?->query->all() ?? []);
 
-            return [
-                'family' => $family,
-                'configurations' => $configurations,
+        /** @var array<string, array{family: ProductFamily, configurations: list<array{product: Product, latest: ?PriceObservation}>}> $familiesBySlug */
+        $familiesBySlug = [];
+        foreach ($browse['rows'] as $row) {
+            if (!$row['family'] instanceof ProductFamily) {
+                continue;
+            }
+            $familiesBySlug[$row['family']->slug] ??= [
+                'family' => $row['family'],
+                'configurations' => [],
             ];
-        }, $catalogFamilies);
+            $familiesBySlug[$row['family']->slug]['configurations'][] = [
+                'product' => $row['product'],
+                'latest' => $row['latest'],
+            ];
+        }
+        $families = array_values($familiesBySlug);
+        foreach ($families as &$family) {
+            usort($family['configurations'], self::compareConfigurationsByPrice(...));
+        }
+        unset($family);
         usort($families, self::compareFamiliesByPrice(...));
 
         return $this->render('market/hub.html.twig', [
@@ -165,10 +176,11 @@ final class MarketController extends AbstractController
             'hub_key' => $hubKey,
             'category_key' => $categoryKey,
             'stats' => $stats,
-            'matrix' => $matrix,
+            'matrix' => $browse['rows'],
             'movers' => $movers,
             'families' => $families,
             'hubs' => $this->catalog->hubs(),
+            'browse' => $browse,
         ]);
     }
 

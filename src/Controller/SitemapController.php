@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Content\Application\BlogRepository;
 use App\Market\Application\ProductCatalog;
 use App\Market\Domain\PriceObservationRepository;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,6 +15,7 @@ final readonly class SitemapController
     public function __construct(
         private ProductCatalog $catalog,
         private PriceObservationRepository $observations,
+        private ?BlogRepository $articles = null,
     ) {
     }
 
@@ -29,6 +31,7 @@ final readonly class SitemapController
             ['/prices/iphone', '/ceny/iphone'],
             ['/prices/ram', '/ceny/ram'],
             ['/prices/cars', '/ceny/samochody'],
+            ['/en/blog/', '/blog/'],
         ];
         $entries = [];
         foreach ($pairs as [$en, $pl]) {
@@ -40,6 +43,13 @@ final readonly class SitemapController
             $en = '/prices/' . $product->slug;
             $pl = '/ceny/' . $product->slug;
             $lastModified = $latest?->observedAt->format('Y-m-d');
+            $entries[] = $this->entry($en, $en, $pl, $lastModified);
+            $entries[] = $this->entry($pl, $en, $pl, $lastModified);
+        }
+        foreach ($this->articles?->all('pl') ?? [] as $article) {
+            $en = '/en/blog/' . $article->getAlternateSlug();
+            $pl = '/blog/' . $article->getSlug();
+            $lastModified = $article->getUpdatedAt()->format('Y-m-d');
             $entries[] = $this->entry($en, $en, $pl, $lastModified);
             $entries[] = $this->entry($pl, $en, $pl, $lastModified);
         }

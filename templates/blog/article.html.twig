@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+{% macro smart_money(grosz, locale) %}
+    {%- set pln = grosz / 100 -%}
+    {%- set step = pln < 100 ? 5 : (pln < 2000 ? 10 : (pln <= 20000 ? 100 : 500)) -%}
+    {{ ((pln / step)|round * step)|number_format(0, locale == 'pl' ? ',' : '.', locale == 'pl' ? ' ' : ',') }}&nbsp;{{ locale == 'pl' ? 'zł' : 'PLN' }}
+{% endmacro %}
+{% block tool_name %}{{ 'blog.context'|trans }}{% endblock %}
+{% block title %}{{ article.title }} · IleZa.pl{% endblock %}
+{% block description %}<meta name="description" content="{{ article.description }}">{% endblock %}
+{% block canonical %}
+    <link rel="canonical" href="https://ileza.pl{{ app.request.locale == 'pl' ? '/blog/' : '/en/blog/' }}{{ article.slug }}">
+    <link rel="alternate" hreflang="{{ app.request.locale }}" href="https://ileza.pl{{ app.request.locale == 'pl' ? '/blog/' : '/en/blog/' }}{{ article.slug }}">
+    <link rel="alternate" hreflang="{{ app.request.locale == 'pl' ? 'en' : 'pl' }}" href="https://ileza.pl{{ app.request.locale == 'pl' ? '/en/blog/' : '/blog/' }}{{ article.alternateSlug }}">
+    <link rel="alternate" hreflang="x-default" href="https://ileza.pl/blog/{{ app.request.locale == 'pl' ? article.slug : article.alternateSlug }}">
+{% endblock %}
+{% block stylesheets %}<link rel="stylesheet" href="/tools.css"><link rel="stylesheet" href="/market.css"><link rel="stylesheet" href="/blog.css">{% endblock %}
+{% block language_switch %}
+    <a class="language-switch" href="{{ path('blog_article', {_locale: app.request.locale == 'pl' ? 'en' : 'pl', slug: article.alternateSlug}) }}" hreflang="{{ app.request.locale == 'pl' ? 'en' : 'pl' }}">{{ app.request.locale == 'pl' ? 'EN' : 'PL' }}</a>
+{% endblock %}
+{% block body %}
+    <main class="tool-shell blog-shell">
+        <nav class="blog-breadcrumbs" aria-label="Breadcrumbs">
+            <a href="{{ path('market_home', {_locale: app.request.locale}) }}">{{ 'market.breadcrumbs.home'|trans }}</a>
+            <span aria-hidden="true">/</span>
+            <a href="{{ path('blog_index', {_locale: app.request.locale}) }}">Blog</a>
+        </nav>
+        <article class="blog-article">
+            <header>
+                <span class="eyebrow">{{ 'blog.guide_eyebrow'|trans }}</span>
+                <h1>{{ article.title }}</h1>
+                <p class="blog-deck">{{ article.description }}</p>
+                <div class="blog-byline">
+                    {{ 'blog.published'|trans }} <time datetime="{{ article.publishedAt|date('Y-m-d') }}">{{ article.publishedAt|date(app.request.locale == 'pl' ? 'd.m.Y' : 'M j, Y') }}</time>
+                    · {{ 'blog.reading_time'|trans({'%minutes%': article.readingMinutes}) }}
+                </div>
+            </header>
+            <div class="blog-copy">
+                {% for block in blocks %}
+                    {% if block.type == 'markdown' %}
+                        {{ block.html|raw }}
+                    {% else %}
+                        {% include 'blog/_price_badge.html.twig' with {product: block.product, latest: block.latest} only %}
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </article>
+    </main>
+    <script type="application/ld+json">{{ {
+        '@context': 'https://schema.org',
+        '@type': 'BlogPosting',
+        'headline': article.title,
+        'description': article.description,
+        'datePublished': article.publishedAt|date('c'),
+        'dateModified': article.updatedAt|date('c'),
+        'inLanguage': article.locale,
+        'author': {'@type': 'Person', 'name': 'Bahdan Hal'},
+        'publisher': {'@type': 'Organization', 'name': 'IleZa.pl'},
+        'mainEntityOfPage': 'https://ileza.pl' ~ (app.request.locale == 'pl' ? '/blog/' : '/en/blog/') ~ article.slug
+    }|json_encode(constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_UNESCAPED_UNICODE'))|raw }}</script>
+{% endblock %}
