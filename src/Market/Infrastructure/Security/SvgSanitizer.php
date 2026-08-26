@@ -64,7 +64,12 @@ final readonly class SvgSanitizer
 
                 if ($tagName === 'style') {
                     $styleContent = rawurldecode($child->textContent);
-                    if (preg_match('/(expression\s*\(|javascript\s*:|behavior\s*:|@import|url\s*\(\s*["\']?(?:javascript:|data:|http:|\/\/))/i', $styleContent)) {
+                    if (
+                        preg_match(
+                            //phpcs:ignore
+                            '/(expression\s*\(|javascript\s*:|behavior\s*:|@import|url\s*\(\s*["\']?(?:javascript:|data:|http:|\/\/))/i',
+                            $styleContent,
+                        )) {
                         $toRemove[] = $child;
                         continue;
                     }
