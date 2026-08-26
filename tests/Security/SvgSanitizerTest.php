@@ -57,6 +57,27 @@ final class SvgSanitizerTest extends TestCase
         self::assertStringNotContainsString('javascript:', $clean);
     }
 
+    public function testStripsMaliciousStyleTagsAndImportDirectives(): void
+    {
+        $svg = '<svg xmlns="http://www.w3.org/2000/svg"><style>@import url("http://evil.com/xss.css"); .a { fill: red; }</style><rect width="10" height="10"/></svg>';
+        $clean = $this->sanitizer->sanitize($svg);
+
+        self::assertNotNull($clean);
+        self::assertStringNotContainsString('@import', $clean);
+        self::assertStringNotContainsString('evil.com', $clean);
+        self::assertStringContainsString('<rect', $clean);
+    }
+
+    public function testStripsMaliciousInlineStyleAttributes(): void
+    {
+        $svg = '<svg xmlns="http://www.w3.org/2000/svg"><rect width="10" height="10" style="background:url(javascript:alert(1))"/></svg>';
+        $clean = $this->sanitizer->sanitize($svg);
+
+        self::assertNotNull($clean);
+        self::assertStringNotContainsString('javascript:', $clean);
+        self::assertStringNotContainsString('style=', $clean);
+    }
+
     public function testRejectsNonSvg(): void
     {
         self::assertNull($this->sanitizer->sanitize('<html><body>hello</body></html>'));

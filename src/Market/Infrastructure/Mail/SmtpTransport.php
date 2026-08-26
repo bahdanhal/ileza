@@ -212,8 +212,9 @@ final readonly class SmtpTransport implements SmtpTransportInterface
         $response = '';
         while (($line = fgets($socket, 512)) !== false) {
             $response .= $line;
-            // Multiline responses have hyphen after code, e.g. "250-SIZE"
-            if (isset($line[3]) && $line[3] === ' ') {
+            $trimmed = rtrim($line, "\r\n");
+            // Standard SMTP response: "250-SIZE" is multiline, "250 OK" or "250" is terminal
+            if (preg_match('/^\d{3}(?:[ ].*)?$/', $trimmed)) {
                 break;
             }
         }

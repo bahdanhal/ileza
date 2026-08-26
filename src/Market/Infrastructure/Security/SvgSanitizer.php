@@ -6,7 +6,7 @@ namespace App\Market\Infrastructure\Security;
 
 final readonly class SvgSanitizer
 {
-    private const DISALLOWED_TAGS = [
+    private const array DISALLOWED_TAGS = [
         'script',
         'foreignobject',
         'iframe',
@@ -62,6 +62,14 @@ final readonly class SvgSanitizer
                     continue;
                 }
 
+                if ($tagName === 'style') {
+                    $styleContent = rawurldecode($child->textContent);
+                    if (preg_match('/(expression\s*\(|javascript\s*:|behavior\s*:|@import|url\s*\(\s*["\']?(?:javascript:|data:|http:|\/\/))/i', $styleContent)) {
+                        $toRemove[] = $child;
+                        continue;
+                    }
+                }
+
                 $this->sanitizeNode($child);
             }
         }
@@ -91,10 +99,10 @@ final readonly class SvgSanitizer
                 }
             }
 
-            // Strip style attributes containing javascript: or expression()
+            // Strip style attributes containing dangerous CSS expressions or imports
             if ($name === 'style') {
                 $styleDecoded = rawurldecode($value);
-                if (preg_match('/(expression\s*\(|javascript\s*:|behavior\s*:)/i', $styleDecoded)) {
+                if (preg_match('/(expression\s*\(|javascript\s*:|behavior\s*:|@import|url\s*\(\s*["\']?(?:javascript:|data:|http:|\/\/))/i', $styleDecoded)) {
                     $attrsToRemove[] = $attr->nodeName;
                 }
             }

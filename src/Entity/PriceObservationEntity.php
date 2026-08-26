@@ -27,13 +27,13 @@ class PriceObservationEntity
     private \DateTimeImmutable $observedAt;
 
     #[ORM\Column(type: 'grosz')]
-    private Grosz|int $medianGrosz;
+    private Grosz $medianGrosz;
 
     #[ORM\Column(type: 'grosz')]
-    private Grosz|int $lowGrosz;
+    private Grosz $lowGrosz;
 
     #[ORM\Column(type: 'grosz')]
-    private Grosz|int $highGrosz;
+    private Grosz $highGrosz;
 
     #[ORM\Column(type: Types::STRING, length: 20)]
     private string $confidence;
@@ -56,9 +56,9 @@ class PriceObservationEntity
     ) {
         $this->productSlug = $productSlug;
         $this->observedAt = $observedAt;
-        $this->medianGrosz = $medianGrosz;
-        $this->lowGrosz = $lowGrosz;
-        $this->highGrosz = $highGrosz;
+        $this->medianGrosz = $medianGrosz instanceof Grosz ? $medianGrosz : Grosz::fromGrosz($medianGrosz);
+        $this->lowGrosz = $lowGrosz instanceof Grosz ? $lowGrosz : Grosz::fromGrosz($lowGrosz);
+        $this->highGrosz = $highGrosz instanceof Grosz ? $highGrosz : Grosz::fromGrosz($highGrosz);
         $this->confidence = $confidence;
         $this->summary = $summary;
         $this->methodology = $methodology;
@@ -81,32 +81,32 @@ class PriceObservationEntity
 
     public function getMedian(): Grosz
     {
-        return $this->medianGrosz instanceof Grosz ? $this->medianGrosz : Grosz::fromGrosz($this->medianGrosz);
+        return $this->medianGrosz;
     }
 
     public function getMedianGrosz(): int
     {
-        return $this->medianGrosz instanceof Grosz ? $this->medianGrosz->amount : $this->medianGrosz;
+        return $this->medianGrosz->amount;
     }
 
     public function getLow(): Grosz
     {
-        return $this->lowGrosz instanceof Grosz ? $this->lowGrosz : Grosz::fromGrosz($this->lowGrosz);
+        return $this->lowGrosz;
     }
 
     public function getLowGrosz(): int
     {
-        return $this->lowGrosz instanceof Grosz ? $this->lowGrosz->amount : $this->lowGrosz;
+        return $this->lowGrosz->amount;
     }
 
     public function getHigh(): Grosz
     {
-        return $this->highGrosz instanceof Grosz ? $this->highGrosz : Grosz::fromGrosz($this->highGrosz);
+        return $this->highGrosz;
     }
 
     public function getHighGrosz(): int
     {
-        return $this->highGrosz instanceof Grosz ? $this->highGrosz->amount : $this->highGrosz;
+        return $this->highGrosz->amount;
     }
 
     public function getConfidence(): string
@@ -126,9 +126,9 @@ class PriceObservationEntity
 
     public function updateFromObservation(PriceObservation $observation): void
     {
-        $this->medianGrosz = $observation->medianGrosz;
-        $this->lowGrosz = $observation->lowGrosz;
-        $this->highGrosz = $observation->highGrosz;
+        $this->medianGrosz = Grosz::fromGrosz($observation->medianGrosz);
+        $this->lowGrosz = Grosz::fromGrosz($observation->lowGrosz);
+        $this->highGrosz = Grosz::fromGrosz($observation->highGrosz);
         $this->confidence = $observation->confidence;
         $this->summary = $observation->summary !== '' ? $observation->summary : null;
         $this->methodology = $observation->methodology !== '' ? $observation->methodology : PriceObservation::METHODOLOGY_MANUAL;

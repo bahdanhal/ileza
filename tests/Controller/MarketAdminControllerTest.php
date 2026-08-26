@@ -144,6 +144,48 @@ final class MarketAdminControllerTest extends TestCase
         self::assertSame('market_admin_auth', $cookies[0]->getName());
     }
 
+    public function testRejectsEmptyPasswordLogin(): void
+    {
+        $catalog = new ProductCatalog();
+        $prodRepo = $this->createStub(ProductRepository::class);
+        $observations = $this->createStub(PriceObservationRepository::class);
+        $productRequests = $this->createStub(ProductRequestStore::class);
+        $priceTips = $this->createStub(PriceTipRepository::class);
+        $priceAlerts = $this->createPriceAlertsStub();
+        $secret = 'test-secret-key';
+
+        $twig = $this->createMock(Environment::class);
+        $twig->expects(self::once())
+            ->method('render')
+            ->with('admin/login.html.twig', self::callback(static function (array $context): bool {
+                return isset($context['error']) && str_contains($context['error'], 'Invalid token');
+            }))
+            ->willReturn('<html>login error</html>');
+
+        $container = new Container();
+        $container->set('twig', $twig);
+
+        $controller = new MarketAdminController(
+            $catalog,
+            $prodRepo,
+            new GetMarketStatistics($catalog, $observations),
+            new RecordPriceObservation($catalog, $observations),
+            new DeletePriceObservation($observations),
+            $productRequests,
+            $priceTips,
+            $priceAlerts,
+            $this->trafficAnalytics(),
+            $secret,
+        );
+        $controller->setContainer($container);
+
+        $validToken = hash_hmac('sha256', 'csrf:market_admin_login', $secret);
+        $request = new Request(request: ['password' => '', '_token' => $validToken]);
+        $response = $controller->login($request);
+
+        self::assertSame(200, $response->getStatusCode());
+    }
+
     public function testSavesManualObservation(): void
     {
         $catalog = new ProductCatalog();
