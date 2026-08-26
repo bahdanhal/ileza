@@ -31,8 +31,8 @@ final class BrowseCatalog
      *         delta_grosz: ?int,
      *         delta_pct: ?float
      *     }>,
-     *     filters: array{brand: string, price: string, ram: string, chip: string, condition: string},
-     *     options: array{brands: list<string>, prices: list<string>, ram: list<string>, chips: list<string>, conditions: list<string>},
+     *     filters: array{brand: string, price: string, ram: string, chip: string},
+     *     options: array{brands: list<string>, prices: list<string>, ram: list<string>, chips: list<string>},
      *     page: int,
      *     pages: int,
      *     total: int,
@@ -46,7 +46,6 @@ final class BrowseCatalog
             'price' => $this->queryString($query, 'price'),
             'ram' => $this->queryString($query, 'ram'),
             'chip' => $this->queryString($query, 'chip'),
-            'condition' => $this->queryString($query, 'condition'),
         ];
         $options = $this->options($rows);
 
@@ -84,7 +83,7 @@ final class BrowseCatalog
 
     /**
      * @param list<array{product: Product, latest: ?PriceObservation}> $rows
-     * @return array{brands: list<string>, prices: list<string>, ram: list<string>, chips: list<string>, conditions: list<string>}
+     * @return array{brands: list<string>, prices: list<string>, ram: list<string>, chips: list<string>}
      */
     private function options(array $rows): array
     {
@@ -116,13 +115,12 @@ final class BrowseCatalog
             'prices' => ['under-100', '100-2000', '2000-20000', 'over-20000'],
             'ram' => array_values($ramValues),
             'chips' => array_values($chipValues),
-            'conditions' => ['used-functional'],
         ];
     }
 
     /**
      * @param array{product: Product, latest: ?PriceObservation} $row
-     * @param array{brand: string, price: string, ram: string, chip: string, condition: string} $filters
+     * @param array{brand: string, price: string, ram: string, chip: string} $filters
      */
     private function matches(array $row, array $filters): bool
     {
@@ -136,10 +134,6 @@ final class BrowseCatalog
         if ($filters['chip'] !== '' && $filters['chip'] !== ($product->specifications['chip'] ?? '')) {
             return false;
         }
-        if ($filters['condition'] !== '' && $filters['condition'] !== 'used-functional') {
-            return false;
-        }
-
         return $filters['price'] === '' || $this->matchesPrice($row['latest'], $filters['price']);
     }
 

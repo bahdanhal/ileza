@@ -1,6 +1,6 @@
 {
     "name": "bahdanhal/bahdan-landing",
-    "description": "Bilingual practical toolbox with a Polish income calculator, GEO and SEO audits, and second-hand market history",
+    "description": "Bilingual practical toolbox with editorial fair-price histories and a Polish income calculator",
     "type": "project",
     "license": "MIT",
     "require": {

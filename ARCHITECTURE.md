@@ -1,6 +1,6 @@
 # Architecture Documentation — Bahdan’s Toolbox
 
-Bahdan’s Toolbox (`bahdan-landing`) is a high-performance, privacy-conscious, bilingual web service and agent toolkit. It provides technical SEO auditing, Generative Engine Optimization (GEO) diagnostics, Polish second-hand price indexing, and Polish employment/income tax calculation.
+Bahdan’s Toolbox (`bahdan-landing`) is a high-performance, privacy-conscious, bilingual web service and agent toolkit. It provides technical SEO auditing, Generative Engine Optimization (GEO) diagnostics, manual editorial fair-price histories, and Polish employment/income tax calculation.
 
 ---
 
@@ -18,7 +18,7 @@ graph TD
         PHP --> AuditContext[Technical SEO Audit & Crawler]
         PHP --> GeoContext[GEO Analyzer & AI Policy Engine]
         PHP --> DomainInspectorContext[Domain & Email Security Inspector]
-        PHP --> MarketContext[Poland Used-Goods Price Index]
+        PHP --> MarketContext[Editorial Fair-Price History]
         PHP --> IncomeContext[Polish Employment Calculator]
         PHP --> McpContext[Model Context Protocol Tools]
     end
@@ -109,7 +109,7 @@ src/
 │   └── Infrastructure/
 │       ├── DoctrineLeadRepository.php # Primary PostgreSQL adapter
 │       └── JsonlLeadRepository.php    # Deprecated legacy migration double
-├── Market/                          # Used Price Index Context (Hexagonal)
+├── Market/                          # Editorial Fair-Price Context (Hexagonal)
 │   ├── Application/
 │   │   └── ProductCatalog.php       # Catalog of product families & configurations
 │   ├── Domain/
@@ -248,14 +248,14 @@ The project exposes a native **Model Context Protocol** endpoint at `/mcp` via `
 - **Public Endpoint**: `https://bahdanhal.pl/mcp`
 - **Transport**: HTTP POST (stateless session with file-backed session IDs).
 - **Tools**:
-  - `list_polish_used_price_products`: Returns tracked product families, configurations, categories, canonical URLs, and observation availability.
-  - `get_polish_used_price_history`: Returns dated asking-price estimates (median, low, high in PLN, sample size, confidence) for a specific product configuration slug.
+  - `list_polish_fair_price_products`: Returns tracked product families, configurations, categories, canonical URLs, and observation availability.
+  - `get_polish_fair_price_history`: Returns dated manual fair-price estimates, reasonable ranges, and confidence for a specific product slug.
   - `get_admin_dashboard_statistics`: Returns privacy-preserving traffic, submission trends, SEO audit outcomes and market observation coverage to an authenticated administrator.
   - `list_admin_contact_leads`: Returns recent private consultation requests to an authenticated administrator.
   - `list_admin_product_requests`: Returns requested price-index products to an authenticated administrator.
   - `list_admin_price_tips`: Returns active, expiring listing links awaiting private manual review.
   - `list_admin_recent_audits`: Returns recent sanitized SEO audit runs and operational outcomes.
-  - `update_polish_used_price_observation`: Writes a manually reviewed aggregate observation.
+  - `update_polish_fair_price_observation`: Writes a manually reviewed aggregate observation.
 - **Administrative authorization**: Admin tools require `Authorization: Bearer <MARKET_ADMIN_TOKEN>`, fail closed when the token is unset, and never accept credentials as tool arguments.
 - **Private output**: Administrative list tools omit IP hashes. Their response bodies may still contain contact details or review URLs and must not be logged or forwarded.
 

@@ -31,10 +31,10 @@
     <link rel="alternate" hreflang="pl" href="https://ileza.pl/ceny/{{ hub.canonicalSlugPl }}">
     <link rel="alternate" hreflang="x-default" href="https://ileza.pl/ceny/{{ hub.canonicalSlugPl }}">
     {% if browse.page > 1 %}
-        <link rel="prev" href="{{ absolute_url(path('market_hub', {_locale: app.request.locale, category: app.request.locale == 'pl' ? hub.canonicalSlugPl : hub.canonicalSlugEn, page: browse.page - 1, brand: browse.filters.brand, price: browse.filters.price, ram: browse.filters.ram, chip: browse.filters.chip, condition: browse.filters.condition})) }}">
+        <link rel="prev" href="{{ absolute_url(path('market_hub', {_locale: app.request.locale, category: app.request.locale == 'pl' ? hub.canonicalSlugPl : hub.canonicalSlugEn, page: browse.page - 1, brand: browse.filters.brand, price: browse.filters.price, ram: browse.filters.ram, chip: browse.filters.chip})) }}">
     {% endif %}
     {% if browse.page < browse.pages %}
-        <link rel="next" href="{{ absolute_url(path('market_hub', {_locale: app.request.locale, category: app.request.locale == 'pl' ? hub.canonicalSlugPl : hub.canonicalSlugEn, page: browse.page + 1, brand: browse.filters.brand, price: browse.filters.price, ram: browse.filters.ram, chip: browse.filters.chip, condition: browse.filters.condition})) }}">
+        <link rel="next" href="{{ absolute_url(path('market_hub', {_locale: app.request.locale, category: app.request.locale == 'pl' ? hub.canonicalSlugPl : hub.canonicalSlugEn, page: browse.page + 1, brand: browse.filters.brand, price: browse.filters.price, ram: browse.filters.ram, chip: browse.filters.chip})) }}">
     {% endif %}
 {% endblock %}
 {% block stylesheets %}<link rel="stylesheet" href="/tools.css"><link rel="stylesheet" href="/market.css"><link rel="stylesheet" href="/market-extra.css">{% endblock %}
@@ -154,9 +154,6 @@
                         <select name="chip"><option value="">{{ 'market.facets.any'|trans }}</option>{% for option in browse.options.chips %}<option value="{{ option }}" {{ browse.filters.chip == option ? 'selected' : '' }}>{{ option }}</option>{% endfor %}</select>
                     </label>
                 {% endif %}
-                <label>{{ 'market.facets.condition'|trans }}
-                    <select name="condition"><option value="">{{ 'market.facets.any'|trans }}</option><option value="used-functional" {{ browse.filters.condition == 'used-functional' ? 'selected' : '' }}>{{ 'market.facets.used_functional'|trans }}</option></select>
-                </label>
                 <button type="submit">{{ 'market.facets.apply'|trans }}</button>
             </div>
         </form>
@@ -234,7 +231,7 @@
         {% if browse.pages > 1 %}
             <nav class="market-pagination" aria-label="{{ 'market.facets.pagination'|trans }}">
                 {% for page in 1..browse.pages %}
-                    <a href="{{ path('market_hub', {_locale: app.request.locale, category: app.request.locale == 'pl' ? hub.canonicalSlugPl : hub.canonicalSlugEn, page: page, brand: browse.filters.brand, price: browse.filters.price, ram: browse.filters.ram, chip: browse.filters.chip, condition: browse.filters.condition}) }}" class="{{ page == browse.page ? 'active' : '' }}" {{ page == browse.page ? 'aria-current="page"' : '' }}>{{ page }}</a>
+                    <a href="{{ path('market_hub', {_locale: app.request.locale, category: app.request.locale == 'pl' ? hub.canonicalSlugPl : hub.canonicalSlugEn, page: page, brand: browse.filters.brand, price: browse.filters.price, ram: browse.filters.ram, chip: browse.filters.chip}) }}" class="{{ page == browse.page ? 'active' : '' }}" {{ page == browse.page ? 'aria-current="page"' : '' }}>{{ page }}</a>
                 {% endfor %}
             </nav>
         {% endif %}
@@ -303,16 +300,9 @@
                 '@type': 'ListItem',
                 'position': loop.index,
                 'item': {
-                    '@type': 'Product',
+                    '@type': 'WebPage',
                     'name': row.product.name,
-                    'url': 'https://ileza.pl' ~ (app.request.locale == 'pl' ? '/ceny/' : '/prices/') ~ row.product.slug,
-                    'offers': {
-                        '@type': 'AggregateOffer',
-                        'priceCurrency': 'PLN',
-                        'lowPrice': (row.latest.lowGrosz / 100)|round(2),
-                        'highPrice': (row.latest.highGrosz / 100)|round(2),
-                        'offerCount': row.latest.sampleSize
-                    }
+                    'url': 'https://ileza.pl' ~ (app.request.locale == 'pl' ? '/ceny/' : '/prices/') ~ row.product.slug
                 }
             }]) %}
         {% endif %}

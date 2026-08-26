@@ -157,8 +157,7 @@ final class MarketAdminControllerTest extends TestCase
                 return $obs->productSlug === 'iphone-13-128gb'
                     && $obs->medianGrosz === 215000
                     && $obs->lowGrosz === 190000
-                    && $obs->highGrosz === 240000
-                    && $obs->sampleSize === 6;
+                    && $obs->highGrosz === 240000;
             }));
 
         $productRequests = new JsonProductRequestStore(sys_get_temp_dir(), 'secret');
@@ -195,7 +194,6 @@ final class MarketAdminControllerTest extends TestCase
                 'median_pln' => '2150',
                 'low_pln' => '1900',
                 'high_pln' => '2400',
-                'sample_size' => '6',
                 'confidence' => 'high',
                 '_token' => $validToken,
             ],
@@ -257,7 +255,7 @@ final class MarketAdminControllerTest extends TestCase
                 'slug' => 'iphone-16-pro-256gb',
                 'name' => 'Apple iPhone 16 Pro 256 GB',
                 'category' => 'smartphones',
-                'definition' => 'Used clean condition',
+                'definition' => 'Exact product identity',
                 'family_slug' => 'iphone-16-pro',
                 'family_name' => 'Apple iPhone 16 Pro',
                 'image_url' => '/images/market/iphone-16.jpg',
@@ -320,7 +318,6 @@ final class MarketAdminControllerTest extends TestCase
                 'median_pln' => '2150',
                 'low_pln' => '1900',
                 'high_pln' => '2400',
-                'sample_size' => '6',
                 '_token' => 'invalid-token',
             ],
             cookies: ['market_admin_auth' => $authCookie]

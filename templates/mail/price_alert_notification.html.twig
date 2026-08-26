@@ -45,7 +45,7 @@
             <p>A new market valuation has been recorded for your tracked item <strong>{{ product.name }}</strong>.</p>
             
             <div class="price-highlight">
-                <div style="font-size: 13px; color: #15803d; font-weight: 600; text-transform: uppercase; margin-bottom: 4px;">Current Market Median</div>
+                <div style="font-size: 13px; color: #15803d; font-weight: 600; text-transform: uppercase; margin-bottom: 4px;">Current Fair Price</div>
                 <div class="price-number">{{ ((latest.medianGrosz / 100)|number_format(0, '.', ',')) }} PLN</div>
                 {% if previous and previous.medianGrosz > latest.medianGrosz %}
                     <div class="price-prev">Previous: {{ ((previous.medianGrosz / 100)|number_format(0, '.', ',')) }} PLN (drop of {{ (((previous.medianGrosz - latest.medianGrosz) / 100)|number_format(0, '.', ',')) }} PLN)</div>

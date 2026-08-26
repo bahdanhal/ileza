@@ -222,25 +222,21 @@
                             <input id="entry-date" name="observed_at" type="date" value="{{ 'now'|date('Y-m-d') }}" required>
                         </div>
                         <div class="admin-form-group">
-                            <label for="entry-median">Median PLN</label>
+                            <label for="entry-median">Fair Price PLN</label>
                             <input id="entry-median" name="median_pln" type="number" step="1" min="1" placeholder="e.g. 2150" required>
                         </div>
                     </div>
                     <div class="admin-form-row">
                         <div class="admin-form-group">
-                            <label for="entry-low">Low PLN</label>
+                            <label for="entry-low">Reasonable Low PLN</label>
                             <input id="entry-low" name="low_pln" type="number" step="1" min="1" placeholder="e.g. 1900" required>
                         </div>
                         <div class="admin-form-group">
-                            <label for="entry-high">High PLN</label>
+                            <label for="entry-high">Reasonable High PLN</label>
                             <input id="entry-high" name="high_pln" type="number" step="1" min="1" placeholder="e.g. 2400" required>
                         </div>
                     </div>
                     <div class="admin-form-row">
-                        <div class="admin-form-group">
-                            <label for="entry-sample">Sample Size</label>
-                            <input id="entry-sample" name="sample_size" type="number" step="1" min="3" value="6" required>
-                        </div>
                         <div class="admin-form-group">
                             <label for="entry-confidence">Confidence</label>
                             <select id="entry-confidence" name="confidence">
@@ -270,12 +266,14 @@
                         </div>
                         <div class="admin-form-group">
                             <label for="prod-category">Category</label>
-                            <select id="prod-category" name="category" required>
+                            <input id="prod-category" name="category" type="text" list="product-categories" placeholder="e.g. cosmetics" required>
+                            <datalist id="product-categories">
                                 <option value="smartphones">Smartphones</option>
                                 <option value="laptops">Laptops</option>
                                 <option value="ram">RAM Memory</option>
                                 <option value="cars">Cars</option>
-                            </select>
+                                <option value="cosmetics">Cosmetics</option>
+                            </datalist>
                         </div>
                     </div>
                     <div class="admin-form-group">
@@ -283,8 +281,8 @@
                         <input id="prod-name" name="name" type="text" placeholder="e.g. Apple iPhone 15 Pro 128 GB" required>
                     </div>
                     <div class="admin-form-group">
-                        <label for="prod-definition">Definition & Quality Criteria</label>
-                        <textarea id="prod-definition" name="definition" rows="2" placeholder="e.g. Used and fully functional with intact screen..." required></textarea>
+                        <label for="prod-definition">Product Identity & Estimate Scope</label>
+                        <textarea id="prod-definition" name="definition" rows="2" placeholder="e.g. Exact model, capacity, size, or formulation covered by this estimate..." required></textarea>
                     </div>
                     <div class="admin-form-row">
                         <div class="admin-form-group">

@@ -29,7 +29,6 @@ final class GetMarketStatisticsTest extends TestCase
                         210000,
                         190000,
                         230000,
-                        5,
                         'high',
                         '',
                         PriceObservation::METHODOLOGY_MANUAL

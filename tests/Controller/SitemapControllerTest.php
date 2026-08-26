@@ -51,7 +51,6 @@ final class SitemapControllerTest extends TestCase
                     1200000,
                     1000000,
                     1400000,
-                    8,
                     'medium',
                     '',
                     PriceObservation::METHODOLOGY_MANUAL,

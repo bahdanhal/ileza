@@ -2,16 +2,16 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "IleZa.pl Model Context Protocol (MCP) Tools Specification",
   "description": "Formal contract definition for Polish Market & Tax MCP tools exposed to AI agents.",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "endpoint": "/mcp",
   "tools": [
     {
-      "name": "list_polish_used_price_products",
-      "description": "List product configurations (smartphones, laptops, RAM, cars) tracked for Polish marketplace fair price history.",
+      "name": "list_polish_fair_price_products",
+      "description": "List products tracked for manual editorial fair-price history in Poland.",
       "parameters": []
     },
     {
-      "name": "get_polish_used_price_product",
+      "name": "get_polish_fair_price_product",
       "description": "Get full product specification, family grouping, and media details for a product slug.",
       "parameters": [
         {
@@ -22,8 +22,8 @@
       ]
     },
     {
-      "name": "get_polish_used_price_history",
-      "description": "Get dated, manually reviewed Polish marketplace asking-price observations for one exact product slug.",
+      "name": "get_polish_fair_price_history",
+      "description": "Get dated manual editorial fair-price estimates for one exact product slug.",
       "parameters": [
         {
           "name": "slug",
@@ -56,8 +56,8 @@
       ]
     },
     {
-      "name": "update_polish_used_price_observation",
-      "description": "Admin tool: Add or update a verified Polish used price observation for a product slug. Authorization is handled via the Authorization header.",
+      "name": "update_polish_fair_price_observation",
+      "description": "Admin tool: Add or update a manual editorial fair-price estimate for a product slug. Authorization is handled via the Authorization header.",
       "parameters": [
         {
           "name": "slug",
@@ -65,7 +65,7 @@
           "required": true
         },
         {
-          "name": "median_pln",
+          "name": "fair_price_pln",
           "type": "number",
           "required": true
         },
@@ -77,11 +77,6 @@
         {
           "name": "high_pln",
           "type": "number",
-          "required": false
-        },
-        {
-          "name": "sample_size",
-          "type": "integer",
           "required": false
         },
         {
@@ -103,7 +98,7 @@
       ]
     },
     {
-      "name": "create_polish_used_price_product",
+      "name": "create_polish_fair_price_product",
       "description": "Admin tool: Create a new tracked product configuration in the database.",
       "parameters": [
         {
@@ -159,7 +154,7 @@
       ]
     },
     {
-      "name": "update_polish_used_price_product",
+      "name": "update_polish_fair_price_product",
       "description": "Admin tool: Update an existing tracked product configuration in the database.",
       "parameters": [
         {
@@ -215,7 +210,7 @@
       ]
     },
     {
-      "name": "delete_polish_used_price_product",
+      "name": "delete_polish_fair_price_product",
       "description": "Admin tool: Delete a tracked product from the database.",
       "parameters": [
         {

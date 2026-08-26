@@ -62,7 +62,7 @@ src/
 ├── Geo/                    # Generative Engine Optimization analyzer context
 ├── Income/                 # Polish income calculator bounded context
 ├── Lead/                   # Contact capture bounded context
-├── Market/                 # Poland used-goods price index bounded context
+├── Market/                 # Editorial fair-price history bounded context
 │   ├── Application/        # Use cases, orchestrators, contracts/interfaces
 │   ├── Domain/             # Core business models, entities, value objects
 │   └── Infrastructure/     # Concrete file stores, AI adapters

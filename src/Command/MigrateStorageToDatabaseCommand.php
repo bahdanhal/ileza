@@ -150,7 +150,6 @@ final class MigrateStorageToDatabaseCommand extends Command
                             $obs->medianGrosz,
                             $obs->lowGrosz,
                             $obs->highGrosz,
-                            $obs->sampleSize,
                             $obs->confidence,
                             $obs->summary !== '' ? $obs->summary : null,
                             $obs->methodology !== '' ? $obs->methodology : PriceObservation::METHODOLOGY_MANUAL

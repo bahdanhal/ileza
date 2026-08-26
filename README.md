@@ -1,8 +1,8 @@
 # IleZa.pl (`ileza`)
 
-**Live website:** [IleZa.pl — used electronics prices and Polish salary calculator](https://ileza.pl/)
+**Live website:** [IleZa.pl — editorial fair prices and Polish salary calculator](https://ileza.pl/)
 
-Manually verified second-hand electronics price intelligence for Poland, paired with a private browser-based salary and income calculator.
+Manual editorial fair-price histories for products in Poland, paired with a private browser-based salary and income calculator.
 
 **Related projects:** [Bahdan Hal — software engineering consulting](https://bahdanhal.pl/) · [Stackhal — free developer and DevOps tools](https://stackhal.com/)
 
@@ -12,11 +12,11 @@ Manually verified second-hand electronics price intelligence for Poland, paired 
 
 ## 1. Overview
 
-**IleZa.pl** ("Ile za?") provides transparent, manually verified asking price benchmarks for second-hand electronics and consumer vehicles in Poland, alongside a browser-only Polish employment and tax comparison calculator.
+**IleZa.pl** ("Ile za?") publishes transparent editorial judgments about what products are reasonably worth without premiums for novelty, packaging, marketing, or large retail markups. It is designed to cover any product category, including electronics, vehicles, and cosmetics, alongside a browser-only Polish employment and tax comparison calculator.
 
 ### Core Features & Canonical Routes:
-- **Price Radar & Catalog (`/`, PL: `/pl/`)**: Live catalog of product families (smartphones, laptops, cars, RAM).
-- **Product History (`/ceny/{slug}`, EN: `/prices/{slug}`)**: Detailed 30-day and 90-day price trends, median asking prices, sample size, and market condition ratings.
+- **Fair-Price Catalog (`/`, PL: `/pl/`)**: Catalog of products with manual editorial price estimates.
+- **Product History (`/ceny/{slug}`, EN: `/prices/{slug}`)**: Dated editorial fair prices, reasonable ranges, confidence, and historical changes.
 - **Employment & Tax Calculator (`/kalkulator-wynagrodzen`, EN: `/salary-calculator`)**: Browser-only comparison of UoP, Umowa Zlecenie, Umowa o Dzieło, and B2B from a single company employer budget using 2026 Polish tax rules.
 - **Product Addition Request (`/zglos`, EN: `/request`)**: Community submission queue for new models.
 - **Price Tip Submission (`/ceny/{slug}/okazja`, EN: `/prices/{slug}/price-tip`)**: Community price alerts for admin review.

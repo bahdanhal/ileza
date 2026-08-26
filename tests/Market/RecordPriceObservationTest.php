@@ -23,7 +23,6 @@ final class RecordPriceObservationTest extends TestCase
                     && $obs->medianGrosz === 210000
                     && $obs->lowGrosz === 190000
                     && $obs->highGrosz === 230000
-                    && $obs->sampleSize === 6
                     && $obs->confidence === 'high';
             }));
 
@@ -34,7 +33,6 @@ final class RecordPriceObservationTest extends TestCase
             210000,
             190000,
             230000,
-            6,
             'high',
             'Summary note'
         );
@@ -76,25 +74,6 @@ final class RecordPriceObservationTest extends TestCase
             200000,
             220000, // low > median
             250000
-        );
-    }
-
-    public function testThrowsExceptionForSmallSampleSize(): void
-    {
-        $catalog = new ProductCatalog();
-        $repository = $this->createStub(PriceObservationRepository::class);
-        $service = new RecordPriceObservation($catalog, $repository);
-
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Sample size must be at least 3');
-
-        $service->execute(
-            'iphone-13-128gb',
-            new \DateTimeImmutable('2026-08-20'),
-            200000,
-            180000,
-            220000,
-            2 // sample size < 3
         );
     }
 }

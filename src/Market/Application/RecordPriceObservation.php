@@ -22,7 +22,6 @@ final readonly class RecordPriceObservation
         int $medianGrosz,
         int $lowGrosz,
         int $highGrosz,
-        int $sampleSize = 5,
         string $confidence = 'high',
         string $summary = '',
         string $methodology = PriceObservation::METHODOLOGY_MANUAL,
@@ -35,10 +34,6 @@ final readonly class RecordPriceObservation
             throw new \InvalidArgumentException('Inconsistent prices. Ensure low <= median <= high and median > 0.');
         }
 
-        if ($sampleSize < 3) {
-            throw new \InvalidArgumentException('Sample size must be at least 3.');
-        }
-
         $confidenceLevel = in_array($confidence, ['low', 'medium', 'high'], true) ? $confidence : 'high';
 
         $observation = new PriceObservation(
@@ -47,7 +42,6 @@ final readonly class RecordPriceObservation
             $medianGrosz,
             $lowGrosz,
             $highGrosz,
-            $sampleSize,
             $confidenceLevel,
             $summary,
             $methodology !== '' ? $methodology : PriceObservation::METHODOLOGY_MANUAL,

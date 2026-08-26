@@ -121,7 +121,7 @@ final readonly class AdminTools
     #[McpTool(
         name: 'list_admin_product_requests',
         // phpcs:ignore Generic.Files.LineLength
-        description: 'Admin-only: List recent requests for products to add to the used-price index. Requires an Authorization: Bearer header.'
+        description: 'Admin-only: List recent requests for products to add to the editorial fair-price index. Requires an Authorization: Bearer header.'
     )]
     public function productRequests(
         #[Schema(description: 'Maximum records to return, from 1 to 100.')] int $limit = 50,

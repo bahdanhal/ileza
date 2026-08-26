@@ -30,7 +30,6 @@ final class CheckPriceAlertsCommandTest extends TestCase
                         230000,
                         220000,
                         250000,
-                        5,
                         'high',
                         '',
                         PriceObservation::METHODOLOGY_MANUAL
@@ -92,7 +91,6 @@ final class CheckPriceAlertsCommandTest extends TestCase
                         230000,
                         220000,
                         250000,
-                        5,
                         'high',
                         '',
                         PriceObservation::METHODOLOGY_MANUAL

@@ -23,7 +23,6 @@ final class DoctrinePriceObservationRepositoryTest extends DoctrineTestCase
             210000,
             190000,
             230000,
-            5,
             'high',
             '',
             PriceObservation::METHODOLOGY_MANUAL
@@ -35,7 +34,6 @@ final class DoctrinePriceObservationRepositoryTest extends DoctrineTestCase
             205000,
             185000,
             225000,
-            6,
             'high',
             '',
             PriceObservation::METHODOLOGY_MANUAL
@@ -75,7 +73,6 @@ final class DoctrinePriceObservationRepositoryTest extends DoctrineTestCase
             210000,
             190000,
             230000,
-            5,
             'medium',
             'Initial estimate',
             PriceObservation::METHODOLOGY_MANUAL
@@ -88,7 +85,6 @@ final class DoctrinePriceObservationRepositoryTest extends DoctrineTestCase
             215000,
             195000,
             235000,
-            8,
             'high',
             'Updated estimate',
             PriceObservation::METHODOLOGY_MANUAL
@@ -100,7 +96,6 @@ final class DoctrinePriceObservationRepositoryTest extends DoctrineTestCase
         self::assertSame(215000, $history[0]->medianGrosz);
         self::assertSame(195000, $history[0]->lowGrosz);
         self::assertSame(235000, $history[0]->highGrosz);
-        self::assertSame(8, $history[0]->sampleSize);
         self::assertSame('high', $history[0]->confidence);
         self::assertSame('Updated estimate', $history[0]->summary);
     }

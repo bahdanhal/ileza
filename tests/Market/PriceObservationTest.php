@@ -25,7 +25,6 @@ final class PriceObservationTest extends TestCase
             150000,
             160000,
             140000,
-            8,
             'medium',
             'Summary',
             'Method'
@@ -60,7 +59,6 @@ final class PriceObservationTest extends TestCase
             150000,
             130000,
             170000,
-            8,
             'medium',
             '',
             PriceObservation::METHODOLOGY_MANUAL

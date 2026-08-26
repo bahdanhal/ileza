@@ -25,8 +25,8 @@ final readonly class MarketPriceTools
     }
 
     #[McpTool(
-        name: 'list_polish_used_price_products',
-        description: 'List product configurations tracked by the IleZa.pl editorial team for Polish second-hand asking-price history.'
+        name: 'list_polish_fair_price_products',
+        description: 'List products tracked by IleZa.pl for manual editorial fair-price history in Poland.'
     )]
     public function listProducts(): string
     {
@@ -47,14 +47,14 @@ final readonly class MarketPriceTools
     }
 
     #[McpTool(
-        name: 'get_polish_used_price_product',
+        name: 'get_polish_fair_price_product',
         description: 'Get full product specification, family grouping, and media details for a product slug.'
     )]
-    public function getProduct(#[Schema(description: 'Product slug returned by list_polish_used_price_products.')] string $slug): string
+    public function getProduct(#[Schema(description: 'Product slug returned by list_polish_fair_price_products.')] string $slug): string
     {
         $product = $this->catalog->get($slug);
         if ($product === null) {
-            return $this->json(['error' => 'Unknown product slug.', 'suggestion' => 'Call list_polish_used_price_products first.']);
+            return $this->json(['error' => 'Unknown product slug.', 'suggestion' => 'Call list_polish_fair_price_products first.']);
         }
 
         $latest = $this->priceHistory->latestForProduct($slug);
@@ -71,7 +71,7 @@ final readonly class MarketPriceTools
                 'image_credit' => $product->imageCredit,
                 'image_source' => $product->imageSource,
                 'specifications' => $product->specifications,
-                'latest_median_pln' => $latest !== null ? $latest->medianGrosz / 100 : null,
+                'latest_fair_price_pln' => $latest !== null ? $latest->medianGrosz / 100 : null,
                 'latest_observed_at' => $latest?->observedAt->format('Y-m-d'),
             ],
             'canonical_url' => $this->canonicalUrl($slug),
@@ -79,15 +79,15 @@ final readonly class MarketPriceTools
     }
 
     #[McpTool(
-        name: 'get_polish_used_price_history',
+        name: 'get_polish_fair_price_history',
         // phpcs:ignore Generic.Files.LineLength
-        description: 'Get dated, editorially reviewed Polish used asking-price observations for one exact product configuration.'
+        description: 'Get dated manual editorial fair-price estimates for one exact product definition in Poland.'
     )]
-    public function getHistory(#[Schema(description: 'Product slug returned by list_polish_used_price_products.')] string $slug): string
+    public function getHistory(#[Schema(description: 'Product slug returned by list_polish_fair_price_products.')] string $slug): string
     {
         $product = $this->catalog->get($slug);
         if ($product === null) {
-            return $this->json(['error' => 'Unknown product slug.', 'suggestion' => 'Call list_polish_used_price_products first.']);
+            return $this->json(['error' => 'Unknown product slug.', 'suggestion' => 'Call list_polish_fair_price_products first.']);
         }
 
         return $this->json([
@@ -96,29 +96,27 @@ final readonly class MarketPriceTools
             'currency' => 'PLN',
             'observations' => array_map(static fn ($item) => [
                 'observed_at' => $item->observedAt->format('Y-m-d'),
-                'median_pln' => $item->medianGrosz / 100,
-                'low_pln' => $item->lowGrosz / 100,
-                'high_pln' => $item->highGrosz / 100,
-                'sample_size' => $item->sampleSize,
+                'fair_price_pln' => $item->medianGrosz / 100,
+                'reasonable_low_pln' => $item->lowGrosz / 100,
+                'reasonable_high_pln' => $item->highGrosz / 100,
                 'confidence' => $item->confidence,
             ], $this->priceHistory->forProduct($slug)),
             // phpcs:ignore Generic.Files.LineLength
-            'methodology' => 'Editorially reviewed aggregate of comparable public asking prices; not scraped data, completed-sale statistics, a valuation, or purchasing advice.',
+            'methodology' => 'Manual editorial estimate based on product knowledge and available market information. It is not a statistical sample, automated pricing algorithm, completed-sale statistic, or purchasing advice.',
             'canonical_url' => $this->canonicalUrl($slug),
         ]);
     }
 
     #[McpTool(
-        name: 'update_polish_used_price_observation',
+        name: 'update_polish_fair_price_observation',
         // phpcs:ignore Generic.Files.LineLength
-        description: 'Admin-only tool: Add or update a verified Polish marketplace used asking-price observation. Authorization is handled via the Authorization header — do NOT pass any token argument.'
+        description: 'Admin-only tool: Add or update a manual editorial fair-price estimate for Poland. Authorization is handled via the Authorization header — do NOT pass any token argument.'
     )]
     public function updateObservation(
         #[Schema(description: 'Product slug to update (must exist in catalog).')] string $slug,
-        #[Schema(description: 'Observed fair market median price in PLN.')] float $median_pln,
-        #[Schema(description: 'Optional lower bound price in PLN (defaults to median * 0.88).')] ?float $low_pln = null,
-        #[Schema(description: 'Optional upper bound price in PLN (defaults to median * 1.14).')] ?float $high_pln = null,
-        #[Schema(description: 'Optional sample size count (defaults to 8).')] ?int $sample_size = null,
+        #[Schema(description: 'Manual editorial fair-price estimate in PLN.')] float $fair_price_pln,
+        #[Schema(description: 'Optional lower bound of the reasonable price range in PLN.')] ?float $low_pln = null,
+        #[Schema(description: 'Optional upper bound of the reasonable price range in PLN.')] ?float $high_pln = null,
         #[Schema(description: 'Optional confidence level: low, medium, high (defaults to high).')] ?string $confidence = null,
         #[Schema(description: 'Optional observation date in YYYY-MM-DD or ISO 8601 format (defaults to current date).')] ?string $observed_at = null,
         #[Schema(description: 'Optional summary note or verification details.')] ?string $summary = null,
@@ -129,20 +127,15 @@ final readonly class MarketPriceTools
 
         $product = $this->catalog->get($slug);
         if ($product === null) {
-            return $this->json(['error' => 'Unknown product slug.', 'suggestion' => 'Call list_polish_used_price_products first.']);
+            return $this->json(['error' => 'Unknown product slug.', 'suggestion' => 'Call list_polish_fair_price_products first.']);
         }
 
-        $medianGrosz = (int) round($median_pln * 100);
+        $medianGrosz = (int) round($fair_price_pln * 100);
         $lowGrosz = $low_pln !== null ? (int) round($low_pln * 100) : (int) round($medianGrosz * 0.88);
         $highGrosz = $high_pln !== null ? (int) round($high_pln * 100) : (int) round($medianGrosz * 1.14);
 
         if ($medianGrosz <= 0 || $lowGrosz <= 0 || $highGrosz < $medianGrosz || $medianGrosz < $lowGrosz) {
             return $this->json(['error' => 'Inconsistent prices. Ensure low <= median <= high and median > 0.']);
-        }
-
-        $sampleSize = $sample_size ?? 8;
-        if ($sampleSize < 3) {
-            return $this->json(['error' => 'Sample size must be at least 3.']);
         }
 
         $confidenceLevel = $confidence ?? 'high';
@@ -156,7 +149,7 @@ final readonly class MarketPriceTools
             return $this->json(['error' => 'Invalid date format. Use YYYY-MM-DD or ISO 8601.']);
         }
 
-        $note = $summary ?? 'Verified and calibrated against Polish secondary market listings.';
+        $note = $summary ?? 'Manual IleZa.pl editorial fair-price estimate.';
 
         try {
             $this->recordObservation->execute(
@@ -165,7 +158,6 @@ final readonly class MarketPriceTools
                 $medianGrosz,
                 $lowGrosz,
                 $highGrosz,
-                $sampleSize,
                 $confidenceLevel,
                 $note,
                 PriceObservation::METHODOLOGY_MANUAL
@@ -183,10 +175,9 @@ final readonly class MarketPriceTools
             ],
             'observation' => [
                 'observed_at' => $observedDate->format('Y-m-d H:i:sP'),
-                'median_pln' => $medianGrosz / 100,
-                'low_pln' => $lowGrosz / 100,
-                'high_pln' => $highGrosz / 100,
-                'sample_size' => $sampleSize,
+                'fair_price_pln' => $medianGrosz / 100,
+                'reasonable_low_pln' => $lowGrosz / 100,
+                'reasonable_high_pln' => $highGrosz / 100,
                 'confidence' => $confidenceLevel,
                 'summary' => $note,
             ],
@@ -195,14 +186,14 @@ final readonly class MarketPriceTools
     }
 
     #[McpTool(
-        name: 'create_polish_used_price_product',
+        name: 'create_polish_fair_price_product',
         description: 'Admin-only: Create a new tracked product configuration in the database. Requires Bearer authorization.'
     )]
     public function createProduct(
         #[Schema(description: 'URL-safe product slug (e.g. iphone-16-pro-256gb).')] string $slug,
         #[Schema(description: 'Human-readable product name (e.g. Apple iPhone 16 Pro 256 GB).')] string $name,
-        #[Schema(description: 'Product category (smartphones, laptops, ram, cars).')] string $category,
-        #[Schema(description: 'Product condition definition and inclusion/exclusion rules.')] string $definition,
+        #[Schema(description: 'Flexible product category slug, such as smartphones, cosmetics, or cars.')] string $category,
+        #[Schema(description: 'Exact product identity and the scope of the editorial price estimate.')] string $definition,
         #[Schema(description: 'Optional family slug (e.g. iphone-16).')] ?string $family_slug = null,
         #[Schema(description: 'Optional family name (e.g. Apple iPhone 16).')] ?string $family_name = null,
         #[Schema(description: 'Optional image path or URL (e.g. /images/market/iphone-16.jpg).')] ?string $image = null,
@@ -270,14 +261,14 @@ final readonly class MarketPriceTools
     }
 
     #[McpTool(
-        name: 'update_polish_used_price_product',
+        name: 'update_polish_fair_price_product',
         description: 'Admin-only: Update an existing tracked product configuration. Requires Bearer authorization.'
     )]
     public function updateProduct(
         #[Schema(description: 'Existing product slug to update.')] string $slug,
         #[Schema(description: 'Updated human-readable product name.')] ?string $name = null,
         #[Schema(description: 'Updated category.')] ?string $category = null,
-        #[Schema(description: 'Updated condition definition.')] ?string $definition = null,
+        #[Schema(description: 'Updated product identity and estimate scope.')] ?string $definition = null,
         #[Schema(description: 'Updated family slug.')] ?string $family_slug = null,
         #[Schema(description: 'Updated family name.')] ?string $family_name = null,
         #[Schema(description: 'Updated image path or URL.')] ?string $image = null,
@@ -345,7 +336,7 @@ final readonly class MarketPriceTools
     }
 
     #[McpTool(
-        name: 'delete_polish_used_price_product',
+        name: 'delete_polish_fair_price_product',
         description: 'Admin-only: Delete a tracked product from the database. Requires Bearer authorization.'
     )]
     public function deleteProduct(#[Schema(description: 'Product slug to delete.')] string $slug): string

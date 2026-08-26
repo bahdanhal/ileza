@@ -35,9 +35,6 @@ class PriceObservationEntity
     #[ORM\Column(type: 'grosz')]
     private Grosz|int $highGrosz;
 
-    #[ORM\Column(type: Types::INTEGER)]
-    private int $sampleSize;
-
     #[ORM\Column(type: Types::STRING, length: 20)]
     private string $confidence;
 
@@ -53,7 +50,6 @@ class PriceObservationEntity
         Grosz|int $medianGrosz,
         Grosz|int $lowGrosz,
         Grosz|int $highGrosz,
-        int $sampleSize,
         string $confidence,
         ?string $summary,
         string $methodology
@@ -63,7 +59,6 @@ class PriceObservationEntity
         $this->medianGrosz = $medianGrosz;
         $this->lowGrosz = $lowGrosz;
         $this->highGrosz = $highGrosz;
-        $this->sampleSize = $sampleSize;
         $this->confidence = $confidence;
         $this->summary = $summary;
         $this->methodology = $methodology;
@@ -114,11 +109,6 @@ class PriceObservationEntity
         return $this->highGrosz instanceof Grosz ? $this->highGrosz->amount : $this->highGrosz;
     }
 
-    public function getSampleSize(): int
-    {
-        return $this->sampleSize;
-    }
-
     public function getConfidence(): string
     {
         return $this->confidence;
@@ -139,7 +129,6 @@ class PriceObservationEntity
         $this->medianGrosz = $observation->medianGrosz;
         $this->lowGrosz = $observation->lowGrosz;
         $this->highGrosz = $observation->highGrosz;
-        $this->sampleSize = $observation->sampleSize;
         $this->confidence = $observation->confidence;
         $this->summary = $observation->summary !== '' ? $observation->summary : null;
         $this->methodology = $observation->methodology !== '' ? $observation->methodology : PriceObservation::METHODOLOGY_MANUAL;

@@ -27,7 +27,6 @@ final class GetProductPriceHistoryMoversTest extends TestCase
             200000,
             180000,
             220000,
-            8,
             'high',
             '',
             PriceObservation::METHODOLOGY_MANUAL
@@ -38,7 +37,6 @@ final class GetProductPriceHistoryMoversTest extends TestCase
             250000,
             230000,
             270000,
-            8,
             'high',
             '',
             PriceObservation::METHODOLOGY_MANUAL
@@ -51,7 +49,6 @@ final class GetProductPriceHistoryMoversTest extends TestCase
             300000,
             280000,
             320000,
-            10,
             'high',
             '',
             PriceObservation::METHODOLOGY_MANUAL
@@ -62,7 +59,6 @@ final class GetProductPriceHistoryMoversTest extends TestCase
             330000,
             310000,
             350000,
-            10,
             'high',
             '',
             PriceObservation::METHODOLOGY_MANUAL
@@ -109,7 +105,6 @@ final class GetProductPriceHistoryMoversTest extends TestCase
                     8000,
                     7000,
                     9000,
-                    5,
                     'high',
                     '',
                     PriceObservation::METHODOLOGY_MANUAL
@@ -120,7 +115,6 @@ final class GetProductPriceHistoryMoversTest extends TestCase
                     14000,
                     12000,
                     16000,
-                    5,
                     'high',
                     '',
                     PriceObservation::METHODOLOGY_MANUAL
@@ -131,7 +125,6 @@ final class GetProductPriceHistoryMoversTest extends TestCase
                     45000,
                     40000,
                     50000,
-                    5,
                     'high',
                     '',
                     PriceObservation::METHODOLOGY_MANUAL
@@ -160,12 +153,12 @@ final class GetProductPriceHistoryMoversTest extends TestCase
         $repository->method('history')->willReturnCallback(static function (string $slug) use ($now, $monthAgo): array {
             return match ($slug) {
                 'peugeot-206-cc-1-6-petrol' => [
-                    new PriceObservation($slug, $now, 800000, 700000, 900000, 6, 'high', '', PriceObservation::METHODOLOGY_MANUAL),
-                    new PriceObservation($slug, $monthAgo, 850000, 750000, 950000, 6, 'high', '', PriceObservation::METHODOLOGY_MANUAL),
+                    new PriceObservation($slug, $now, 800000, 700000, 900000, 'high', '', PriceObservation::METHODOLOGY_MANUAL),
+                    new PriceObservation($slug, $monthAgo, 850000, 750000, 950000, 'high', '', PriceObservation::METHODOLOGY_MANUAL),
                 ],
                 'peugeot-206-cc-2-0-petrol' => [
-                    new PriceObservation($slug, $now, 1100000, 950000, 1250000, 6, 'high', '', PriceObservation::METHODOLOGY_MANUAL),
-                    new PriceObservation($slug, $monthAgo, 1100000, 950000, 1250000, 6, 'high', '', PriceObservation::METHODOLOGY_MANUAL),
+                    new PriceObservation($slug, $now, 1100000, 950000, 1250000, 'high', '', PriceObservation::METHODOLOGY_MANUAL),
+                    new PriceObservation($slug, $monthAgo, 1100000, 950000, 1250000, 'high', '', PriceObservation::METHODOLOGY_MANUAL),
                 ],
                 default => [],
             };

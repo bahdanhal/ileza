@@ -62,13 +62,13 @@ final class SpecificationComplianceTest extends TestCase
         self::assertCount(8, $spec['tools']);
 
         $names = array_column($spec['tools'], 'name');
-        self::assertContains('list_polish_used_price_products', $names);
-        self::assertContains('get_polish_used_price_product', $names);
-        self::assertContains('get_polish_used_price_history', $names);
+        self::assertContains('list_polish_fair_price_products', $names);
+        self::assertContains('get_polish_fair_price_product', $names);
+        self::assertContains('get_polish_fair_price_history', $names);
         self::assertContains('calculate_polish_income_comparison', $names);
-        self::assertContains('update_polish_used_price_observation', $names);
-        self::assertContains('create_polish_used_price_product', $names);
-        self::assertContains('update_polish_used_price_product', $names);
-        self::assertContains('delete_polish_used_price_product', $names);
+        self::assertContains('update_polish_fair_price_observation', $names);
+        self::assertContains('create_polish_fair_price_product', $names);
+        self::assertContains('update_polish_fair_price_product', $names);
+        self::assertContains('delete_polish_fair_price_product', $names);
     }
 }

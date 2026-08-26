@@ -54,7 +54,6 @@ final class CheckPriceAlertsTest extends DoctrineTestCase
             235000,
             220000,
             250000,
-            5,
             'high',
             '',
             PriceObservation::METHODOLOGY_MANUAL
@@ -90,7 +89,6 @@ final class CheckPriceAlertsTest extends DoctrineTestCase
             240000,
             220000,
             260000,
-            5,
             'high',
             '',
             PriceObservation::METHODOLOGY_MANUAL

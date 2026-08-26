@@ -68,7 +68,6 @@ final class BrowseCatalogTest extends TestCase
                 $medianGrosz,
                 $medianGrosz - 1000,
                 $medianGrosz + 1000,
-                5,
                 'medium',
                 '',
                 PriceObservation::METHODOLOGY_MANUAL,

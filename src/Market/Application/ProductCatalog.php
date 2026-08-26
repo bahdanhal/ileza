@@ -507,7 +507,7 @@ final class ProductCatalog
                         $slug,
                         $name,
                         // phpcs:ignore Generic.Files.LineLength
-                        sprintf('Unlocked %s, used and fully functional, with intact screen. Include comparable Polish marketplace asking prices and exclude new, damaged, parts-only, locked, bundled and refurbished-as-new units.', $name),
+                        sprintf('Exact %s model and storage configuration. The estimate concerns the product itself and excludes unrelated bundles or accessories.', $name),
                         'smartphones',
                         [
                             'generation' => $genName,
@@ -681,7 +681,7 @@ final class ProductCatalog
                         $slug,
                         $name,
                         // phpcs:ignore Generic.Files.LineLength
-                        sprintf('Used, fully functional Apple %s in Poland with the exact display, chip, unified-memory and SSD configuration shown. Exclude damaged, parts-only, locked, bundled and refurbished-as-new units.', $name),
+                        sprintf('Exact Apple %s display, chip, unified-memory, and SSD configuration. The estimate concerns the product itself and excludes unrelated bundles or accessories.', $name),
                         'laptops',
                         [
                             'line' => $family['line'],
@@ -766,7 +766,7 @@ final class ProductCatalog
                     $slug,
                     $name,
                     // phpcs:ignore Generic.Files.LineLength
-                    sprintf('Used, fully functional single %s %s RAM module (%s) in Poland. Exclude defective, ECC server memory, and new-in-box dealer listings.', $group['type'], $module['capacity'], $group['form_factor']),
+                    sprintf('Exact single %s %s RAM module in the %s form factor, with the specified speed.', $group['type'], $module['capacity'], $group['form_factor']),
                     'ram',
                     [
                         'family' => $group['family'],
@@ -791,7 +791,7 @@ final class ProductCatalog
                 'peugeot-206-cc-1-6-petrol',
                 'Peugeot 206 CC 1.6 petrol',
                 // phpcs:ignore Generic.Files.LineLength
-                'Used, registered and roadworthy Peugeot 206 CC with the 1.6-litre petrol engine in Poland. Include complete running cars with normal age-related wear. Exclude damaged, parts-only, non-running, heavily modified, imported-unregistered and dealer-new vehicles.',
+                'Peugeot 206 CC with the 1.6-litre petrol engine. The estimate concerns this exact model and engine variant.',
                 'cars',
                 ['model' => '206 CC', 'engine' => '1.6 petrol', 'market' => 'Poland'],
             ),
@@ -799,7 +799,7 @@ final class ProductCatalog
                 'peugeot-206-cc-2-0-petrol',
                 'Peugeot 206 CC 2.0 petrol',
                 // phpcs:ignore Generic.Files.LineLength
-                'Used, registered and roadworthy Peugeot 206 CC with the 2.0-litre petrol engine in Poland. Include complete running cars with normal age-related wear. Exclude damaged, parts-only, non-running, heavily modified, imported-unregistered and dealer-new vehicles.',
+                'Peugeot 206 CC with the 2.0-litre petrol engine. The estimate concerns this exact model and engine variant.',
                 'cars',
                 ['model' => '206 CC', 'engine' => '2.0 petrol', 'market' => 'Poland'],
             ),

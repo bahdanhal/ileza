@@ -53,7 +53,6 @@ final class JsonPriceObservationRepositoryTest extends TestCase
             $median,
             $median - 10000,
             $median + 10000,
-            12,
             'medium',
             'Summary',
             'Method'

@@ -70,7 +70,7 @@ final class TransactionalPriceAlertMailerTest extends TestCase
         $product = new Product(
             slug: 'iphone-14-128gb',
             name: 'Apple iPhone 14',
-            definition: 'Used condition',
+            definition: 'Exact product identity',
             category: 'smartphones',
             familySlug: 'iphone-14',
             familyName: 'Apple iPhone 14',
@@ -125,7 +125,7 @@ final class TransactionalPriceAlertMailerTest extends TestCase
         $product = new Product(
             slug: 'iphone-14-128gb',
             name: 'Apple iPhone 14',
-            definition: 'Used condition',
+            definition: 'Exact product identity',
             category: 'smartphones',
             familySlug: 'iphone-14',
             familyName: 'Apple iPhone 14',
@@ -139,7 +139,6 @@ final class TransactionalPriceAlertMailerTest extends TestCase
             medianGrosz: 230000,
             lowGrosz: 210000,
             highGrosz: 250000,
-            sampleSize: 5,
             confidence: 'high',
             summary: '',
             methodology: PriceObservation::METHODOLOGY_MANUAL

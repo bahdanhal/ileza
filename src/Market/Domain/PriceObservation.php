@@ -12,7 +12,6 @@ final readonly class PriceObservation
         public int $medianGrosz,
         public int $lowGrosz,
         public int $highGrosz,
-        public int $sampleSize,
         public string $confidence,
         public string $summary,
         public string $methodology,
@@ -20,7 +19,7 @@ final readonly class PriceObservation
         if ($medianGrosz <= 0 || $lowGrosz <= 0 || $highGrosz < $medianGrosz || $medianGrosz < $lowGrosz) {
             throw new \InvalidArgumentException('Observed prices are inconsistent.');
         }
-        if ($sampleSize < 3 || !in_array($confidence, ['low', 'medium', 'high'], true)) {
+        if (!in_array($confidence, ['low', 'medium', 'high'], true)) {
             throw new \InvalidArgumentException('Observation evidence is insufficient.');
         }
     }
@@ -32,7 +31,6 @@ final readonly class PriceObservation
      *     median_grosz: int,
      *     low_grosz: int,
      *     high_grosz: int,
-     *     sample_size: int,
      *     confidence: string,
      *     summary: string,
      *     methodology: string
@@ -46,7 +44,6 @@ final readonly class PriceObservation
             'median_grosz' => $this->medianGrosz,
             'low_grosz' => $this->lowGrosz,
             'high_grosz' => $this->highGrosz,
-            'sample_size' => $this->sampleSize,
             'confidence' => $this->confidence,
             'summary' => $this->summary,
             'methodology' => $this->methodology,
@@ -54,7 +51,8 @@ final readonly class PriceObservation
     }
 
     public const METHODOLOGY_MANUAL =
-        'Editorially reviewed snapshot of comparable public asking prices; submitted source links are retained privately for verification only.';
+        'Manual editorial estimate based on product knowledge and available market information; '
+        . 'no statistical sample or automated pricing algorithm is claimed.';
 
     /**
      * @param array<string, mixed> $data
@@ -67,7 +65,6 @@ final readonly class PriceObservation
             (int) $data['median_grosz'],
             (int) $data['low_grosz'],
             (int) $data['high_grosz'],
-            (int) $data['sample_size'],
             (string) $data['confidence'],
             '',
             self::METHODOLOGY_MANUAL

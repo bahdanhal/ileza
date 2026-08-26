@@ -26,7 +26,6 @@ final class GetProductPriceHistoryTest extends TestCase
             200000,
             180000,
             220000,
-            6,
             'high',
             '',
             PriceObservation::METHODOLOGY_MANUAL
@@ -38,7 +37,6 @@ final class GetProductPriceHistoryTest extends TestCase
             210000,
             190000,
             230000,
-            5,
             'high',
             '',
             PriceObservation::METHODOLOGY_MANUAL
@@ -79,7 +77,6 @@ final class GetProductPriceHistoryTest extends TestCase
             200000,
             180000,
             220000,
-            6,
             'high',
             '',
             PriceObservation::METHODOLOGY_MANUAL

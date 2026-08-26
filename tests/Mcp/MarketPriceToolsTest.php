@@ -45,7 +45,6 @@ final class MarketPriceToolsTest extends TestCase
                 95000,
                 83600,
                 108300,
-                8,
                 'high',
                 'Verified fair price',
                 'Methodology note'
@@ -61,7 +60,7 @@ final class MarketPriceToolsTest extends TestCase
         $data = json_decode($json, true, flags: JSON_THROW_ON_ERROR);
 
         self::assertSame('iphone-13-128gb', $data['product']['slug']);
-        self::assertEquals(950, $data['observations'][0]['median_pln']);
+        self::assertEquals(950, $data['observations'][0]['fair_price_pln']);
     }
 
     public function testAdminUpdateObservationUnauthorized(): void
@@ -144,7 +143,6 @@ final class MarketPriceToolsTest extends TestCase
             950,
             830,
             1080,
-            10,
             'high',
             '2026-08-22',
             'Personal verification'
@@ -152,7 +150,7 @@ final class MarketPriceToolsTest extends TestCase
 
         $data = json_decode($json, true, flags: JSON_THROW_ON_ERROR);
         self::assertSame('success', $data['status']);
-        self::assertEquals(950, $data['observation']['median_pln']);
+        self::assertEquals(950, $data['observation']['fair_price_pln']);
     }
 
     public function testAdminUpdateObservationSavesSuccessfullyWithAuthorizationHeader(): void
@@ -177,7 +175,6 @@ final class MarketPriceToolsTest extends TestCase
             950,
             830,
             1080,
-            10,
             'high',
             '2026-08-22',
             'Personal verification'
@@ -185,7 +182,7 @@ final class MarketPriceToolsTest extends TestCase
 
         $data = json_decode($json, true, flags: JSON_THROW_ON_ERROR);
         self::assertSame('success', $data['status']);
-        self::assertEquals(950, $data['observation']['median_pln']);
+        self::assertEquals(950, $data['observation']['fair_price_pln']);
     }
 
     public function testGetProductReturnsProductData(): void

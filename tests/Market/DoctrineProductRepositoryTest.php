@@ -64,7 +64,7 @@ final class DoctrineProductRepositoryTest extends DoctrineTestCase
         $updatedProduct1 = new Product(
             'iphone-16-pro-256gb',
             'Apple iPhone 16 Pro 256 GB (Updated)',
-            'Updated condition definition',
+            'Updated product definition',
             'smartphones',
             ['generation' => 'iPhone 16 Pro', 'storage' => '256 GB', 'battery' => '95%'],
             'iphone-16-pro',

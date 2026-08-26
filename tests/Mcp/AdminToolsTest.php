@@ -82,7 +82,6 @@ final class AdminToolsTest extends TestCase
             95000,
             83000,
             108000,
-            8,
             'high',
             'Manual review',
             PriceObservation::METHODOLOGY_MANUAL,
