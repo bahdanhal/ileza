@@ -88,6 +88,9 @@ market:
         nav_label: "Browse categories:"
         matrix_title: "Configuration Pricing Matrix"
         matrix_subtitle: "Current editorial reference prices and reasonable ranges for products in this category."
+        view_label: "Category view"
+        cards_view: "Cards"
+        matrix_view: "Price matrix"
         col_model: "Model / Version"
         col_specs: "Key Specifications"
         col_median: "Fair Price"
@@ -383,4 +386,3 @@ income:
         a2: "Comparing from the employer's total budget (Total Cost = UoP Gross × 1.2048) provides an honest apples-to-apples comparison of what a business spends versus what lands in your personal bank account across all contract forms."
         q3: "How does the health contribution (składka zdrowotna) differ on B2B?"
         a3: "On tax scale (skala) it is 9% of income. On linear PIT (liniowy) it is 4.9% of income. On lump-sum (ryczałt) it is a fixed monthly tier based on annual revenue."
-

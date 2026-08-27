@@ -112,6 +112,13 @@ final class ProductCatalog
                 'cars' => 'Peugeot 206 CC',
                 default => $first->name,
             };
+            if ($first->category === 'laptops') {
+                $name = trim(sprintf(
+                    '%s %s',
+                    $first->specifications['line'] ?? 'MacBook',
+                    $first->specifications['chip'] ?? ''
+                ));
+            }
             [$image, $credit, $source] = $this->familyImage($familySlug, $first->category, $first);
 
             return new ProductFamily(
@@ -403,7 +410,7 @@ final class ProductCatalog
 
     public function familySlug(Product $product): string
     {
-        if ($product->familySlug !== null && $product->familySlug !== '') {
+        if ($product->category !== 'laptops' && $product->familySlug !== null && $product->familySlug !== '') {
             return $product->familySlug;
         }
 
@@ -423,13 +430,12 @@ final class ProductCatalog
             str_contains($product->name, 'MacBook Pro') ? 'MacBook Pro' : 'MacBook Air'
         );
 
-        $display = (string) ($product->specifications['display'] ?? '');
         $chip = (string) ($product->specifications['chip'] ?? '');
 
         return strtolower(str_replace(
-            [' ', '-inch'],
-            ['-', ''],
-            sprintf('%s-%s-%s', $line, $display, $chip)
+            ' ',
+            '-',
+            sprintf('%s-%s', $line, $chip)
         ));
     }
 

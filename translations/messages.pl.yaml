@@ -88,6 +88,9 @@ market:
         nav_label: "Przeglądaj kategorie:"
         matrix_title: "Matryca cenowa konfiguracji"
         matrix_subtitle: "Zestawienie aktualnych redakcyjnych cen odniesienia i rozsądnych przedziałów dla produktów w tej kategorii."
+        view_label: "Widok kategorii"
+        cards_view: "Karty"
+        matrix_view: "Matryca cen"
         col_model: "Model / Wersja"
         col_specs: "Specyfikacja"
         col_median: "Uczciwa cena"
@@ -383,4 +386,3 @@ income:
         a2: "Punktem wyjścia jest łączny koszt, jaki zleceniodawca lub pracodawca przeznacza na stanowisko (Budżet = Brutto UoP × 1.2048). Pozwala to na rzetelne i przejrzyste porównanie kwoty na rękę przy identycznym nakładzie finansowym."
         q3: "Jak działa składka zdrowotna na B2B w 2026 roku?"
         a3: "Na skali podatkowej wynosi 9% dochodu, na podatku liniowym 4.9% dochodu, a na ryczałcie jest zryczałtowaną kwotą zależną od rocznego przedziału przychodów."
-

@@ -223,17 +223,17 @@
                         </div>
                         <div class="admin-form-group">
                             <label for="entry-median">Fair Price PLN</label>
-                            <input id="entry-median" name="median_pln" type="number" step="1" min="1" placeholder="e.g. 2150" required>
+                            <input id="entry-median" name="median_pln" type="number" step="0.01" min="1" placeholder="e.g. 2150" required>
                         </div>
                     </div>
                     <div class="admin-form-row">
                         <div class="admin-form-group">
                             <label for="entry-low">Reasonable Low PLN</label>
-                            <input id="entry-low" name="low_pln" type="number" step="1" min="1" placeholder="e.g. 1900" required>
+                            <input id="entry-low" name="low_pln" type="number" step="0.01" min="1" placeholder="e.g. 1900" required>
                         </div>
                         <div class="admin-form-group">
                             <label for="entry-high">Reasonable High PLN</label>
-                            <input id="entry-high" name="high_pln" type="number" step="1" min="1" placeholder="e.g. 2400" required>
+                            <input id="entry-high" name="high_pln" type="number" step="0.01" min="1" placeholder="e.g. 2400" required>
                         </div>
                     </div>
                     <div class="admin-form-row">
@@ -416,6 +416,25 @@
                                     <input type="hidden" name="slug" value="{{ p.slug }}">
                                     <button type="submit" class="admin-btn admin-btn-danger" style="padding: 4px 8px; font-size: 11px;">✕</button>
                                 </form>
+                                {% if item.history is not empty %}
+                                    <details style="margin-top: 8px; white-space: normal;">
+                                        <summary style="cursor: pointer; color: var(--orange); font-size: 11px;">Edit history ({{ item.history|length }})</summary>
+                                        <div style="display: grid; gap: 8px; margin-top: 8px; min-width: 360px;">
+                                            {% for observation in item.history %}
+                                                <form method="post" action="{{ path('market_admin_save_observation') }}" style="display: grid; grid-template-columns: 110px repeat(3, 1fr) auto; gap: 5px; align-items: center;">
+                                                    <input type="hidden" name="_token" value="{{ admin_csrf_token('market_admin_save_observation') }}">
+                                                    <input type="hidden" name="product_slug" value="{{ p.slug }}">
+                                                    <input name="observed_at" type="date" value="{{ observation.observedAt|date('Y-m-d') }}" required>
+                                                    <input name="median_pln" type="number" step="0.01" min="1" value="{{ (observation.medianGrosz / 100)|number_format(2, '.', '') }}" required aria-label="Median">
+                                                    <input name="low_pln" type="number" step="0.01" min="1" value="{{ (observation.lowGrosz / 100)|number_format(2, '.', '') }}" required aria-label="Low">
+                                                    <input name="high_pln" type="number" step="0.01" min="1" value="{{ (observation.highGrosz / 100)|number_format(2, '.', '') }}" required aria-label="High">
+                                                    <input type="hidden" name="confidence" value="{{ observation.confidence }}">
+                                                    <button type="submit" class="admin-btn" style="padding: 4px 8px; font-size: 11px;">Save</button>
+                                                </form>
+                                            {% endfor %}
+                                        </div>
+                                    </details>
+                                {% endif %}
                             </td>
                         </tr>
                     {% endfor %}

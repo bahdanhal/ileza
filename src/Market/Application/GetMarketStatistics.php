@@ -18,7 +18,13 @@ final readonly class GetMarketStatistics
 
     /**
      * @return array{
-     *     products: list<array{product: Product, latest: ?PriceObservation, previous: ?PriceObservation, observation_count: int}>,
+     *     products: list<array{
+     *         product: Product,
+     *         latest: ?PriceObservation,
+     *         previous: ?PriceObservation,
+     *         history: list<PriceObservation>,
+     *         observation_count: int
+     *     }>,
      *     all_products: list<Product>,
      *     tracked_products: int,
      *     products_with_history: int,
@@ -51,6 +57,7 @@ final readonly class GetMarketStatistics
                 'product' => $product,
                 'latest' => $latest,
                 'previous' => $previous,
+                'history' => $history,
                 'observation_count' => $count,
             ];
 

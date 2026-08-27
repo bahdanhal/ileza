@@ -158,6 +158,12 @@
             </div>
         </form>
 
+        <nav class="market-view-switcher" aria-label="{{ 'market.hubs.view_label'|trans }}">
+            <a href="{{ path('market_hub', {_locale: app.request.locale, category: app.request.locale == 'pl' ? hub.canonicalSlugPl : hub.canonicalSlugEn, brand: browse.filters.brand, price: browse.filters.price, ram: browse.filters.ram, chip: browse.filters.chip}) }}" class="{{ view == 'cards' ? 'active' : '' }}">{{ 'market.hubs.cards_view'|trans }}</a>
+            <a href="{{ path('market_hub', {_locale: app.request.locale, category: app.request.locale == 'pl' ? hub.canonicalSlugPl : hub.canonicalSlugEn, view: 'matrix', brand: browse.filters.brand, price: browse.filters.price, ram: browse.filters.ram, chip: browse.filters.chip}) }}" class="{{ view == 'matrix' ? 'active' : '' }}">{{ 'market.hubs.matrix_view'|trans }}</a>
+        </nav>
+
+        {% if view == 'matrix' %}
         <section class="market-matrix-card">
             <div class="section-title">
                 <h2>{{ 'market.hubs.matrix_title'|trans }}</h2>
@@ -227,11 +233,12 @@
                 </table>
             </div>
         </section>
+        {% endif %}
 
         {% if browse.pages > 1 %}
             <nav class="market-pagination" aria-label="{{ 'market.facets.pagination'|trans }}">
                 {% for page in 1..browse.pages %}
-                    <a href="{{ path('market_hub', {_locale: app.request.locale, category: app.request.locale == 'pl' ? hub.canonicalSlugPl : hub.canonicalSlugEn, page: page, brand: browse.filters.brand, price: browse.filters.price, ram: browse.filters.ram, chip: browse.filters.chip}) }}" class="{{ page == browse.page ? 'active' : '' }}" {{ page == browse.page ? 'aria-current="page"' : '' }}>{{ page }}</a>
+                    <a href="{{ path('market_hub', {_locale: app.request.locale, category: app.request.locale == 'pl' ? hub.canonicalSlugPl : hub.canonicalSlugEn, page: page, view: view == 'matrix' ? 'matrix' : null, brand: browse.filters.brand, price: browse.filters.price, ram: browse.filters.ram, chip: browse.filters.chip}) }}" class="{{ page == browse.page ? 'active' : '' }}" {{ page == browse.page ? 'aria-current="page"' : '' }}>{{ page }}</a>
                 {% endfor %}
             </nav>
         {% endif %}

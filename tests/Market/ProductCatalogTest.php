@@ -101,9 +101,9 @@ final class ProductCatalogTest extends TestCase
         $catalog = new ProductCatalog();
         $familySlugs = array_map(static fn ($f) => $f->slug, $catalog->families());
 
-        self::assertContains('macbook-pro-14-m1-pro', $familySlugs);
-        self::assertContains('macbook-pro-16-m1-max', $familySlugs);
-        self::assertContains('macbook-pro-14-m3-pro', $familySlugs);
+        self::assertContains('macbook-pro-m1-pro', $familySlugs);
+        self::assertContains('macbook-pro-m1-max', $familySlugs);
+        self::assertContains('macbook-pro-m3-pro', $familySlugs);
     }
 
     public function testContainsRamMemoryKits(): void

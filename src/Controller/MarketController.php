@@ -139,6 +139,7 @@ final class MarketController extends AbstractController
         $categoryKey = $hubInfo['category'];
         $familyFilter = $hubInfo['familyFilter'];
         $hubKey = $hubInfo['key'];
+        $view = ($request?->query->get('view') === 'matrix') ? 'matrix' : 'cards';
 
         $catalogFamilies = $this->catalog->familiesForHub($categoryKey, $familyFilter);
         $this->priceHistory->preload($this->productSlugs($catalogFamilies));
@@ -181,6 +182,7 @@ final class MarketController extends AbstractController
             'families' => $families,
             'hubs' => $this->catalog->hubs(),
             'browse' => $browse,
+            'view' => $view,
         ]);
     }
 

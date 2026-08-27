@@ -78,7 +78,7 @@ final class MarketControllerTest extends TestCase
         $twig->expects(self::once())
             ->method('render')
             ->with('market/home.html.twig', self::callback(static function (array $context): bool {
-                self::assertSame('macbook-pro-16-m3-max', $context['families'][0]['family']->slug);
+                self::assertSame('macbook-pro-m3-max', $context['families'][0]['family']->slug);
                 self::assertSame(
                     'macbook-pro-16-m3-max-64-gb-ram-2-tb-ssd',
                     $context['families'][0]['configurations'][0]['product']->slug
