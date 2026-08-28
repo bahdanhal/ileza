@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace App\Shared\Presentation\Http;
 
-use App\Content\Application\BlogRepository;
+use App\Content\Application\BlogArticleRepository;
 use App\Market\Application\ProductCatalog;
 use App\Market\Domain\PriceObservationRepository;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,7 +15,7 @@ final readonly class SitemapController
     public function __construct(
         private ProductCatalog $catalog,
         private PriceObservationRepository $observations,
-        private ?BlogRepository $articles = null,
+        private ?BlogArticleRepository $articles = null,
     ) {
     }
 

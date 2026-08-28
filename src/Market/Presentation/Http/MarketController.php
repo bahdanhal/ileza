@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace App\Market\Presentation\Http;
 
 use App\Market\Application\BrowseCatalog;
 use App\Market\Application\GetProductPriceHistory;

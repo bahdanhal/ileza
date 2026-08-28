@@ -6,7 +6,7 @@ namespace App\Tests\Controller;
 
 use App\Analytics\Application\TrafficAnalytics;
 use App\Analytics\Domain\PageViewRepository;
-use App\Controller\Admin\MarketAdminController;
+use App\Market\Presentation\Http\Admin\MarketAdminController;
 use App\Market\Application\DeletePriceObservation;
 use App\Market\Application\GetMarketStatistics;
 use App\Market\Application\ProductCatalog;

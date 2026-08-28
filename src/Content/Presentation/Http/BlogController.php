@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace App\Content\Presentation\Http;
 
-use App\Content\Application\BlogRepository;
+use App\Content\Application\BlogArticleRepository;
 use App\Content\Application\MarkdownRenderer;
 use App\Market\Application\GetProductPriceHistory;
 use App\Market\Application\ProductCatalog;
@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class BlogController extends AbstractController
 {
     public function __construct(
-        private readonly BlogRepository $articles,
+        private readonly BlogArticleRepository $articles,
         private readonly MarkdownRenderer $markdown,
         private readonly ProductCatalog $catalog,
         private readonly GetProductPriceHistory $priceHistory,

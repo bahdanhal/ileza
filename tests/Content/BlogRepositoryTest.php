@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Content;
 
-use App\Content\Application\BlogRepository;
+use App\Content\Infrastructure\DoctrineBlogArticleRepository;
 use App\Entity\BlogArticleEntity;
 use App\Tests\DoctrineTestCase;
 
@@ -20,10 +20,13 @@ final class BlogRepositoryTest extends DoctrineTestCase
         $this->entityManager->persist($english);
         $this->entityManager->flush();
 
-        $repository = new BlogRepository($this->entityManager);
+        $repository = new DoctrineBlogArticleRepository($this->entityManager);
 
-        self::assertSame([$newer, $older], $repository->all('pl'));
-        self::assertSame($english, $repository->find('en', 'english-guide'));
+        self::assertSame(['newer-guide', 'older-guide'], array_map(
+            static fn ($article): string => $article->getSlug(),
+            $repository->all('pl')
+        ));
+        self::assertSame('english-guide', $repository->find('en', 'english-guide')?->getSlug());
         self::assertNull($repository->find('pl', 'english-guide'));
     }
 

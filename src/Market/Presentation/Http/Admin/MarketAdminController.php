@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Admin;
+namespace App\Market\Presentation\Http\Admin;
 
 use App\Analytics\Application\TrafficAnalytics;
 use App\Market\Application\DeletePriceObservation;

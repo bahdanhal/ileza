@@ -135,13 +135,13 @@ services:
       $logDirectory: '%contact.lead_directory%'
       $smtpTransport: '@App\Market\Infrastructure\Mail\SmtpTransport'
 
-  App\Controller\MarketController:
+  App\Market\Presentation\Http\MarketController:
     arguments:
       $productRequestLimiter: '@limiter.product_request'
       $priceTipLimiter: '@limiter.price_tip'
       $priceAlertLimiter: '@limiter.price_alert'
 
-  App\Controller\Admin\MarketAdminController:
+  App\Market\Presentation\Http\Admin\MarketAdminController:
     arguments:
       $secret: '%env(APP_SECRET)%'
       $projectDir: '%kernel.project_dir%'
