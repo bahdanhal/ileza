@@ -28,4 +28,20 @@ final class MarketPositioningTest extends TestCase
         self::assertStringNotContainsString('AggregateOffer', $template);
         self::assertStringNotContainsString('sampleSize', $template);
     }
+
+    public function testPriceTemplatesDoNotExposeEscapedHtmlEntities(): void
+    {
+        $templateDirectory = dirname(__DIR__, 2) . '/templates';
+        $templates = [
+            $templateDirectory . '/market/home.html.twig',
+            $templateDirectory . '/market/hub.html.twig',
+            $templateDirectory . '/market/product.html.twig',
+            $templateDirectory . '/blog/article.html.twig',
+            $templateDirectory . '/blog/_price_badge.html.twig',
+        ];
+
+        foreach ($templates as $template) {
+            self::assertStringNotContainsString('&nbsp;', (string) file_get_contents($template), $template);
+        }
+    }
 }

@@ -2,7 +2,7 @@
 {% macro smart_money(grosz, locale) %}
     {%- set pln = grosz / 100 -%}
     {%- set step = pln < 100 ? 5 : (pln < 2000 ? 10 : (pln <= 20000 ? 100 : 500)) -%}
-    {{ ((pln / step)|round * step)|number_format(0, locale == 'pl' ? ',' : '.', locale == 'pl' ? ' ' : ',') }}&nbsp;{{ locale == 'pl' ? 'zł' : 'PLN' }}
+    {{ ((pln / step)|round * step)|number_format(0, locale == 'pl' ? ',' : '.', locale == 'pl' ? ' ' : ',') }}{{ ' ' }}{{ locale == 'pl' ? 'zł' : 'PLN' }}
 {% endmacro %}
 {% block tool_name %}{{ 'blog.context'|trans }}{% endblock %}
 {% block title %}{{ article.title }} · IleZa.pl{% endblock %}

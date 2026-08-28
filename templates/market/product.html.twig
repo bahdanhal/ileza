@@ -1,5 +1,5 @@
 {% extends 'base.html.twig' %}
-{% macro money(grosz, locale) %}{{ (grosz / 100)|number_format(2, locale == 'pl' ? ',' : '.', locale == 'pl' ? ' ' : ',') }}&nbsp;{{ locale == 'pl' ? 'zł' : 'PLN' }}{% endmacro %}
+{% macro money(grosz, locale) %}{{ (grosz / 100)|number_format(2, locale == 'pl' ? ',' : '.', locale == 'pl' ? ' ' : ',') }}{{ ' ' }}{{ locale == 'pl' ? 'zł' : 'PLN' }}{% endmacro %}
 {% macro localized_label(label, locale) %}{{- locale == 'pl' ? label|replace({'-inch': '″', ' petrol': ' benzyna'}) : label -}}{% endmacro %}
 {% set localized_product_name = app.request.locale == 'pl' ? product.name|replace({'-inch': '″', ' petrol': ' benzyna'}) : product.name %}
 {% block tool_name %}{{ 'base.context.market'|trans }}{% endblock %}
