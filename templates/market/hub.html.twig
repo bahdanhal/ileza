@@ -250,7 +250,20 @@
                 </div>
                 {% for item in families %}
                     {% set initial = item.configurations[0] %}
-                    <article class="market-product" data-market-family>
+                    {% set config_data = [] %}
+                    {% set spec_keys = [] %}
+                    {% for configuration in item.configurations %}
+                        {% set config_data = config_data|merge([{
+                            url: path('market_product', {_locale: app.request.locale, slug: configuration.product.slug}),
+                            price: configuration.latest ? _self.smart_money(configuration.latest.medianGrosz, app.request.locale) : 'market.awaiting'|trans,
+                            note: configuration.latest ? ('market.observed'|trans ~ ' ' ~ configuration.latest.observedAt|date(app.request.locale == 'pl' ? 'd.m.Y' : 'M j, Y')) : 'market.awaiting_note'|trans,
+                            specs: configuration.product.specifications
+                        }]) %}
+                        {% for key in configuration.product.specifications|keys %}
+                            {% if key not in spec_keys %}{% set spec_keys = spec_keys|merge([key]) %}{% endif %}
+                        {% endfor %}
+                    {% endfor %}
+                    <article class="market-product" data-market-family data-market-configurations="{{ config_data|json_encode }}">
                         <figure>
                             <img src="{{ item.family.image }}" alt="{{ _self.localized_label(item.family.name, app.request.locale) }}" width="640" height="480" loading="lazy">
                             <figcaption><a href="{{ item.family.imageSource }}">{{ item.family.imageCredit }}</a> · <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a></figcaption>
@@ -258,19 +271,26 @@
                         <div class="market-product-body">
                             <span class="market-category">{{ ('market.category.' ~ item.family.category)|trans }}</span>
                             <h2>{{ _self.localized_label(item.family.name, app.request.locale) }}</h2>
-                            <label for="configuration-{{ item.family.slug }}">{{ 'market.choose_configuration'|trans }}</label>
-                            <select id="configuration-{{ item.family.slug }}" data-market-select>
-                                {% for configuration in item.configurations %}
-                                    <option value="{{ path('market_product', {_locale: app.request.locale, slug: configuration.product.slug}) }}" data-price="{{ configuration.latest ? _self.smart_money(configuration.latest.medianGrosz, app.request.locale) : 'market.awaiting'|trans }}" data-note="{{ configuration.latest ? ('market.observed'|trans ~ ' ' ~ configuration.latest.observedAt|date(app.request.locale == 'pl' ? 'd.m.Y' : 'M j, Y')) : 'market.awaiting_note'|trans }}">{{ _self.localized_label(configuration.product.name|replace({(item.family.name ~ ' '): ''}), app.request.locale) }}</option>
-                                {% endfor %}
-                            </select>
-                            <strong data-market-price>{{ initial.latest ? _self.smart_money(initial.latest.medianGrosz, app.request.locale) : 'market.awaiting'|trans }}</strong>
-                            <small data-market-note>{{ initial.latest ? ('market.observed'|trans ~ ' ' ~ initial.latest.observedAt|date(app.request.locale == 'pl' ? 'd.m.Y' : 'M j, Y')) : 'market.awaiting_note'|trans }}</small>
-                            <div class="market-configurations-list" aria-label="{{ 'market.choose_configuration'|trans }}">
-                                {% for configuration in item.configurations %}
-                                    <a class="market-config-chip" href="{{ path('market_product', {_locale: app.request.locale, slug: configuration.product.slug}) }}">{{ _self.localized_label(configuration.product.name|replace({(item.family.name ~ ' '): ''}), app.request.locale) }}</a>
+                            <div class="market-configuration-selects" data-market-selects>
+                                {% for key in spec_keys %}
+                                    {% set values = [] %}
+                                    {% for configuration in item.configurations %}
+                                        {% if configuration.product.specifications[key] is defined and configuration.product.specifications[key] not in values %}
+                                            {% set values = values|merge([configuration.product.specifications[key]]) %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% if values|length > 1 %}
+                                        <div class="market-configuration-field">
+                                            <label for="configuration-{{ item.family.slug }}-{{ key }}">{{ ('market.spec.' ~ key)|trans }}</label>
+                                            <select id="configuration-{{ item.family.slug }}-{{ key }}" data-market-spec-select="{{ key }}">
+                                                {% for value in values %}<option value="{{ value }}" {{ value == initial.product.specifications[key] ? 'selected' : '' }}>{{ _self.localized_label(value, app.request.locale) }}</option>{% endfor %}
+                                            </select>
+                                        </div>
+                                    {% endif %}
                                 {% endfor %}
                             </div>
+                            <strong data-market-price>{{ initial.latest ? _self.smart_money(initial.latest.medianGrosz, app.request.locale) : 'market.awaiting'|trans }}</strong>
+                            <small data-market-note>{{ initial.latest ? ('market.observed'|trans ~ ' ' ~ initial.latest.observedAt|date(app.request.locale == 'pl' ? 'd.m.Y' : 'M j, Y')) : 'market.awaiting_note'|trans }}</small>
                             <a class="market-open" data-market-link href="{{ path('market_product', {_locale: app.request.locale, slug: initial.product.slug}) }}">{{ 'market.open_history'|trans }} →</a>
                         </div>
                     </article>

@@ -314,9 +314,26 @@
                             <input id="prod-image-source" name="image_source" type="url" placeholder="https://commons.wikimedia.org/...">
                         </div>
                     </div>
-                    <div class="admin-form-group">
-                        <label for="prod-specifications">Specifications (JSON format)</label>
-                        <textarea id="prod-specifications" name="specifications" rows="2" placeholder='{"generation":"iPhone 15","storage":"128 GB"}'></textarea>
+                    <div class="admin-form-group" data-spec-editor>
+                        <label>Configuration details</label>
+                        <div class="admin-form-row">
+                            <div class="admin-form-group"><label for="prod-spec-generation">Generation</label><select id="prod-spec-generation" data-spec-field="generation"><option value="">—</option>{% for value in ['iPhone X', 'iPhone 11', 'iPhone 12', 'iPhone 13', 'iPhone 14', 'iPhone 15', 'iPhone 16', 'iPhone 17'] %}<option value="{{ value }}">{{ value }}</option>{% endfor %}</select></div>
+                            <div class="admin-form-group"><label for="prod-spec-variant">Variant</label><select id="prod-spec-variant" data-spec-field="variant"><option value="">—</option>{% for value in ['Standard', 'Mini', 'Plus', 'Pro', 'Pro Max'] %}<option value="{{ value }}">{{ value }}</option>{% endfor %}</select></div>
+                        </div>
+                        <div class="admin-form-row">
+                            <div class="admin-form-group"><label for="prod-spec-display">Display</label><select id="prod-spec-display" data-spec-field="display"><option value="">—</option><option value="13-inch">13-inch</option><option value="14-inch">14-inch</option><option value="15-inch">15-inch</option><option value="16-inch">16-inch</option></select></div>
+                            <div class="admin-form-group"><label for="prod-spec-chip">Chip</label><select id="prod-spec-chip" data-spec-field="chip"><option value="">—</option>{% for value in ['M1', 'M1 Pro', 'M1 Max', 'M2', 'M2 Pro', 'M2 Max', 'M3', 'M3 Pro', 'M3 Max', 'M4', 'A15', 'A16', 'A17', 'A18'] %}<option value="{{ value }}">{{ value }}</option>{% endfor %}</select></div>
+                        </div>
+                        <div class="admin-form-row">
+                            <div class="admin-form-group"><label for="prod-spec-memory">Memory</label><select id="prod-spec-memory" data-spec-field="memory"><option value="">—</option>{% for value in ['4 GB', '8 GB', '16 GB', '18 GB', '24 GB', '32 GB', '36 GB', '48 GB', '64 GB'] %}<option value="{{ value }}">{{ value }}</option>{% endfor %}</select></div>
+                            <div class="admin-form-group"><label for="prod-spec-storage">Storage</label><select id="prod-spec-storage" data-spec-field="storage"><option value="">—</option>{% for value in ['64 GB', '128 GB', '256 GB', '512 GB', '1 TB', '2 TB'] %}<option value="{{ value }}">{{ value }}</option>{% endfor %}</select></div>
+                        </div>
+                        <div class="admin-form-row">
+                            <div class="admin-form-group"><label for="prod-spec-type">Type</label><select id="prod-spec-type" data-spec-field="type"><option value="">—</option>{% for value in ['DDR4', 'DDR5', 'LPDDR4', 'LPDDR5'] %}<option value="{{ value }}">{{ value }}</option>{% endfor %}</select></div>
+                            <div class="admin-form-group"><label for="prod-spec-form-factor">Form factor</label><select id="prod-spec-form-factor" data-spec-field="form_factor"><option value="">—</option>{% for value in ['DIMM (Desktop)', 'SO-DIMM (Laptop)'] %}<option value="{{ value }}">{{ value }}</option>{% endfor %}</select></div>
+                        </div>
+                        <label for="prod-specifications">Additional specifications (JSON)</label>
+                        <textarea id="prod-specifications" name="specifications" rows="2" placeholder='{"battery":"95%"}'></textarea>
                     </div>
                     <button type="submit" id="prod-submit-btn" class="admin-btn" style="width: 100%; margin-top: 8px;">Save Product</button>
                 </form>
@@ -558,7 +575,7 @@
             document.getElementById('prod-image-url').value = product.image || '';
             document.getElementById('prod-image-credit').value = product.image_credit || '';
             document.getElementById('prod-image-source').value = product.image_source || '';
-            document.getElementById('prod-specifications').value = product.specifications ? JSON.stringify(product.specifications, null, 2) : '';
+            setSpecificationFields(product.specifications || {});
 
             document.getElementById('product-editor-title').textContent = '✏️ Edit Product: ' + product.name;
             document.getElementById('prod-submit-btn').textContent = 'Update Product';
@@ -567,9 +584,41 @@
 
         function resetProductForm() {
             document.getElementById('product-form').reset();
+            setSpecificationFields({});
             document.getElementById('product-editor-title').textContent = '📦 Product Editor';
             document.getElementById('prod-submit-btn').textContent = 'Save Product';
             document.getElementById('product-editor-card').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function setSpecificationFields(specifications) {
+            const editor = document.querySelector('[data-spec-editor]');
+            if (!editor) return;
+            editor.querySelectorAll('[data-spec-field]').forEach((field) => {
+                const value = specifications[field.dataset.specField] || '';
+                if (value && ![...field.options].some((option) => option.value === value)) {
+                    field.add(new Option(value, value));
+                }
+                field.value = value;
+            });
+            document.getElementById('prod-specifications').value = JSON.stringify(specifications, null, 2);
+        }
+
+        const productForm = document.getElementById('product-form');
+        if (productForm) {
+            productForm.addEventListener('submit', () => {
+                let specifications = {};
+                try {
+                    specifications = JSON.parse(document.getElementById('prod-specifications').value || '{}');
+                } catch (_) {
+                    specifications = {};
+                }
+                document.querySelectorAll('[data-spec-field]').forEach((field) => {
+                    const key = field.dataset.specField;
+                    if (field.value) specifications[key] = field.value;
+                    else delete specifications[key];
+                });
+                document.getElementById('prod-specifications').value = JSON.stringify(specifications);
+            });
         }
     </script>
 {% endblock %}

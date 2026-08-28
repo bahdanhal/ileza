@@ -1,17 +1,42 @@
 document.querySelectorAll('[data-market-family]').forEach((family) => {
-  const select = family.querySelector('[data-market-select]');
+  const selects = [...family.querySelectorAll('[data-market-spec-select]')];
+  const configurations = JSON.parse(family.dataset.marketConfigurations || '[]');
   const link = family.querySelector('[data-market-link]');
   const price = family.querySelector('[data-market-price]');
   const note = family.querySelector('[data-market-note]');
-  if (!select || !link || !price || !note) return;
+  if (!selects.length || !configurations.length || !link || !price || !note) return;
 
-  const sync = () => {
-    const option = select.options[select.selectedIndex];
-    link.href = option.value;
-    price.textContent = option.dataset.price || '';
-    note.textContent = option.dataset.note || '';
+  const selectedSpecs = () => Object.fromEntries(selects.map((select) => [select.dataset.marketSpecSelect, select.value]));
+  const matches = (configuration, specs, ignoredKey = null) => Object.entries(specs).every(([key, value]) => key === ignoredKey || configuration.specs[key] === value);
+
+  const sync = (changedKey = null) => {
+    let specs = selectedSpecs();
+
+    selects.forEach((select) => {
+      [...select.options].forEach((option) => {
+        option.disabled = !configurations.some((configuration) => matches(configuration, { ...specs, [select.dataset.marketSpecSelect]: option.value }, select.dataset.marketSpecSelect));
+      });
+      if (select.selectedOptions[0]?.disabled) {
+        const firstAvailable = [...select.options].find((option) => !option.disabled);
+        if (firstAvailable) select.value = firstAvailable.value;
+      }
+    });
+    specs = selectedSpecs();
+
+    const selected = configurations.find((configuration) => matches(configuration, specs))
+      || configurations.find((configuration) => matches(configuration, specs, changedKey))
+      || configurations[0];
+    if (!selected) return;
+
+    selects.forEach((select) => {
+      const key = select.dataset.marketSpecSelect;
+      if (selected.specs[key] !== undefined) select.value = selected.specs[key];
+    });
+    link.href = selected.url;
+    price.textContent = selected.price || '';
+    note.textContent = selected.note || '';
   };
-  select.addEventListener('change', sync);
+  selects.forEach((select) => select.addEventListener('change', () => sync(select.dataset.marketSpecSelect)));
   sync();
 });
 
