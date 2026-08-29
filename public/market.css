@@ -17,3 +17,55 @@
   font-size: 18px;
 }
 .market-product figcaption a{color:#fff}
+
+.market-faq {
+  margin-top: 56px;
+  padding-top: 36px;
+  border-top: 1px solid var(--line);
+}
+
+.market-faq-header {
+  margin-bottom: 24px;
+}
+
+.market-faq-header h2 {
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  font-size: 28px;
+  letter-spacing: -.03em;
+  margin: 8px 0 0;
+}
+
+.market-faq-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.market-faq-item {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 24px;
+}
+
+.market-faq-item h2 {
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.4;
+  margin: 0 0 10px;
+  color: var(--ink);
+}
+
+.market-faq-item p {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+@media(max-width:850px){
+  .market-faq-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -202,7 +202,32 @@
         </section>
 
         <aside class="market-method"><strong>{{ 'market.method.title'|trans }}</strong><p>{{ 'market.method.text'|trans }}</p><ul><li>{{ 'market.method.one'|trans }}</li><li>{{ 'market.method.two'|trans }}</li><li>{{ 'market.method.three'|trans }}</li></ul></aside>
+
+        <section class="market-faq" aria-labelledby="home-faq-title">
+            <div class="market-faq-header">
+                <span class="market-category">{{ 'market.home_faq.eyebrow'|trans }}</span>
+                <h2 id="home-faq-title">{{ 'market.home_faq.title'|trans }}</h2>
+            </div>
+            <div class="market-faq-grid">
+                <article class="market-faq-item">
+                    <h2>{{ 'market.home_faq.q1'|trans }}</h2>
+                    <p>{{ 'market.home_faq.a1'|trans }}</p>
+                </article>
+                <article class="market-faq-item">
+                    <h2>{{ 'market.home_faq.q2'|trans }}</h2>
+                    <p>{{ 'market.home_faq.a2'|trans }}</p>
+                </article>
+                <article class="market-faq-item">
+                    <h2>{{ 'market.home_faq.q3'|trans }}</h2>
+                    <p>{{ 'market.home_faq.a3'|trans }}</p>
+                </article>
+            </div>
+        </section>
+
         <section class="market-mcp"><div><span class="market-category">{{ 'market.mcp.eyebrow'|trans }}</span><h2>{{ 'market.mcp.title'|trans }}</h2><p>{{ 'market.mcp.text'|trans }}</p></div><code>https://ileza.pl/mcp</code></section>
     </section>
+{% endblock %}
+{% block head_scripts %}
+  <script type="application/ld+json">{{ {'@context':'https://schema.org','@graph':[{'@type':'WebApplication','@id':'https://ileza.pl/#app','url':'https://ileza.pl/','name':'IleZa.pl Price Radar & Fair Price Index','applicationCategory':'FinanceApplication','operatingSystem':'All','browserRequirements':'Requires JavaScript. Requires HTML5.','offers':{'@type':'Offer','price':'0','priceCurrency':'PLN'},'description':('market.lede'|trans),'author':{'@id':'https://ileza.pl/#editorial'},'publisher':{'@id':'https://ileza.pl/#editorial'}},{'@type':'FAQPage','@id':'https://ileza.pl/#faq','mainEntity':[{'@type':'Question','name':('market.home_faq.q1'|trans),'acceptedAnswer':{'@type':'Answer','text':('market.home_faq.a1'|trans)}},{'@type':'Question','name':('market.home_faq.q2'|trans),'acceptedAnswer':{'@type':'Answer','text':('market.home_faq.a2'|trans)}},{'@type':'Question','name':('market.home_faq.q3'|trans),'acceptedAnswer':{'@type':'Answer','text':('market.home_faq.a3'|trans)}}]}]}|json_encode(constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_UNESCAPED_UNICODE'))|raw }}</script>
 {% endblock %}
 {% block scripts %}<script src="/market-index.js" defer></script>{% endblock %}

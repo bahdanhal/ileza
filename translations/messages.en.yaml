@@ -85,7 +85,16 @@ market:
     eyebrow: "POLAND · FAIR PRICES · EDITORIAL JUDGMENT"
     heading_start: "What is it really worth?"
     heading_emphasis: ""
-    lede: "The value of a thing without the premium for novelty, attractive packaging, marketing, or a large retailer's margin. Every historical point is a deliberate editorial judgment, not an algorithmic result."
+    lede: "IleZa.pl is a Polish second-hand tech and electronics price radar without premiums for novelty, retail margins, or aggressive marketing. Every historical price point reflects a deliberate, manually verified editorial assessment of actual market value."
+    home_faq:
+        eyebrow: "FAQ"
+        title: "Frequently Asked Questions About IleZa.pl"
+        q1: "What is the fair price concept on IleZa.pl?"
+        a1: "It is an independent editorial assessment of the actual market value of second-hand electronics and hardware, excluding premiums for novelty, retail margins, or aggressive marketing."
+        q2: "How are prices gathered and verified?"
+        a2: "Every data point in the price history is manually evaluated and verified from secondary market listings and transactions across Poland, rather than relying on noisy automated scraping."
+        q3: "Can I check income comparisons or specific product price histories?"
+        a3: "Yes, IleZa.pl provides a comprehensive Polish employment income calculator alongside interactive historical fair-price charts for laptops, MacBooks, smartphones, RAM, and vehicles."
     category:
         smartphones: "SMARTPHONES"
         laptops: "LAPTOPS"

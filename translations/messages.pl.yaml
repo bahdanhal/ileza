@@ -85,7 +85,16 @@ market:
     eyebrow: "POLSKA · UCZCIWE CENY · OCENA REDAKCYJNA"
     heading_start: "Ile to naprawdę jest warte?"
     heading_emphasis: ""
-    lede: "Cena rzeczy bez premii za nowość, ładne pudełko, marketing czy marżę dużej sieci. Każdy punkt historii jest świadomą oceną redakcyjną, nie wynikiem algorytmu."
+    lede: "IleZa.pl to polski radar cen używanej elektroniki i sprzętu komputerowego bez premii za nowość, marketing czy marżę dużej sieci. Każdy punkt historii cen jest świadomą, ręcznie weryfikowaną oceną redakcyjną realnej wartości rynkowej."
+    home_faq:
+        eyebrow: "PYTANIA I ODPOWIEDZI"
+        title: "Często zadawane pytania o IleZa.pl"
+        q1: "Czym jest uczciwa cena (fair price) na IleZa.pl?"
+        a1: "To niezależna, redakcyjna ocena realnej wartości rynkowej używanego sprzętu, oczyszczona z premii za nowość, ładne opakowanie, agresywny marketing czy marże dużych sieci handlowych."
+        q2: "W jaki sposób zbierane i weryfikowane są dane o cenach?"
+        a2: "Każdy punkt w historii cen jest wynikiem ręcznej weryfikacji ogłoszeń i transakcji na polskim rynku wtórnym. Nie stosujemy nieprzejrzystych algorytmów ani przypadkowych średnich."
+        q3: "Czy mogę sprawdzić kalkulator wynagrodzeń lub historię konkretnego modelu?"
+        a3: "Tak, udostępniamy bezpłatny kalkulator porównawczy form zatrudnienia (UoP, B2B, UZ, UoD, Spółka z o.o.) oraz profile cenowe z pełnymi wykresami historii dla laptopów, smartfonów, pamięci RAM i samochodów."
     category:
         smartphones: "SMARTFONY"
         laptops: "LAPTOPY"

@@ -23,7 +23,7 @@
 {% block tool_name %}{{ 'base.context.market'|trans }}{% endblock %}
 {% block title %}{{ ('market.hubs.meta.' ~ hub_key ~ '.title')|trans }}{% endblock %}
 {% block robots %}<meta name="robots" content="{{ browse.has_filters ? 'noindex,follow' : 'index,follow' }}">{% endblock %}
-{% block description %}{{ ('market.hubs.meta.' ~ hub_key ~ '.description')|trans({'%min%': stats.min_price_grosz ? _self.smart_money(stats.min_price_grosz, app.request.locale) : '', '%max%': stats.max_price_grosz ? _self.smart_money(stats.max_price_grosz, app.request.locale) : ''}) }}{% endblock %}
+{% block description %}<meta name="description" content="{{ ('market.hubs.meta.' ~ hub_key ~ '.description')|trans({'%min%': stats.min_price_grosz ? _self.smart_money(stats.min_price_grosz, app.request.locale) : '', '%max%': stats.max_price_grosz ? _self.smart_money(stats.max_price_grosz, app.request.locale) : ''}) }}">{% endblock %}
 {% set canonical_url = 'https://ileza.pl' ~ (app.request.locale == 'pl' ? ('/ceny/' ~ hub.canonicalSlugPl) : ('/prices/' ~ hub.canonicalSlugEn)) ~ (not browse.has_filters and browse.page > 1 ? '?page=' ~ browse.page : '') %}
 {% block canonical %}
     <link rel="canonical" href="{{ canonical_url }}">
