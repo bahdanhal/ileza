@@ -1,0 +1,200 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'error404.title'|trans }}{% endblock %}
+{% block robots %}<meta name="robots" content="noindex,nofollow">{% endblock %}
+
+{% block stylesheets %}
+<style>
+  .error-hero-ileza {
+    padding: clamp(3rem, 7vw, 5.5rem) 1.5rem clamp(4rem, 9vw, 7rem);
+    max-width: 960px;
+    margin: 0 auto;
+  }
+  .radar-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+  .radar-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #e9f2f7;
+    color: #174c65;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    padding: 0.35rem 0.8rem;
+    border-radius: 999px;
+    border: 1px solid #d0e3ed;
+  }
+  .radar-ping {
+    width: 8px;
+    height: 8px;
+    background: #e65100;
+    border-radius: 50%;
+    box-shadow: 0 0 0 0 rgba(230, 81, 0, 0.7);
+    animation: ping 2s infinite;
+  }
+  @keyframes ping {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(230, 81, 0, 0.7); }
+    70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(230, 81, 0, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(230, 81, 0, 0); }
+  }
+  .error-code-ileza {
+    font-size: clamp(3.5rem, 10vw, 6.5rem);
+    font-weight: 800;
+    color: #174c65;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    margin-bottom: 1rem;
+  }
+  .error-title-ileza {
+    font-size: clamp(1.5rem, 3.2vw, 2.25rem);
+    font-weight: 700;
+    color: #0f2c3b;
+    margin: 0 0 1rem;
+    letter-spacing: -0.02em;
+  }
+  .error-p-ileza {
+    font-size: clamp(1rem, 1.4vw, 1.125rem);
+    color: #4a6270;
+    line-height: 1.6;
+    max-width: 620px;
+    margin: 0 0 2.25rem;
+  }
+  .error-buttons-ileza {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.875rem;
+    margin-bottom: 3.5rem;
+  }
+  .btn-radar-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.85rem 1.6rem;
+    background: #174c65;
+    color: #ffffff;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    text-decoration: none;
+    transition: background-color 0.2s ease, transform 0.15s ease;
+  }
+  .btn-radar-primary:hover {
+    background: #0f3446;
+    color: #ffffff;
+    transform: translateY(-1px);
+  }
+  .btn-radar-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.85rem 1.6rem;
+    background: #ffffff;
+    color: #174c65;
+    border: 1px solid #c7dbe6;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+  .btn-radar-secondary:hover {
+    background: #f0f7fa;
+    border-color: #174c65;
+  }
+  .radar-categories {
+    background: #ffffff;
+    border: 1px solid #dce8ef;
+    border-radius: 12px;
+    padding: 1.75rem;
+    box-shadow: 0 4px 20px rgba(23, 76, 101, 0.05);
+  }
+  .radar-cat-title {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #648191;
+    margin-bottom: 1.25rem;
+  }
+  .radar-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+  .radar-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    background: #f8fafc;
+    border: 1px solid #e2edf2;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #174c65;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    transition: all 0.2s ease;
+  }
+  .radar-card:hover {
+    background: #eef6fa;
+    border-color: #174c65;
+    transform: translateY(-1px);
+  }
+  .radar-card-icon {
+    font-size: 1.1rem;
+  }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="error-hero-ileza">
+  <div class="radar-header">
+    <div class="radar-badge">
+      <span class="radar-ping"></span>
+      <span>{{ 'error404.eyebrow'|trans }}</span>
+    </div>
+  </div>
+
+  <div class="error-code-ileza">404</div>
+  <h1 class="error-title-ileza">{{ 'error404.heading'|trans }}</h1>
+  <p class="error-p-ileza">{{ 'error404.description'|trans }}</p>
+
+  <div class="error-buttons-ileza">
+    <a href="{{ path('market_home', {_locale: app.request ? app.request.locale : 'pl'}) }}" class="btn-radar-primary">
+      {{ 'error404.home_button'|trans }} ↗
+    </a>
+    <a href="{{ path('income_calculator', {_locale: app.request ? app.request.locale : 'pl'}) }}" class="btn-radar-secondary">
+      {{ 'error404.calculator_button'|trans }}
+    </a>
+  </div>
+
+  <div class="radar-categories">
+    <span class="radar-cat-title">{{ 'error404.explore_heading'|trans }}</span>
+    <div class="radar-grid">
+      <a href="{{ path('market_home', {_locale: app.request ? app.request.locale : 'pl'}) }}#macbook" class="radar-card">
+        <span>{{ 'error404.macbook'|trans }}</span>
+        <span class="radar-card-icon">💻</span>
+      </a>
+      <a href="{{ path('market_home', {_locale: app.request ? app.request.locale : 'pl'}) }}#iphone" class="radar-card">
+        <span>{{ 'error404.iphone'|trans }}</span>
+        <span class="radar-card-icon">📱</span>
+      </a>
+      <a href="{{ path('market_home', {_locale: app.request ? app.request.locale : 'pl'}) }}#ram" class="radar-card">
+        <span>{{ 'error404.ram'|trans }}</span>
+        <span class="radar-card-icon">⚡</span>
+      </a>
+      <a href="{{ path('blog_index', {_locale: app.request ? app.request.locale : 'pl'}) }}" class="radar-card">
+        <span>{{ 'error404.blog'|trans }}</span>
+        <span class="radar-card-icon">📖</span>
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

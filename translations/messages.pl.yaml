@@ -29,6 +29,20 @@ base:
     footer: "Przydatne i przejrzyste narzędzia · Bez rejestracji · Bez pikseli śledzących"
     contact: "Kontakt"
 
+error404:
+    title: "404 — Poza radarem cenowym · IleZa.pl"
+    eyebrow: "404 · POZA RADAREM"
+    heading: "Brak pozycji na radarze."
+    description: "Szukany produkt, kategoria lub poradnik nie istnieje bądź zmienił swój adres. Sprawdź monitorowane ceny elektroniki lub oblicz wynagrodzenie."
+    home_button: "Radar cen używanych"
+    calculator_button: "Kalkulator wynagrodzeń"
+    explore_heading: "Popularne kategorie cenowe:"
+    macbook: "MacBook Pro i MacBook Air"
+    iphone: "Indeks cen Apple iPhone"
+    ram: "Pamięci RAM DDR4 / DDR5"
+    blog: "Poradniki i analizy rynku"
+
+
 contact:
     email: "Twój e-mail"
     email_optional: "E-mail (opcjonalny, jeśli zostawisz telefon)"

@@ -29,6 +29,20 @@ base:
     footer: "Useful, transparent tools · No signup · No tracking pixel"
     contact: "Contact"
 
+error404:
+    title: "404 — Price Radar Not Found · IleZa.pl"
+    eyebrow: "404 · OFF RADAR"
+    heading: "Item missing from the radar."
+    description: "The product, category, or article you were looking for doesn't exist or has moved. Browse our tracked electronics or calculate net income below."
+    home_button: "Used Price Radar"
+    calculator_button: "Income Calculator"
+    explore_heading: "Popular Radar Categories:"
+    macbook: "Apple MacBook Pro & Air"
+    iphone: "Apple iPhone Price Index"
+    ram: "RAM DDR4 / DDR5 Memory"
+    blog: "Buying Guides & Insights"
+
+
 contact:
     email: "Your email"
     email_optional: "Email (optional if you leave a phone number)"
