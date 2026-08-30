@@ -30,7 +30,7 @@ base:
     contact: "Kontakt"
 
 error404:
-    title: "404 — Poza radarem cenowym · IleZa.pl"
+    title: "404 - Poza radarem cenowym · IleZa.pl"
     eyebrow: "404 · POZA RADAREM"
     heading: "Brak pozycji na radarze."
     description: "Szukany produkt, kategoria lub poradnik nie istnieje bądź zmienił swój adres. Sprawdź monitorowane ceny elektroniki lub oblicz wynagrodzenie."
@@ -53,7 +53,7 @@ contact:
     company: "Firma"
     note: "Dane zostaną zapisane prywatnie na tym serwerze, aby Bahdan mógł się odezwać. Bez newslettera i automatycznej sprzedaży."
     invalid_origin: "Nieprawidłowe źródło formularza."
-    saved: "Dziękuję — zgłoszenie zostało zapisane. Bahdan się odezwie."
+    saved: "Dziękuję - zgłoszenie zostało zapisane. Bahdan się odezwie."
     too_many: "Zbyt wiele zgłoszeń kontaktowych dzisiaj. Użyj kontaktu bezpośredniego."
     invalid_email: "Wpisz poprawny adres e-mail."
     invalid_contact: "Wpisz poprawny e-mail albo numer telefonu."
@@ -78,7 +78,7 @@ blog:
 market:
     meta:
         title: "Ile rzeczy naprawdę są warte? Uczciwe ceny · IleZa.pl"
-        description: "Sprawdź redakcyjne ceny odniesienia produktów w Polsce — bez premii za nowość, opakowanie, marketing i marżę dużej sieci."
+        description: "Sprawdź redakcyjne ceny odniesienia produktów w Polsce - bez premii za nowość, opakowanie, marketing i marżę dużej sieci."
     product_meta:
         title: "Ile naprawdę wart jest %product%? Uczciwa cena i historia"
         description: "Sprawdź redakcyjną ocenę uczciwej ceny %product%, rozsądny przedział i historię zmian w Polsce."
@@ -134,7 +134,7 @@ market:
         meta:
             laptops:
                 title: "Uczciwe ceny laptopów i MacBooków w Polsce · IleZa.pl"
-                description: "Sprawdź redakcyjne ceny odniesienia MacBooków i laptopów w Polsce — od %min% do %max% z historią zmian."
+                description: "Sprawdź redakcyjne ceny odniesienia MacBooków i laptopów w Polsce - od %min% do %max% z historią zmian."
             macbook:
                 title: "Uczciwe ceny MacBooków w Polsce (Air, Pro, M1, M2, M3) · IleZa.pl"
                 description: "Redakcyjne ceny odniesienia MacBooków w Polsce, rozsądne przedziały i największe zmiany w ostatnich 30 dniach."
@@ -164,8 +164,8 @@ market:
         pagination: "Strony katalogu"
         price_options:
             under_100: "Poniżej 100 zł"
-            100_2000: "100–2 000 zł"
-            2000_20000: "2 000–20 000 zł"
+            100_2000: "100-2 000 zł"
+            2000_20000: "2 000-20 000 zł"
             over_20000: "Powyżej 20 000 zł"
     movers:
         title: "🔥 Największe spadki cen (30 dni)"
@@ -193,10 +193,10 @@ market:
     awaiting_note: "Historia rozpocznie się po najbliższym przeglądzie redakcyjnym rynku."
     open_history: "Otwórz historię ceny"
     method:
-        title: "Dlaczego to jest użyteczne — i uczciwe"
+        title: "Dlaczego to jest użyteczne - i uczciwe"
         text: "To historia autorskich ocen realnej wartości, a nie statystyczny indeks, scraper marketplace ani automatyczny model wyceny."
         one: "Redakcja IleZa.pl ręcznie ocenia, ile sam produkt jest rozsądnie wart, korzystając z wiedzy o nim i dostępnych informacji rynkowych."
-        two: "Publikujemy uczciwą cenę, rozsądny przedział, datę i historię zmian — bez udawania próby statystycznej lub matematycznej precyzji."
+        two: "Publikujemy uczciwą cenę, rozsądny przedział, datę i historię zmian - bez udawania próby statystycznej lub matematycznej precyzji."
         three: "Zgłoszenia społeczności mogą dostarczyć nowego kontekstu, ale każdy punkt pozostaje świadomą opinią redakcyjną IleZa.pl."
         public: "Każda wartość jest ręczną oceną redakcyjną. Nie powstaje ze sformalizowanego algorytmu ani deklarowanej próby ofert. Linki nadesłane przez społeczność pozostają prywatne, nie są automatycznie pobierane ani publikowane i są usuwane po 90 dniach."
         verified_editorially: "Każdy opublikowany punkt jest świadomą oceną redakcji IleZa.pl, opartą na wiedzy o produkcie i dostępnym kontekście rynkowym."
@@ -215,7 +215,7 @@ market:
     month_change: "Zmiana w 30 dni"
     no_month_data: "Zbieranie historii 30 dni"
     snapshot: "Najnowsza ocena uczciwej ceny"
-    snapshot_text: "W dniu %date% redakcja IleZa.pl oceniała uczciwą cenę %product% na %median%. Rozsądny przedział wynosił %low% – %high%. To opinia redakcyjna, a nie wynik algorytmu lub próby statystycznej."
+    snapshot_text: "W dniu %date% redakcja IleZa.pl oceniała uczciwą cenę %product% na %median%. Rozsądny przedział wynosił %low% - %high%. To opinia redakcyjna, a nie wynik algorytmu lub próby statystycznej."
     dataset:
         name: "Historia uczciwej ceny %product% w Polsce"
         measurement: "Ręczna ocena redakcyjna oparta na wiedzy o produkcie i dostępnych informacjach rynkowych"
@@ -248,7 +248,7 @@ market:
         submit: "Zgłoś produkt"
         note: "Zgłoszenie zostaje prywatnie na tym serwerze. E-mail służy tylko do ewentualnego kontaktu."
         saving: "Zapisywanie…"
-        saved: "Dzięki — propozycja produktu została zapisana."
+        saved: "Dzięki - propozycja produktu została zapisana."
         invalid: "Wpisz produkt oraz poprawny e-mail, jeśli go podajesz."
         failed: "Nie udało się teraz zapisać zgłoszenia."
         too_many: "Zbyt wiele zgłoszeń z tego połączenia. Spróbuj ponownie jutro."
@@ -261,7 +261,7 @@ market:
         submit: "Wyślij okazję"
         note: "Tylko do prywatnej weryfikacji. Parametry i fragmenty URL są usuwane, strona nigdy nie jest pobierana automatycznie, IP jest haszowane, a zgłoszenie znika po 90 dniach."
         saving: "Wysyłanie…"
-        saved: "Dzięki — link trafił do prywatnej kolejki redakcyjnej IleZa.pl."
+        saved: "Dzięki - link trafił do prywatnej kolejki redakcyjnej IleZa.pl."
         invalid: "Podaj poprawny publiczny link HTTP lub HTTPS oraz poprawny e-mail, jeśli go wpisujesz."
         failed: "Nie udało się teraz zapisać zgłoszenia."
         too_many: "Zbyt wiele zgłoszeń cenowych z tego połączenia. Spróbuj ponownie jutro."
@@ -290,9 +290,9 @@ market:
         unsubscribed_text: "Twój adres został usunięty z listy subskrybentów dla modelu: %product%."
     mail:
         verify:
-            subject: "Potwierdź alert cenowy dla %product% — IleZa.pl"
+            subject: "Potwierdź alert cenowy dla %product% - IleZa.pl"
         drop:
-            subject: "🔔 Spadek ceny: %product% — nowa uczciwa cena %price% na IleZa.pl"
+            subject: "🔔 Spadek ceny: %product% - nowa uczciwa cena %price% na IleZa.pl"
     mcp:
         eyebrow: "OTWARTY SERWER MCP"
         title: "Użyj historii cen we własnych narzędziach"
@@ -302,7 +302,7 @@ market:
         title: "Często zadawane pytania o ceny"
         price_now:
             q: "Ile naprawdę wart jest teraz %product%?"
-            a: "Aktualna redakcyjna uczciwa cena %product% wynosi %median%, a rozsądny przedział to %low% – %high%."
+            a: "Aktualna redakcyjna uczciwa cena %product% wynosi %median%, a rozsądny przedział to %low% - %high%."
         month_ago:
             q: "Ile %product% kosztował miesiąc temu?"
             a: "Około 30 dni temu redakcyjna cena odniesienia wynosiła %median%, co oznacza zmianę o %diff% (%diff_pct%%)."

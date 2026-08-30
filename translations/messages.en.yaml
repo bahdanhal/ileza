@@ -1,7 +1,7 @@
 base:
-    default_title: "Bahdan’s Toolbox"
-    home_label: "Bahdan’s Toolbox home"
-    brand: "Bahdan’s Toolbox"
+    default_title: "Bahdan's Toolbox"
+    home_label: "Bahdan's Toolbox home"
+    brand: "Bahdan's Toolbox"
     brand_short: "Toolbox"
     by: "by Bahdan Hal"
     product_label: "Polish price index"
@@ -30,7 +30,7 @@ base:
     contact: "Contact"
 
 error404:
-    title: "404 — Price Radar Not Found · IleZa.pl"
+    title: "404 - Price Radar Not Found · IleZa.pl"
     eyebrow: "404 · OFF RADAR"
     heading: "Item missing from the radar."
     description: "The product, category, or article you were looking for doesn't exist or has moved. Browse our tracked electronics or calculate net income below."
@@ -53,7 +53,7 @@ contact:
     company: "Company"
     note: "Stored privately on this server so Bahdan can follow up. No mailing list or automated sales sequence."
     invalid_origin: "Invalid form origin."
-    saved: "Thanks — your contact request is saved. Bahdan will follow up."
+    saved: "Thanks - your contact request is saved. Bahdan will follow up."
     too_many: "Too many contact requests today. Please use a direct contact link instead."
     invalid_email: "Please enter a valid email address."
     invalid_contact: "Please enter a valid email address or phone number."
@@ -164,8 +164,8 @@ market:
         pagination: "Catalog pages"
         price_options:
             under_100: "Under PLN 100"
-            100_2000: "PLN 100–2,000"
-            2000_20000: "PLN 2,000–20,000"
+            100_2000: "PLN 100-2,000"
+            2000_20000: "PLN 2,000-20,000"
             over_20000: "Over PLN 20,000"
     movers:
         title: "🔥 Top 30-Day Price Drops"
@@ -193,7 +193,7 @@ market:
     awaiting_note: "The history will begin after the next editorial market review."
     open_history: "Open price history"
     method:
-        title: "What makes this useful—and honest"
+        title: "What makes this useful-and honest"
         text: "This is a history of editorial judgments about real value, not a statistical index, marketplace scraper, or automated valuation model."
         one: "The IleZa.pl editorial team manually judges what the product itself is reasonably worth, using product knowledge and available market information."
         two: "We publish a fair price, reasonable range, date, and history without pretending to have a statistical sample or mathematical precision."
@@ -215,7 +215,7 @@ market:
     month_change: "30-day change"
     no_month_data: "Gathering 30-day baseline"
     snapshot: "Latest fair-price judgment"
-    snapshot_text: "On %date%, the IleZa.pl editorial fair-price estimate for %product% was %median%. The reasonable range was %low%–%high%. This is an editorial opinion, not the result of an algorithm or statistical sample."
+    snapshot_text: "On %date%, the IleZa.pl editorial fair-price estimate for %product% was %median%. The reasonable range was %low%-%high%. This is an editorial opinion, not the result of an algorithm or statistical sample."
     dataset:
         name: "%product% fair-price history in Poland"
         measurement: "Manual editorial judgment based on product knowledge and available market information"
@@ -248,7 +248,7 @@ market:
         submit: "Request product"
         note: "Saved privately on this server. Your email is only for a possible follow-up."
         saving: "Saving…"
-        saved: "Thanks — the product request is saved."
+        saved: "Thanks - the product request is saved."
         invalid: "Enter a product name and, if supplied, a valid email."
         failed: "The request could not be saved right now."
         too_many: "Too many requests from this connection today. Please try again tomorrow."
@@ -261,7 +261,7 @@ market:
         submit: "Send price tip"
         note: "Private review only. Query parameters and fragments are removed, the page is never fetched automatically, your IP is hashed, and the tip is deleted after 90 days."
         saving: "Sending…"
-        saved: "Thank you — the listing is in the private IleZa.pl editorial review queue."
+        saved: "Thank you - the listing is in the private IleZa.pl editorial review queue."
         invalid: "Enter a valid public HTTP or HTTPS listing URL and, if supplied, a valid email."
         failed: "The price tip could not be saved right now."
         too_many: "Too many price tips from this connection today. Please try again tomorrow."
@@ -290,9 +290,9 @@ market:
         unsubscribed_text: "Your email address has been removed from price alert notifications for: %product%."
     mail:
         verify:
-            subject: "Confirm your price drop alert for %product% — IleZa.pl"
+            subject: "Confirm your price drop alert for %product% - IleZa.pl"
         drop:
-            subject: "🔔 Price drop: %product% — new fair price %price% on IleZa.pl"
+            subject: "🔔 Price drop: %product% - new fair price %price% on IleZa.pl"
     mcp:
         eyebrow: "OPEN MCP SERVER"
         title: "Use the price history in your own tools"
@@ -302,7 +302,7 @@ market:
         title: "Frequently asked pricing questions"
         price_now:
             q: "What is %product% really worth now?"
-            a: "The current editorial fair-price estimate for %product% is %median%, with a reasonable range of %low%–%high%."
+            a: "The current editorial fair-price estimate for %product% is %median%, with a reasonable range of %low%-%high%."
         month_ago:
             q: "How much did %product% cost a month ago?"
             a: "Around 30 days ago, the editorial reference price was %median%, representing a change of %diff% (%diff_pct%%)."

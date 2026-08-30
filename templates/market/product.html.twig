@@ -1,5 +1,5 @@
 {% extends 'base.html.twig' %}
-{% macro money(grosz, locale) %}{{ (grosz / 100)|number_format(2, locale == 'pl' ? ',' : '.', locale == 'pl' ? ' ' : ',') }}{{ ' ' }}{{ locale == 'pl' ? 'zł' : 'PLN' }}{% endmacro %}
+{% macro money(grosz, locale) %}{{ (grosz / 100)|number_format(2, locale == 'pl' ? ',' : '.', locale == 'pl' ? ' ' : ',') }}{{ ' ' }}{{ locale == 'pl' ? 'zł' : 'PLN' }}{% endmacro %}
 {% macro localized_label(label, locale) %}{{- locale == 'pl' ? label|replace({'-inch': '″', ' petrol': ' benzyna'}) : label -}}{% endmacro %}
 {% set localized_product_name = app.request.locale == 'pl' ? product.name|replace({'-inch': '″', ' petrol': ' benzyna'}) : product.name %}
 {% block tool_name %}{{ 'base.context.market'|trans }}{% endblock %}
@@ -132,11 +132,11 @@
                         <strong>{{ month_diff < 0 ? '📉 ' : (month_diff > 0 ? '📈 +' : '🟢 ') }}{{ (month_diff / 100)|number_format(0) }} zł</strong>
                         <small>{{ 'market.month_ago'|trans }}: {{ _self.money(one_month_ago.medianGrosz, app.request.locale) }} ({{ month_diff > 0 ? '+' : '' }}{{ month_pct }}%)</small>
                     {% else %}
-                        <strong>—</strong>
+                        <strong>-</strong>
                         <small>{{ 'market.no_month_data'|trans }}</small>
                     {% endif %}
                 </div>
-                <div><span>{{ 'market.range'|trans }}</span><strong>{{ _self.money(latest.lowGrosz, app.request.locale) }} – {{ _self.money(latest.highGrosz, app.request.locale) }}</strong><small>{{ 'market.comparable_range'|trans }}</small></div>
+                <div><span>{{ 'market.range'|trans }}</span><strong>{{ _self.money(latest.lowGrosz, app.request.locale) }} - {{ _self.money(latest.highGrosz, app.request.locale) }}</strong><small>{{ 'market.comparable_range'|trans }}</small></div>
                 <div>
                     <span>{{ 'market.updated'|trans }}</span>
                     <strong>{{ latest.observedAt|date(app.request.locale == 'pl' ? 'd.m.Y' : 'M j, Y') }}</strong>
@@ -200,7 +200,7 @@
             <section class="section">
                 <div class="section-title"><h2>{{ 'market.history'|trans }}</h2><span>{{ history|length }} {{ 'market.observations'|trans }}</span></div>
                 <div class="table-wrap"><table><thead><tr><th>{{ 'market.date'|trans }}</th><th>{{ 'market.median'|trans }}</th><th>{{ 'market.range'|trans }}</th></tr></thead><tbody>
-                        {% for observation in history %}<tr><td><time datetime="{{ observation.observedAt|date('c') }}">{{ observation.observedAt|date(app.request.locale == 'pl' ? 'd.m.Y' : 'M j, Y') }}</time></td><td><strong>{{ _self.money(observation.medianGrosz, app.request.locale) }}</strong></td><td>{{ _self.money(observation.lowGrosz, app.request.locale) }} – {{ _self.money(observation.highGrosz, app.request.locale) }}</td></tr>{% endfor %}
+                        {% for observation in history %}<tr><td><time datetime="{{ observation.observedAt|date('c') }}">{{ observation.observedAt|date(app.request.locale == 'pl' ? 'd.m.Y' : 'M j, Y') }}</time></td><td><strong>{{ _self.money(observation.medianGrosz, app.request.locale) }}</strong></td><td>{{ _self.money(observation.lowGrosz, app.request.locale) }} - {{ _self.money(observation.highGrosz, app.request.locale) }}</td></tr>{% endfor %}
                         </tbody></table></div>
             </section>
             <section class="section market-evidence"><div class="section-title"><h2>{{ 'market.methodology_label'|trans }}</h2><span>{{ 'market.method.verified_badge'|trans }}</span></div><p>{{ 'market.method.public'|trans }}</p><p class="market-curation-note">✓ {{ 'market.method.verified_editorially'|trans }}</p></section>

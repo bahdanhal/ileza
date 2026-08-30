@@ -72,7 +72,7 @@
                 tooltip.innerHTML = `
           <strong>${d.date_formatted}</strong>
           <div><span>${container.dataset.labelMedian}:</span> <b>${d.median_pln} PLN</b></div>
-          <div><span>${container.dataset.labelRange}:</span> ${d.low_pln}–${d.high_pln} PLN</div>
+          <div><span>${container.dataset.labelRange}:</span> ${d.low_pln}-${d.high_pln} PLN</div>
         `;
                 tooltip.hidden = false;
 

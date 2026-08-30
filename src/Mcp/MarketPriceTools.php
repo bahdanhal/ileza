@@ -110,7 +110,7 @@ final readonly class MarketPriceTools
     #[McpTool(
         name: 'update_polish_fair_price_observation',
         // phpcs:ignore Generic.Files.LineLength
-        description: 'Admin-only tool: Add or update a manual editorial fair-price estimate for Poland. Authorization is handled via the Authorization header — do NOT pass any token argument.'
+        description: 'Admin-only tool: Add or update a manual editorial fair-price estimate for Poland. Authorization is handled via the Authorization header - do NOT pass any token argument.'
     )]
     public function updateObservation(
         #[Schema(description: 'Product slug to update (must exist in catalog).')] string $slug,

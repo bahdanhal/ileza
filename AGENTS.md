@@ -1,4 +1,4 @@
-# AI Agent Guidelines & System Instructions — ileza (ileza.pl)
+# AI Agent Guidelines & System Instructions - ileza (ileza.pl)
 
 This document provides mandatory directives for all AI coding agents interacting with the `ileza` repository (`ileza.pl`).
 

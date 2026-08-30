@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 {% macro money(grosz) %}{{ (grosz / 100)|number_format(2, '.', ' ') }} PLN{% endmacro %}
 {% block tool_name %}Market Admin{% endblock %}
-{% block title %}Market Admin Dashboard · Bahdan’s Toolbox{% endblock %}
+{% block title %}Market Admin Dashboard · Bahdan's Toolbox{% endblock %}
 {% block robots %}<meta name="robots" content="noindex,nofollow">{% endblock %}
 {% block stylesheets %}
     <link rel="stylesheet" href="/tools.css">
@@ -317,20 +317,20 @@
                     <div class="admin-form-group" data-spec-editor>
                         <label>Configuration details</label>
                         <div class="admin-form-row">
-                            <div class="admin-form-group"><label for="prod-spec-generation">Generation</label><select id="prod-spec-generation" data-spec-field="generation"><option value="">—</option>{% for value in ['iPhone X', 'iPhone 11', 'iPhone 12', 'iPhone 13', 'iPhone 14', 'iPhone 15', 'iPhone 16', 'iPhone 17'] %}<option value="{{ value }}">{{ value }}</option>{% endfor %}</select></div>
-                            <div class="admin-form-group"><label for="prod-spec-variant">Variant</label><select id="prod-spec-variant" data-spec-field="variant"><option value="">—</option>{% for value in ['Standard', 'Mini', 'Plus', 'Pro', 'Pro Max'] %}<option value="{{ value }}">{{ value }}</option>{% endfor %}</select></div>
+                            <div class="admin-form-group"><label for="prod-spec-generation">Generation</label><select id="prod-spec-generation" data-spec-field="generation"><option value="">-</option>{% for value in ['iPhone X', 'iPhone 11', 'iPhone 12', 'iPhone 13', 'iPhone 14', 'iPhone 15', 'iPhone 16', 'iPhone 17'] %}<option value="{{ value }}">{{ value }}</option>{% endfor %}</select></div>
+                            <div class="admin-form-group"><label for="prod-spec-variant">Variant</label><select id="prod-spec-variant" data-spec-field="variant"><option value="">-</option>{% for value in ['Standard', 'Mini', 'Plus', 'Pro', 'Pro Max'] %}<option value="{{ value }}">{{ value }}</option>{% endfor %}</select></div>
                         </div>
                         <div class="admin-form-row">
-                            <div class="admin-form-group"><label for="prod-spec-display">Display</label><select id="prod-spec-display" data-spec-field="display"><option value="">—</option><option value="13-inch">13-inch</option><option value="14-inch">14-inch</option><option value="15-inch">15-inch</option><option value="16-inch">16-inch</option></select></div>
-                            <div class="admin-form-group"><label for="prod-spec-chip">Chip</label><select id="prod-spec-chip" data-spec-field="chip"><option value="">—</option>{% for value in ['M1', 'M1 Pro', 'M1 Max', 'M2', 'M2 Pro', 'M2 Max', 'M3', 'M3 Pro', 'M3 Max', 'M4', 'A15', 'A16', 'A17', 'A18'] %}<option value="{{ value }}">{{ value }}</option>{% endfor %}</select></div>
+                            <div class="admin-form-group"><label for="prod-spec-display">Display</label><select id="prod-spec-display" data-spec-field="display"><option value="">-</option><option value="13-inch">13-inch</option><option value="14-inch">14-inch</option><option value="15-inch">15-inch</option><option value="16-inch">16-inch</option></select></div>
+                            <div class="admin-form-group"><label for="prod-spec-chip">Chip</label><select id="prod-spec-chip" data-spec-field="chip"><option value="">-</option>{% for value in ['M1', 'M1 Pro', 'M1 Max', 'M2', 'M2 Pro', 'M2 Max', 'M3', 'M3 Pro', 'M3 Max', 'M4', 'A15', 'A16', 'A17', 'A18'] %}<option value="{{ value }}">{{ value }}</option>{% endfor %}</select></div>
                         </div>
                         <div class="admin-form-row">
-                            <div class="admin-form-group"><label for="prod-spec-memory">Memory</label><select id="prod-spec-memory" data-spec-field="memory"><option value="">—</option>{% for value in ['4 GB', '8 GB', '16 GB', '18 GB', '24 GB', '32 GB', '36 GB', '48 GB', '64 GB'] %}<option value="{{ value }}">{{ value }}</option>{% endfor %}</select></div>
-                            <div class="admin-form-group"><label for="prod-spec-storage">Storage</label><select id="prod-spec-storage" data-spec-field="storage"><option value="">—</option>{% for value in ['64 GB', '128 GB', '256 GB', '512 GB', '1 TB', '2 TB'] %}<option value="{{ value }}">{{ value }}</option>{% endfor %}</select></div>
+                            <div class="admin-form-group"><label for="prod-spec-memory">Memory</label><select id="prod-spec-memory" data-spec-field="memory"><option value="">-</option>{% for value in ['4 GB', '8 GB', '16 GB', '18 GB', '24 GB', '32 GB', '36 GB', '48 GB', '64 GB'] %}<option value="{{ value }}">{{ value }}</option>{% endfor %}</select></div>
+                            <div class="admin-form-group"><label for="prod-spec-storage">Storage</label><select id="prod-spec-storage" data-spec-field="storage"><option value="">-</option>{% for value in ['64 GB', '128 GB', '256 GB', '512 GB', '1 TB', '2 TB'] %}<option value="{{ value }}">{{ value }}</option>{% endfor %}</select></div>
                         </div>
                         <div class="admin-form-row">
-                            <div class="admin-form-group"><label for="prod-spec-type">Type</label><select id="prod-spec-type" data-spec-field="type"><option value="">—</option>{% for value in ['DDR4', 'DDR5', 'LPDDR4', 'LPDDR5'] %}<option value="{{ value }}">{{ value }}</option>{% endfor %}</select></div>
-                            <div class="admin-form-group"><label for="prod-spec-form-factor">Form factor</label><select id="prod-spec-form-factor" data-spec-field="form_factor"><option value="">—</option>{% for value in ['DIMM (Desktop)', 'SO-DIMM (Laptop)'] %}<option value="{{ value }}">{{ value }}</option>{% endfor %}</select></div>
+                            <div class="admin-form-group"><label for="prod-spec-type">Type</label><select id="prod-spec-type" data-spec-field="type"><option value="">-</option>{% for value in ['DDR4', 'DDR5', 'LPDDR4', 'LPDDR5'] %}<option value="{{ value }}">{{ value }}</option>{% endfor %}</select></div>
+                            <div class="admin-form-group"><label for="prod-spec-form-factor">Form factor</label><select id="prod-spec-form-factor" data-spec-field="form_factor"><option value="">-</option>{% for value in ['DIMM (Desktop)', 'SO-DIMM (Laptop)'] %}<option value="{{ value }}">{{ value }}</option>{% endfor %}</select></div>
                         </div>
                         <label for="prod-specifications">Additional specifications (JSON)</label>
                         <textarea id="prod-specifications" name="specifications" rows="2" placeholder='{"battery":"95%"}'></textarea>
@@ -400,16 +400,16 @@
                             </td>
                             <td>
                                 {% if lat %}
-                                    {{ (lat.lowGrosz / 100)|round }}–{{ (lat.highGrosz / 100)|round }} PLN
+                                    {{ (lat.lowGrosz / 100)|round }}-{{ (lat.highGrosz / 100)|round }} PLN
                                 {% else %}
-                                    —
+                                    -
                                 {% endif %}
                             </td>
                             <td>
                                 {% if lat %}
                                     {{ lat.observedAt|date('Y-m-d') }}
                                 {% else %}
-                                    —
+                                    -
                                 {% endif %}
                             </td>
                             <td>{{ item.observation_count }}</td>
@@ -507,7 +507,7 @@
                             <td>{{ tip.submittedAt|date('Y-m-d H:i') }}</td>
                             <td><code>{{ tip.productSlug }}</code></td>
                             <td><a href="{{ tip.listingUrl }}" target="_blank" rel="noopener noreferrer nofollow">Open listing ↗</a></td>
-                            <td>{{ tip.email ?: '—' }}</td>
+                            <td>{{ tip.email ?: '-' }}</td>
                             <td>{{ tip.expiresAt|date('Y-m-d') }}</td>
                         </tr>
                     {% else %}
@@ -542,7 +542,7 @@
                                     <span class="badge" style="background: rgba(251, 191, 36, 0.15); color: #fbbf24;">Pending verify</span>
                                 {% endif %}
                             </td>
-                            <td>{{ alert.lastNotifiedAt ? alert.lastNotifiedAt|date('Y-m-d H:i') ~ ' (' ~ ((alert.lastNotifiedPriceGrosz / 100)|number_format(0, '.', ' ')) ~ ' PLN)' : '—' }}</td>
+                            <td>{{ alert.lastNotifiedAt ? alert.lastNotifiedAt|date('Y-m-d H:i') ~ ' (' ~ ((alert.lastNotifiedPriceGrosz / 100)|number_format(0, '.', ' ')) ~ ' PLN)' : '-' }}</td>
                         </tr>
                     {% else %}
                         <tr><td colspan="6" style="text-align: center; color: var(--muted); padding: 24px;">No price alert subscriptions yet.</td></tr>

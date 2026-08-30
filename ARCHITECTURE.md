@@ -1,4 +1,4 @@
-# Architecture Documentation — ileza (ileza.pl)
+# Architecture Documentation - ileza (ileza.pl)
 
 `ileza` (`ileza.pl`) is the Polish second-hand tech/electronics price radar, financial employment calculator, and editorial fair-price history application.
 

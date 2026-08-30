@@ -51,7 +51,7 @@ final class CheckPriceAlertsCommand extends Command
             $detail['email'],
             number_format($detail['current_price_grosz'] / 100, 0) . ' zł',
             $detail['target_price_grosz'] !== null ? number_format($detail['target_price_grosz'] / 100, 0) . ' zł' : 'Any drop',
-            $detail['notified'] ? '✓ Sent' : '— Skipped',
+            $detail['notified'] ? '✓ Sent' : '- Skipped',
         ], $result['details']);
 
         if (!empty($tableRows)) {

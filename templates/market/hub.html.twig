@@ -1,21 +1,21 @@
 {% extends 'base.html.twig' %}
-{% macro money(grosz, locale) %}{{ (grosz / 100)|number_format(2, locale == 'pl' ? ',' : '.', locale == 'pl' ? ' ' : ',') }}{{ ' ' }}{{ locale == 'pl' ? 'zł' : 'PLN' }}{% endmacro %}
+{% macro money(grosz, locale) %}{{ (grosz / 100)|number_format(2, locale == 'pl' ? ',' : '.', locale == 'pl' ? ' ' : ',') }}{{ ' ' }}{{ locale == 'pl' ? 'zł' : 'PLN' }}{% endmacro %}
 {% macro smart_money(grosz, locale) %}
     {%- set pln = grosz / 100 -%}
     {%- if pln <= 0 -%}
-        0{{ ' ' }}{{ locale == 'pl' ? 'zł' : 'PLN' }}
+        0{{ ' ' }}{{ locale == 'pl' ? 'zł' : 'PLN' }}
     {%- elseif pln < 100 -%}
         {%- set rounded = ((pln / 5)|round) * 5 -%}
-        {{ rounded|number_format(0, locale == 'pl' ? ',' : '.', locale == 'pl' ? ' ' : ',') }}{{ ' ' }}{{ locale == 'pl' ? 'zł' : 'PLN' }}
+        {{ rounded|number_format(0, locale == 'pl' ? ',' : '.', locale == 'pl' ? ' ' : ',') }}{{ ' ' }}{{ locale == 'pl' ? 'zł' : 'PLN' }}
     {%- elseif pln < 2000 -%}
         {%- set rounded = ((pln / 10)|round) * 10 -%}
-        {{ rounded|number_format(0, locale == 'pl' ? ',' : '.', locale == 'pl' ? ' ' : ',') }}{{ ' ' }}{{ locale == 'pl' ? 'zł' : 'PLN' }}
+        {{ rounded|number_format(0, locale == 'pl' ? ',' : '.', locale == 'pl' ? ' ' : ',') }}{{ ' ' }}{{ locale == 'pl' ? 'zł' : 'PLN' }}
     {%- elseif pln <= 20000 -%}
         {%- set rounded = ((pln / 100)|round) * 100 -%}
-        {{ rounded|number_format(0, locale == 'pl' ? ',' : '.', locale == 'pl' ? ' ' : ',') }}{{ ' ' }}{{ locale == 'pl' ? 'zł' : 'PLN' }}
+        {{ rounded|number_format(0, locale == 'pl' ? ',' : '.', locale == 'pl' ? ' ' : ',') }}{{ ' ' }}{{ locale == 'pl' ? 'zł' : 'PLN' }}
     {%- else -%}
         {%- set rounded = ((pln / 500)|round) * 500 -%}
-        {{ rounded|number_format(0, locale == 'pl' ? ',' : '.', locale == 'pl' ? ' ' : ',') }}{{ ' ' }}{{ locale == 'pl' ? 'zł' : 'PLN' }}
+        {{ rounded|number_format(0, locale == 'pl' ? ',' : '.', locale == 'pl' ? ' ' : ',') }}{{ ' ' }}{{ locale == 'pl' ? 'zł' : 'PLN' }}
     {%- endif -%}
 {% endmacro %}
 {% macro localized_label(label, locale) %}{{- locale == 'pl' ? label|replace({'-inch': '″', ' petrol': ' benzyna'}) : label -}}{% endmacro %}
@@ -77,7 +77,7 @@
                 <li>
                     <strong>
                         {% if stats.has_observations and stats.min_price_grosz and stats.max_price_grosz %}
-                            {{ _self.smart_money(stats.min_price_grosz, app.request.locale) }} – {{ _self.smart_money(stats.max_price_grosz, app.request.locale) }}
+                            {{ _self.smart_money(stats.min_price_grosz, app.request.locale) }} - {{ _self.smart_money(stats.max_price_grosz, app.request.locale) }}
                         {% else %}
                             PLN
                         {% endif %}
@@ -207,9 +207,9 @@
                                 <td>
                                     <span class="matrix-range">
                                         {% if row.latest %}
-                                            {{ _self.smart_money(row.latest.lowGrosz, app.request.locale) }} – {{ _self.smart_money(row.latest.highGrosz, app.request.locale) }}
+                                            {{ _self.smart_money(row.latest.lowGrosz, app.request.locale) }} - {{ _self.smart_money(row.latest.highGrosz, app.request.locale) }}
                                         {% else %}
-                                            —
+                                            -
                                         {% endif %}
                                     </span>
                                 </td>
@@ -219,7 +219,7 @@
                                             {{ row.delta_grosz < 0 ? '📉' : (row.delta_grosz > 0 ? '📈 +' : '🟢 ') }}{{ row.delta_pct }}%
                                         </span>
                                     {% else %}
-                                        <span class="trend-badge trend-flat">—</span>
+                                        <span class="trend-badge trend-flat">-</span>
                                     {% endif %}
                                 </td>
                                 <td>
@@ -246,7 +246,7 @@
         {% if families is not empty %}
             <section class="market-products">
                 <div class="section-title" style="grid-column: 1 / -1; margin-bottom: 8px;">
-                    <h2>{{ hub_title }} — {{ 'market.choose_configuration'|trans }}</h2>
+                    <h2>{{ hub_title }} - {{ 'market.choose_configuration'|trans }}</h2>
                 </div>
                 {% for item in families %}
                     {% set initial = item.configurations[0] %}

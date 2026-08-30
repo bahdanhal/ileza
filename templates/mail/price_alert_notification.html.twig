@@ -30,7 +30,7 @@
                 {% if previous and previous.medianGrosz > latest.medianGrosz %}
                     <div class="price-prev">Poprzednio: {{ ((previous.medianGrosz / 100)|number_format(0, ',', ' ')) }} zł (spadek o {{ (((previous.medianGrosz - latest.medianGrosz) / 100)|number_format(0, ',', ' ')) }} zł)</div>
                 {% endif %}
-                <div style="font-size: 13px; color: #64748b; margin-top: 8px;">Typowy zakres ofert: {{ ((latest.lowGrosz / 100)|number_format(0, ',', ' ')) }} zł – {{ ((latest.highGrosz / 100)|number_format(0, ',', ' ')) }} zł</div>
+                <div style="font-size: 13px; color: #64748b; margin-top: 8px;">Typowy zakres ofert: {{ ((latest.lowGrosz / 100)|number_format(0, ',', ' ')) }} zł - {{ ((latest.highGrosz / 100)|number_format(0, ',', ' ')) }} zł</div>
             </div>
 
             <p>Sprawdź pełny wykres historii cen, rozkład ofert oraz kalkulator opłacalności zakupu:</p>
@@ -50,7 +50,7 @@
                 {% if previous and previous.medianGrosz > latest.medianGrosz %}
                     <div class="price-prev">Previous: {{ ((previous.medianGrosz / 100)|number_format(0, '.', ',')) }} PLN (drop of {{ (((previous.medianGrosz - latest.medianGrosz) / 100)|number_format(0, '.', ',')) }} PLN)</div>
                 {% endif %}
-                <div style="font-size: 13px; color: #64748b; margin-top: 8px;">Observed range: {{ ((latest.lowGrosz / 100)|number_format(0, '.', ',')) }} PLN – {{ ((latest.highGrosz / 100)|number_format(0, '.', ',')) }} PLN</div>
+                <div style="font-size: 13px; color: #64748b; margin-top: 8px;">Observed range: {{ ((latest.lowGrosz / 100)|number_format(0, '.', ',')) }} PLN - {{ ((latest.highGrosz / 100)|number_format(0, '.', ',')) }} PLN</div>
             </div>
 
             <p>View the complete price history chart and deal checker:</p>

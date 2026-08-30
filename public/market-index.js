@@ -113,7 +113,7 @@ document.querySelectorAll('[data-market-family]').forEach((family) => {
       const ctaText = dropdown.dataset.requestCta || 'Zgłoś ten model →';
       dropdown.innerHTML = `
         <div class="search-empty-state">
-          <p><strong>${dropdown.dataset.noResults || 'Brak wyników'}</strong> dla „<em>${escapeHtml(cleanQuery)}</em>”</p>
+          <p><strong>${dropdown.dataset.noResults || 'Brak wyników'}</strong> dla „<em>${escapeHtml(cleanQuery)}</em>"</p>
           <button type="button" class="search-request-cta-btn" data-prefill="${escapeHtml(cleanQuery)}">
             ${escapeHtml(promptText)} (${escapeHtml(ctaText)})
           </button>
