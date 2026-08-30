@@ -86,7 +86,8 @@
                 <a class="back" href="{{ path('market_home', {_locale: 'pl'}) }}">← View Public Site</a>
                 <h1 style="font-size: 32px; margin-top: 8px;">Market <em>Admin Control Center</em></h1>
             </div>
-            <div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <a href="{{ path('market_admin_blog_list') }}" class="admin-btn" style="text-decoration: none; font-size: 13px;">Poradniki &amp; Blog</a>
                 <a href="{{ path('market_admin_logout') }}" class="admin-btn admin-btn-secondary" style="text-decoration: none; font-size: 13px;">Log Out</a>
             </div>
         </div>

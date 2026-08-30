@@ -42,6 +42,51 @@ final readonly class DoctrineBlogArticleRepository implements BlogArticleReposit
         return $entity === null ? null : $this->map($entity);
     }
 
+    /** @return list<BlogArticle> */
+    public function findAllForAdmin(?string $locale = null): array
+    {
+        $criteria = [];
+        if ($locale !== null && in_array($locale, ['en', 'pl'], true)) {
+            $criteria['locale'] = $locale;
+        }
+
+        /** @var list<BlogArticleEntity> $entities */
+        $entities = $this->entityManager->getRepository(BlogArticleEntity::class)->findBy(
+            $criteria,
+            ['publishedAt' => 'DESC', 'id' => 'DESC']
+        );
+
+        return array_map($this->map(...), $entities);
+    }
+
+    public function findEntity(int $id): ?BlogArticleEntity
+    {
+        return $this->entityManager->find(BlogArticleEntity::class, $id);
+    }
+
+    public function findEntityByLocaleAndSlug(string $locale, string $slug): ?BlogArticleEntity
+    {
+        /** @var BlogArticleEntity|null $entity */
+        $entity = $this->entityManager->getRepository(BlogArticleEntity::class)->findOneBy([
+            'locale' => $locale,
+            'slug' => $slug,
+        ]);
+
+        return $entity;
+    }
+
+    public function save(BlogArticleEntity $entity): void
+    {
+        $this->entityManager->persist($entity);
+        $this->entityManager->flush();
+    }
+
+    public function delete(BlogArticleEntity $entity): void
+    {
+        $this->entityManager->remove($entity);
+        $this->entityManager->flush();
+    }
+
     private function map(BlogArticleEntity $entity): BlogArticle
     {
         return new BlogArticle(
@@ -53,6 +98,7 @@ final readonly class DoctrineBlogArticleRepository implements BlogArticleReposit
             $entity->getBodyMarkdown(),
             $entity->getPublishedAt(),
             $entity->getUpdatedAt(),
+            $entity->getId(),
         );
     }
 }

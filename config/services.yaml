@@ -146,6 +146,10 @@ services:
       $secret: '%env(APP_SECRET)%'
       $projectDir: '%kernel.project_dir%'
 
+  App\Market\Presentation\Http\Admin\AdminBlogController:
+    arguments:
+      $secret: '%env(APP_SECRET)%'
+
   App\Twig\AdminCsrfExtension:
     arguments:
       $secret: '%env(APP_SECRET)%'

@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace App\Mcp;
 
 use App\Analytics\Application\TrafficAnalytics;
+use App\Content\Application\BlogArticleRepository;
+use App\Content\Domain\BlogArticle;
+use App\Entity\BlogArticleEntity;
 use App\Market\Application\GetMarketStatistics;
 use App\Market\Domain\PriceTip;
 use App\Market\Domain\PriceTipRepository;
@@ -23,6 +26,7 @@ final readonly class AdminTools
         private PriceTipRepository $priceTips,
         private GetMarketStatistics $marketStatistics,
         private TrafficAnalytics $trafficAnalytics,
+        private BlogArticleRepository $blogArticles,
     ) {
     }
 
@@ -114,14 +118,13 @@ final readonly class AdminTools
                 'message' => $lead->message,
                 'source' => $lead->source,
             ], array_slice($all, 0, $limit)),
-            'privacy' => 'Admin-only personal data. Do not log, republish, or forward without a valid purpose.',
         ]);
     }
 
     #[McpTool(
         name: 'list_admin_product_requests',
         // phpcs:ignore Generic.Files.LineLength
-        description: 'Admin-only: List recent requests for products to add to the editorial fair-price index. Requires an Authorization: Bearer header.'
+        description: 'Admin-only: List recent unfulfilled product tracking requests from the community. Requires an Authorization: Bearer header.'
     )]
     public function productRequests(
         #[Schema(description: 'Maximum records to return, from 1 to 100.')] int $limit = 50,
@@ -138,12 +141,7 @@ final readonly class AdminTools
         return $this->json([
             'total' => count($all),
             'returned' => min($limit, count($all)),
-            'items' => array_map(static fn (array $request): array => [
-                'created_at' => $request['timestamp'],
-                'product' => $request['product'],
-                'email' => $request['email'],
-            ], array_slice($all, 0, $limit)),
-            'privacy' => 'Admin-only submission data. Do not log or republish contact details.',
+            'items' => array_slice($all, 0, $limit),
         ]);
     }
 
@@ -178,12 +176,205 @@ final readonly class AdminTools
         ]);
     }
 
+    #[McpTool(
+        name: 'list_admin_blog_articles',
+        // phpcs:ignore Generic.Files.LineLength
+        description: 'Admin-only: List buying guides and blog articles across locales with metadata, word counts, and price widget dependencies. Requires an Authorization: Bearer header.'
+    )]
+    public function blogArticles(
+        #[Schema(description: 'Filter by locale ("pl" or "en"), or omit for all.')] ?string $locale = null,
+        #[Schema(description: 'Maximum articles to return, from 1 to 100.')] int $limit = 50,
+    ): string {
+        if (!$this->access->isGranted()) {
+            return $this->unauthorized();
+        }
+        if (!$this->validLimit($limit)) {
+            return $this->invalidLimit();
+        }
+
+        $articles = $this->blogArticles->findAllForAdmin($locale);
+
+        return $this->json([
+            'total' => count($articles),
+            'returned' => min($limit, count($articles)),
+            'items' => array_map(
+                static fn (BlogArticle $article): array => [
+                    'id' => $article->getId(),
+                    'locale' => $article->getLocale(),
+                    'slug' => $article->getSlug(),
+                    'alternate_slug' => $article->getAlternateSlug(),
+                    'title' => $article->getTitle(),
+                    'description' => $article->getDescription(),
+                    'reading_minutes' => $article->getReadingMinutes(),
+                    'price_slugs' => $article->getPriceSlugs(),
+                    'published_at' => $article->getPublishedAt()->format(DATE_ATOM),
+                    'updated_at' => $article->getUpdatedAt()->format(DATE_ATOM),
+                    'url' => ($article->getLocale() === 'en' ? '/en/blog/' : '/blog/') . $article->getSlug(),
+                ],
+                array_slice($articles, 0, $limit),
+            ),
+        ]);
+    }
+
+    #[McpTool(
+        name: 'get_admin_blog_article',
+        // phpcs:ignore Generic.Files.LineLength
+        description: 'Admin-only: Get full buying guide / blog article markdown and price widget metadata by slug and locale. Requires an Authorization: Bearer header.'
+    )]
+    public function getBlogArticle(
+        #[Schema(description: 'URL slug of the article.')] string $slug,
+        #[Schema(description: 'Locale of the article ("pl" or "en"). Default: "pl".')] string $locale = 'pl',
+    ): string {
+        if (!$this->access->isGranted()) {
+            return $this->unauthorized();
+        }
+
+        $entity = $this->blogArticles->findEntityByLocaleAndSlug($locale, $slug);
+        if ($entity === null) {
+            return $this->json(['error' => 'Article not found for given slug and locale.']);
+        }
+
+        return $this->json([
+            'id' => $entity->getId(),
+            'locale' => $entity->getLocale(),
+            'slug' => $entity->getSlug(),
+            'alternate_slug' => $entity->getAlternateSlug(),
+            'title' => $entity->getTitle(),
+            'description' => $entity->getDescription(),
+            'body_markdown' => $entity->getBodyMarkdown(),
+            'reading_minutes' => $entity->getReadingMinutes(),
+            'price_slugs' => $entity->getPriceSlugs(),
+            'published_at' => $entity->getPublishedAt()->format(DATE_ATOM),
+            'updated_at' => $entity->getUpdatedAt()->format(DATE_ATOM),
+        ]);
+    }
+
+    #[McpTool(
+        name: 'save_admin_blog_article',
+        // phpcs:ignore Generic.Files.LineLength
+        description: 'Admin-only: Create or update a buying guide / blog article with automatic smart-character cleanup and plain ASCII normalization. Requires an Authorization: Bearer header.'
+    )]
+    public function saveBlogArticle(
+        #[Schema(description: 'Language locale ("pl" or "en").')] string $locale,
+        #[Schema(description: 'URL slug of the article.')] string $slug,
+        #[Schema(description: 'Article headline / title.')] string $title,
+        #[Schema(description: 'Short summary or lead description.')] string $description,
+        #[Schema(description: 'Full body Markdown content.')] string $body_markdown,
+        #[Schema(description: 'Paired alternate language slug.')] string $alternate_slug = '',
+    ): string {
+        if (!$this->access->isGranted()) {
+            return $this->unauthorized();
+        }
+
+        $locale = strtolower(trim($locale));
+        $slug = strtolower(trim($slug));
+        $alternate_slug = strtolower(trim($alternate_slug));
+        $title = $this->cleanSymbols(trim($title));
+        $description = $this->cleanSymbols(trim($description));
+        $body_markdown = $this->cleanSymbols(trim($body_markdown));
+
+        if (!in_array($locale, ['en', 'pl'], true)) {
+            return $this->json(['error' => 'Locale must be "pl" or "en".']);
+        }
+
+        if ($slug === '' || $title === '' || $body_markdown === '') {
+            return $this->json(['error' => 'slug, title, and body_markdown cannot be empty.']);
+        }
+
+        $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
+        $entity = $this->blogArticles->findEntityByLocaleAndSlug($locale, $slug);
+        $isNew = false;
+
+        try {
+            if ($entity === null) {
+                $isNew = true;
+                $entity = new BlogArticleEntity(
+                    $locale,
+                    $slug,
+                    $alternate_slug,
+                    $title,
+                    $description,
+                    $body_markdown,
+                    $now,
+                    $now
+                );
+            } else {
+                $entity->setAlternateSlug($alternate_slug);
+                $entity->setTitle($title);
+                $entity->setDescription($description);
+                $entity->setBodyMarkdown($body_markdown);
+                $entity->setUpdatedAt($now);
+            }
+
+            $this->blogArticles->save($entity);
+
+            return $this->json([
+                'status' => 'success',
+                'action' => $isNew ? 'created' : 'updated',
+                'id' => $entity->getId(),
+                'locale' => $entity->getLocale(),
+                'slug' => $entity->getSlug(),
+                'title' => $entity->getTitle(),
+                'url' => ($entity->getLocale() === 'en' ? '/en/blog/' : '/blog/') . $entity->getSlug(),
+            ]);
+        } catch (\Throwable $e) {
+            return $this->json(['error' => 'Failed to save article: ' . $e->getMessage()]);
+        }
+    }
+
+    #[McpTool(
+        name: 'delete_admin_blog_article',
+        // phpcs:ignore Generic.Files.LineLength
+        description: 'Admin-only: Delete a buying guide / blog article by locale and slug. Requires an Authorization: Bearer header.'
+    )]
+    public function deleteBlogArticle(
+        #[Schema(description: 'Locale of the article ("pl" or "en").')] string $locale,
+        #[Schema(description: 'URL slug of the article to delete.')] string $slug,
+    ): string {
+        if (!$this->access->isGranted()) {
+            return $this->unauthorized();
+        }
+
+        $entity = $this->blogArticles->findEntityByLocaleAndSlug($locale, $slug);
+        if ($entity === null) {
+            return $this->json(['error' => 'Article not found.']);
+        }
+
+        $this->blogArticles->delete($entity);
+
+        return $this->json([
+            'status' => 'success',
+            'action' => 'deleted',
+            'locale' => $locale,
+            'slug' => $slug,
+        ]);
+    }
+
+    private function cleanSymbols(string $text): string
+    {
+        $replacements = [
+            "\u{2014}" => '-',
+            "\u{2013}" => '-',
+            "\u{2018}" => "'",
+            "\u{2019}" => "'",
+            "\u{201C}" => '"',
+            "\u{201D}" => '"',
+            "\u{00A0}" => ' ',
+        ];
+
+        return strtr($text, $replacements);
+    }
+
     /**
      * @param list<mixed> $items
      * @return array{total: int, last_7_days: int, last_30_days: int}
      */
-    private function submissionStats(array $items, callable $date, \DateTimeImmutable $sevenDaysAgo, \DateTimeImmutable $thirtyDaysAgo): array
-    {
+    private function submissionStats(
+        array $items,
+        callable $date,
+        \DateTimeImmutable $sevenDaysAgo,
+        \DateTimeImmutable $thirtyDaysAgo
+    ): array {
         return [
             'total' => count($items),
             'last_7_days' => count(array_filter($items, static fn (mixed $item): bool => $date($item) >= $sevenDaysAgo)),

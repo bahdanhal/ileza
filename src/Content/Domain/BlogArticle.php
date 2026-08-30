@@ -15,7 +15,13 @@ final readonly class BlogArticle
         private string $bodyMarkdown,
         private \DateTimeImmutable $publishedAt,
         private \DateTimeImmutable $updatedAt,
+        private ?int $id = null,
     ) {
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
     }
 
     public function getLocale(): string

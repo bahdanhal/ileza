@@ -6,6 +6,8 @@ namespace App\Tests\Mcp;
 
 use App\Analytics\Application\TrafficAnalytics;
 use App\Analytics\Infrastructure\DoctrinePageViewRepository;
+use App\Content\Application\BlogArticleRepository;
+use App\Content\Infrastructure\DoctrineBlogArticleRepository;
 use App\Lead\Domain\Lead;
 use App\Lead\Domain\LeadRepository;
 use App\Lead\Infrastructure\DoctrineLeadRepository;
@@ -35,6 +37,10 @@ final class AdminToolsTest extends DoctrineTestCase
             $tools->contactLeads(),
             $tools->productRequests(),
             $tools->priceTips(),
+            $tools->blogArticles(),
+            $tools->getBlogArticle('test-slug', 'pl'),
+            $tools->saveBlogArticle('pl', 'test-slug', 'Title', 'Desc', 'Markdown'),
+            $tools->deleteBlogArticle('pl', 'test-slug'),
         ];
         foreach ($responses as $json) {
             $data = json_decode($json, true, flags: JSON_THROW_ON_ERROR);
@@ -95,6 +101,40 @@ final class AdminToolsTest extends DoctrineTestCase
         self::assertArrayNotHasKey('ip_hash', $tips['items'][0]);
     }
 
+    public function testAdminCanManageBlogArticlesViaMcp(): void
+    {
+        $blogArticles = new DoctrineBlogArticleRepository($this->entityManager);
+        $tools = $this->tools(true, null, null, null, null, $blogArticles);
+
+        // Save guide with smart characters to verify cleanup
+        $saveRes = json_decode($tools->saveBlogArticle(
+            'pl',
+            'przewodnik-gpu-2026',
+            "Karty graficzne — Ranking opłacalności",
+            'Poradnik wyboru kart.',
+            "Sprawdź ceny: {{ price(\"rtx-3060-12gb\") }} na rynku wtórnym.",
+            'gpu-buying-guide-2026'
+        ), true, flags: JSON_THROW_ON_ERROR);
+
+        self::assertSame('success', $saveRes['status']);
+        self::assertSame('created', $saveRes['action']);
+        self::assertSame('Karty graficzne - Ranking opłacalności', $saveRes['title']);
+
+        // List articles
+        $listRes = json_decode($tools->blogArticles('pl'), true, flags: JSON_THROW_ON_ERROR);
+        self::assertGreaterThanOrEqual(1, $listRes['total']);
+
+        // Get single article
+        $getRes = json_decode($tools->getBlogArticle('przewodnik-gpu-2026', 'pl'), true, flags: JSON_THROW_ON_ERROR);
+        self::assertSame('Karty graficzne - Ranking opłacalności', $getRes['title']);
+        self::assertSame(['rtx-3060-12gb'], $getRes['price_slugs']);
+
+        // Delete article
+        $delRes = json_decode($tools->deleteBlogArticle('pl', 'przewodnik-gpu-2026'), true, flags: JSON_THROW_ON_ERROR);
+        self::assertSame('success', $delRes['status']);
+        self::assertSame('deleted', $delRes['action']);
+    }
+
     public function testAdminListsRejectUnsafeResultLimits(): void
     {
         $tools = $this->tools(true);
@@ -109,6 +149,7 @@ final class AdminToolsTest extends DoctrineTestCase
         ?ProductRequestStore $requests = null,
         ?PriceTipRepository $tips = null,
         ?PriceObservationRepository $observations = null,
+        ?BlogArticleRepository $blogArticles = null,
     ): AdminTools {
         $requestStack = new RequestStack();
         $request = new Request();
@@ -127,6 +168,7 @@ final class AdminToolsTest extends DoctrineTestCase
                 $observations ?? new DoctrinePriceObservationRepository($this->entityManager)
             ),
             new TrafficAnalytics(new DoctrinePageViewRepository($this->entityManager, 90)),
+            $blogArticles ?? new DoctrineBlogArticleRepository($this->entityManager),
         );
     }
 }

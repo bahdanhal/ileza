@@ -1,0 +1,79 @@
+{% extends 'base.html.twig' %}
+{% block title %}Zarządzanie Poradnikami · IleZa Admin{% endblock %}
+{% block robots %}<meta name="robots" content="noindex,nofollow">{% endblock %}
+{% block stylesheets %}
+  <link rel="stylesheet" href="/admin-blog-editor.css">
+{% endblock %}
+{% block body %}
+<div class="admin-shell">
+  <header class="admin-topbar">
+    <div>
+      <p class="admin-eyebrow">ILEZA ADMIN</p>
+      <h1>Poradniki Zakupowe &amp; Blog</h1>
+    </div>
+    <div class="admin-nav-actions">
+      <a href="{{ path('market_admin_dashboard') }}" class="admin-btn admin-btn-secondary">← Radar Cenowy</a>
+      <a href="{{ path('market_admin_blog_new') }}" class="admin-btn admin-btn-primary">+ Nowy Poradnik</a>
+    </div>
+  </header>
+
+  {% for message in app.flashes('success') %}
+    <div class="admin-alert admin-alert-success">{{ message }}</div>
+  {% endfor %}
+  {% for message in app.flashes('error') %}
+    <div class="admin-alert admin-alert-danger">{{ message }}</div>
+  {% endfor %}
+
+  <div class="admin-locale-tabs">
+    <a href="{{ path('market_admin_blog_list') }}" class="admin-tab {% if current_locale is null %}active{% endif %}">Wszystkie języki ({{ articles|length }})</a>
+    <a href="{{ path('market_admin_blog_list', {locale: 'pl'}) }}" class="admin-tab {% if current_locale == 'pl' %}active{% endif %}">Polski (PL)</a>
+    <a href="{{ path('market_admin_blog_list', {locale: 'en'}) }}" class="admin-tab {% if current_locale == 'en' %}active{% endif %}">English (EN)</a>
+  </div>
+
+  <div class="admin-table-wrapper">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Język</th>
+          <th>Tytuł &amp; Slug</th>
+          <th>Czas czytania</th>
+          <th>Data publikacji</th>
+          <th>Akcje</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for article in articles %}
+          <tr>
+            <td>
+              <span class="admin-badge admin-badge-{{ article.locale }}">{{ article.locale|upper }}</span>
+            </td>
+            <td>
+              <strong>{{ article.title }}</strong>
+              <div class="admin-table-sub">
+                <code>/blog/{{ article.slug }}</code>
+                {% if article.alternateSlug %}
+                  <span title="Połączona wersja językowa">⇄ <code>{{ article.alternateSlug }}</code></span>
+                {% endif %}
+              </div>
+            </td>
+            <td>{{ article.readingMinutes }} min</td>
+            <td>{{ article.publishedAt|date('Y-m-d H:i') }}</td>
+            <td class="admin-actions-cell">
+              <a href="{{ path('market_admin_blog_edit', {id: article.id}) }}" class="admin-action-link">Edytuj</a>
+              <a href="{{ path('blog_article', {slug: article.slug, _locale: article.locale}) }}" target="_blank" class="admin-action-link">Podgląd ↗</a>
+              <form action="{{ path('market_admin_blog_delete', {id: article.id}) }}" method="POST" onsubmit="return confirm('Czy na pewno chcesz usunąć ten artykuł?');" style="display:inline;">
+                <input type="hidden" name="_token" value="{{ admin_csrf_token('delete_blog_article_' ~ article.id) }}">
+                <button type="submit" class="admin-action-delete">Usuń</button>
+              </form>
+            </td>
+          </tr>
+        {% else %}
+          <tr>
+            <td colspan="5" class="admin-empty-state">Brak artykułów w wybranym języku.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

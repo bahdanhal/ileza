@@ -78,9 +78,25 @@ class BlogArticleEntity
         return $this->locale;
     }
 
+    public function setLocale(string $locale): void
+    {
+        if (!in_array($locale, ['en', 'pl'], true)) {
+            throw new \InvalidArgumentException('Blog article locale must be English or Polish.');
+        }
+        $this->locale = $locale;
+    }
+
     public function getSlug(): string
     {
         return $this->slug;
+    }
+
+    public function setSlug(string $slug): void
+    {
+        if (preg_match('/^[a-z0-9]+(?:-[a-z0-9]+)*$/', $slug) !== 1) {
+            throw new \InvalidArgumentException('Blog article slug must be URL-safe.');
+        }
+        $this->slug = $slug;
     }
 
     public function getAlternateSlug(): string
@@ -88,9 +104,19 @@ class BlogArticleEntity
         return $this->alternateSlug;
     }
 
+    public function setAlternateSlug(string $alternateSlug): void
+    {
+        $this->alternateSlug = $alternateSlug;
+    }
+
     public function getTitle(): string
     {
         return $this->title;
+    }
+
+    public function setTitle(string $title): void
+    {
+        $this->title = $title;
     }
 
     public function getDescription(): string
@@ -98,9 +124,19 @@ class BlogArticleEntity
         return $this->description;
     }
 
+    public function setDescription(string $description): void
+    {
+        $this->description = $description;
+    }
+
     public function getBodyMarkdown(): string
     {
         return $this->bodyMarkdown;
+    }
+
+    public function setBodyMarkdown(string $bodyMarkdown): void
+    {
+        $this->bodyMarkdown = $bodyMarkdown;
     }
 
     public function getPublishedAt(): \DateTimeImmutable
@@ -108,9 +144,19 @@ class BlogArticleEntity
         return $this->publishedAt;
     }
 
+    public function setPublishedAt(\DateTimeImmutable $publishedAt): void
+    {
+        $this->publishedAt = $publishedAt;
+    }
+
     public function getUpdatedAt(): \DateTimeImmutable
     {
         return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(\DateTimeImmutable $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
     }
 
     public function getReadingMinutes(): int

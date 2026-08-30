@@ -1,0 +1,110 @@
+{% extends 'base.html.twig' %}
+{% block title %}{% if article %}Edycja: {{ article.title }}{% else %}Nowy Poradnik{% endif %} · IleZa Admin{% endblock %}
+{% block robots %}<meta name="robots" content="noindex,nofollow">{% endblock %}
+{% block stylesheets %}
+  <link rel="stylesheet" href="/admin-blog-editor.css">
+{% endblock %}
+{% block body %}
+<div class="admin-shell">
+  <form action="" method="POST" id="blog-editor-form">
+    <input type="hidden" name="_token" value="{{ admin_csrf_token('admin_blog_article') }}">
+    
+    <header class="editor-header">
+      <div class="editor-header-left">
+        <a href="{{ path('market_admin_blog_list') }}" class="admin-btn admin-btn-secondary">← Lista Poradników</a>
+        <h2>{% if article %}Edycja Poradnika{% else %}Nowy Poradnik Zakupowy{% endif %}</h2>
+      </div>
+      <div class="editor-header-right">
+        <button type="button" id="btn-clean-symbols" class="admin-btn admin-btn-warning" title="Usuwa myślniki em-dash, cudzysłowy drukarskie i ukryte znaki">Wyczyść Znaki AI</button>
+        <button type="submit" class="admin-btn admin-btn-primary">{% if article %}Zapisz Zmiany{% else %}Opublikuj Poradnik{% endif %}</button>
+      </div>
+    </header>
+
+    {% for message in app.flashes('error') %}
+      <div class="admin-alert admin-alert-danger">{{ message }}</div>
+    {% endfor %}
+
+    <!-- Live Anti-Slop & Readability Bar -->
+    <div class="editor-score-bar" id="editor-score-bar">
+      <div class="score-pill">
+        <span class="score-label">Flesch Reading Ease:</span>
+        <strong id="score-flesch" class="score-val score-good">--</strong>
+      </div>
+      <div class="score-pill">
+        <span class="score-label">Poziom czytelności:</span>
+        <strong id="score-grade" class="score-val">--</strong>
+      </div>
+      <div class="score-pill">
+        <span class="score-label">Słów w zdaniu:</span>
+        <strong id="score-wps" class="score-val">--</strong>
+      </div>
+      <div class="score-pill">
+        <span class="score-label">Liczba słów:</span>
+        <strong id="score-words" class="score-val">0</strong>
+      </div>
+      <div class="score-pill" id="score-symbols-pill">
+        <span class="score-label">Znaki typograficzne:</span>
+        <strong id="score-symbols" class="score-val score-good">0 (Czysto)</strong>
+      </div>
+    </div>
+
+    <!-- Metadata Fields Grid -->
+    <div class="editor-meta-grid">
+      <div class="form-group">
+        <label for="input-locale">Język / Wersja</label>
+        <select name="locale" id="input-locale" class="form-control">
+          <option value="pl" {% if form_data.locale == 'pl' %}selected{% endif %}>Polski (pl)</option>
+          <option value="en" {% if form_data.locale == 'en' %}selected{% endif %}>English (en)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="input-slug">URL Slug</label>
+        <input type="text" name="slug" id="input-slug" class="form-control" value="{{ form_data.slug|default('') }}" required placeholder="np. ram-w-macbooku-2026">
+      </div>
+      <div class="form-group">
+        <label for="input-alt-slug">Odpowiednik w drugim języku (alternate_slug)</label>
+        <input type="text" name="alternate_slug" id="input-alt-slug" class="form-control" value="{{ form_data.alternate_slug|default('') }}" placeholder="np. macbook-memory-guide-2026">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="input-title">Tytuł Artykułu / Poradnika</label>
+      <input type="text" name="title" id="input-title" class="form-control form-control-lg" value="{{ form_data.title|default('') }}" required placeholder="Zwięzły, konkretny tytuł techniczny">
+    </div>
+
+    <div class="form-group">
+      <label for="input-description">Wstęp / Lead (Opis SEO)</label>
+      <textarea name="description" id="input-description" class="form-control" rows="2" placeholder="Jedno lub dwa proste zdania podsumowujące kluczowe wnioski.">{{ form_data.description|default('') }}</textarea>
+    </div>
+
+    <!-- Split Editor Toolbar & Work Area -->
+    <div class="editor-workspace">
+      <div class="editor-pane">
+        <div class="editor-toolbar">
+          <button type="button" data-tag="h2">H2</button>
+          <button type="button" data-tag="h3">H3</button>
+          <button type="button" data-tag="bold">Pogrubienie</button>
+          <button type="button" data-tag="code">Kod</button>
+          <button type="button" data-tag="price">Badge Ceny</button>
+          <button type="button" data-tag="list">Lista</button>
+          <span class="toolbar-hint">Format Markdown + widgety cen</span>
+        </div>
+        <textarea name="body_markdown" id="input-content" class="editor-textarea" rows="25" required placeholder="Napisz treść poradnika w formacie Markdown...">{{ form_data.body_markdown|default('') }}</textarea>
+      </div>
+
+      <div class="preview-pane">
+        <div class="preview-header">
+          <span>PODGLĄD NA ŻYWO</span>
+          <span id="preview-mode">Renderowany HTML</span>
+        </div>
+        <div class="preview-body" id="preview-container">
+          <div class="blog-article-content" id="preview-target"></div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}
+{% block javascripts %}
+  <script src="/admin-blog-editor.js"></script>
+{% endblock %}
