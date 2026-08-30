@@ -112,8 +112,19 @@ body.ileza-site {
   max-width: 1180px;
 }
 
+.ileza-site .tool-shell,
+.ileza-site .hero,
+.ileza-site .report-shell {
+  padding-top: 34px;
+}
+
+.ileza-site .tool-intro h1,
+.ileza-site .income-shell h1 {
+  font-size: clamp(40px, 4.9vw, 62px);
+}
+
 .ileza-site .market-shell {
-  padding-top: 52px;
+  padding-top: 34px;
 }
 
 .ileza-site .market-shell > .eyebrow,
@@ -134,7 +145,7 @@ body.ileza-site {
 .ileza-site .market-shell h1 {
   max-width: 880px;
   font-family: "Arial Nova", Arial, Helvetica, sans-serif;
-  font-size: clamp(43px, 5.6vw, 70px);
+  font-size: clamp(40px, 4.9vw, 62px);
   font-weight: 800;
   line-height: 1.02;
   letter-spacing: -.055em;
@@ -143,7 +154,7 @@ body.ileza-site {
 .ileza-site .market-shell > .lede {
   max-width: 700px;
   color: #56666e;
-  font-size: 18px;
+  font-size: 17px;
   line-height: 1.6;
 }
 

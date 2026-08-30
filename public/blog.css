@@ -1,6 +1,6 @@
 .blog-shell { max-width: 1080px; }
-.blog-hero { max-width: 780px; padding: 64px 0 32px; }
-.blog-hero h1, .blog-article h1 { font-family: Georgia, serif; font-size: clamp(38px, 6vw, 68px); line-height: 1.04; margin: 14px 0 20px; }
+.blog-hero { max-width: 780px; padding: 40px 0 24px; }
+.blog-hero h1, .blog-article h1 { font-family: Georgia, serif; font-size: clamp(36px, 5vw, 58px); line-height: 1.04; margin: 14px 0 20px; }
 .blog-hero p, .blog-deck { color: var(--muted); font-size: 19px; line-height: 1.65; }
 .blog-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 24px 0 72px; }
 .blog-card { display: flex; flex-direction: column; min-height: 310px; padding: 26px; border: 1px solid var(--line); border-radius: 16px; background: var(--panel); }
