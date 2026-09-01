@@ -404,8 +404,8 @@ income:
     faq:
         title: "Często zadawane pytania o formy zatrudnienia w Polsce"
         q1: "Czym różnią się formy UoP, UZ, UoD, B2B i Spółka z o.o.?"
-        a1: "Umowa o pracę (UoP) zapewnia pełne prawa pracownicze i płatny urlop. Umowa zlecenie (UZ) to elastyczna umowa cywilnoprawna ze składkami społecznymi (zwolniona dla studentów do 26 lat). Umowa o dzieło (UoD) dotyczy wykonania określonego dzieła i nie podlega ubezpieczeniom społecznym ani zdrowotnemu. B2B to jednoosobowa działalność gospodarcza z bezpośrednim fakturowaniem. Spółka z o.o. (powołanie członka zarządu) pozwala na wypłatę bez składek na ubezpieczenia społeczne, ze składką zdrowotną 9% i podatkiem dochodowym według skali."
+        a1: "Umowa o pracę (UoP) zapewnia pełne prawa pracownicze i płatny urlop. Umowa zlecenie (UZ) jest elastyczną umową cywilnoprawną ze składkami społecznymi, z wyjątkiem studentów do 26 lat. Umowa o dzieło (UoD) dotyczy wykonania określonego dzieła i nie podlega ubezpieczeniom społecznym ani zdrowotnemu. B2B oznacza jednoosobową działalność gospodarczą i bezpośrednie fakturowanie. Spółka z o.o. z wynagrodzeniem z powołania członka zarządu oznacza brak składek społecznych, składkę zdrowotną 9% i podatek według skali."
         q2: "Dlaczego porównanie wychodzi od budżetu firmy lub przelicza brutto UoP?"
-        a2: "Punktem wyjścia jest łączny koszt, jaki zleceniodawca lub pracodawca przeznacza na stanowisko (Budżet = Brutto UoP × 1.2048). Pozwala to na rzetelne i przejrzyste porównanie kwoty na rękę przy identycznym nakładzie finansowym."
+        a2: "Punktem wyjścia jest łączny koszt, jaki zleceniodawca lub pracodawca przeznacza na stanowisko. Budżet obliczamy jako Brutto UoP × 1.2048. Dzięki temu można przejrzyście porównać kwotę na rękę przy takim samym nakładzie finansowym."
         q3: "Jak działa składka zdrowotna na B2B w 2026 roku?"
         a3: "Na skali podatkowej wynosi 9% dochodu, na podatku liniowym 4.9% dochodu, a na ryczałcie jest zryczałtowaną kwotą zależną od rocznego przedziału przychodów."
