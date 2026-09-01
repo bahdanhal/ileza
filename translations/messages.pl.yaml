@@ -24,7 +24,7 @@ base:
         market: "Redakcyjny indeks uczciwych cen"
         bimi: "BIMI Studio i konwerter SVG"
         domain_inspector: "Inspektor bezpieczeństwa domen i BIMI"
-        caddy_transpiler: "Transpiler Nginx i Apache do Caddyfile"
+        caddy_transpiler: "Konwerter Nginx i Apache do Caddyfile"
         pkpass: "Inspektor i emulator Apple Wallet (.pkpass)"
     footer: "Przydatne i przejrzyste narzędzia · Bez rejestracji · Bez pikseli śledzących"
     contact: "Kontakt"
@@ -58,7 +58,7 @@ contact:
     invalid_email: "Wpisz poprawny adres e-mail."
     invalid_contact: "Wpisz poprawny e-mail albo numer telefonu."
     failed: "Nie udało się teraz zapisać zgłoszenia. Użyj kontaktu bezpośredniego."
-    saving: "Zapisywanie…"
+    saving: "Zapisywanie..."
 
 blog:
     context: "Poradniki zakupowe"
@@ -77,7 +77,7 @@ blog:
 
 market:
     meta:
-        title: "Ile rzeczy naprawdę są warte? Uczciwe ceny · IleZa.pl"
+        title: "Ile naprawdę warte są używane rzeczy? Uczciwe ceny · IleZa.pl"
         description: "Sprawdź redakcyjne ceny odniesienia produktów w Polsce - bez premii za nowość, opakowanie, marketing i marżę dużej sieci."
     product_meta:
         title: "Ile naprawdę wart jest %product%? Uczciwa cena i historia"
@@ -246,8 +246,8 @@ market:
         placeholder: "np. PlayStation 5 Slim 1TB"
         email: "E-mail (opcjonalnie)"
         submit: "Zgłoś produkt"
-        note: "Zgłoszenie zostaje prywatnie na tym serwerze. E-mail służy tylko do ewentualnego kontaktu."
-        saving: "Zapisywanie…"
+        note: "Zgłoszenie pozostaje prywatne na tym serwerze. E-mail służy tylko do ewentualnego kontaktu."
+        saving: "Zapisywanie..."
         saved: "Dzięki - propozycja produktu została zapisana."
         invalid: "Wpisz produkt oraz poprawny e-mail, jeśli go podajesz."
         failed: "Nie udało się teraz zapisać zgłoszenia."
@@ -260,7 +260,7 @@ market:
         email: "E-mail (opcjonalnie)"
         submit: "Wyślij okazję"
         note: "Tylko do prywatnej weryfikacji. Parametry i fragmenty URL są usuwane, strona nigdy nie jest pobierana automatycznie, IP jest haszowane, a zgłoszenie znika po 90 dniach."
-        saving: "Wysyłanie…"
+        saving: "Wysyłanie..."
         saved: "Dzięki - link trafił do prywatnej kolejki redakcyjnej IleZa.pl."
         invalid: "Podaj poprawny publiczny link HTTP lub HTTPS oraz poprawny e-mail, jeśli go wpisujesz."
         failed: "Nie udało się teraz zapisać zgłoszenia."
@@ -276,14 +276,14 @@ market:
         threshold_suggested: "Gdy cena spadnie poniżej %price% zł"
         submit: "Włącz powiadomienia"
         note: "Double Opt-In i RODO: wyślemy link potwierdzający. Twój adres służy wyłącznie do alertów i możesz zrezygnować w dowolnym momencie jednym kliknięciem."
-        saving: "Włączanie alertu…"
+        saving: "Włączanie alertu..."
         saved: "Dziękujemy! Sprawdź skrzynkę e-mail i kliknij link aktywacyjny, aby włączyć powiadomienia."
         invalid: "Podaj poprawny adres e-mail."
         failed: "Nie udało się teraz zapisać alertu cenowego."
         too_many: "Zbyt wiele prób z tego połączenia. Spróbuj ponownie później."
         verified_title: "Powiadomienia aktywowane"
         verified_heading: "Alert cenowy został pomyślnie aktywowany"
-        verified_text: "Od teraz będziesz otrzymywać powiadomienia e-mail o spadkach cen dla modelu: %product%."
+        verified_text: "Od teraz będziesz otrzymywać powiadomienia e-mail o spadkach ceny modelu %product%."
         view_product: "Wróć do produktu: %product%"
         unsubscribed_title: "Powiadomienia wyłączone"
         unsubscribed_heading: "Zrezygnowano z alertów cenowych"
