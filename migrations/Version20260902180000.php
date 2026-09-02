@@ -18,8 +18,8 @@ final class Version20260902180000 extends AbstractMigration
     {
         $this->addSql(
             'UPDATE price_observations '
-            . 'SET high_grosz = median_grosz, '
-            . 'low_grosz = CAST(ROUND(median_grosz * 0.88) AS INTEGER) '
+            . 'SET high_grosz = CASE WHEN low_grosz >= median_grosz '
+            . 'THEN CAST(ROUND(low_grosz * 1.12) AS INTEGER) ELSE median_grosz END '
             . 'WHERE high_grosz > median_grosz OR low_grosz >= median_grosz'
         );
     }

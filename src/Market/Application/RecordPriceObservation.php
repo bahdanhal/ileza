@@ -31,20 +31,20 @@ final readonly class RecordPriceObservation
         }
 
         if ($medianGrosz <= 0 || $lowGrosz <= 0 || $highGrosz <= 0 || $lowGrosz > $medianGrosz) {
-            throw new \InvalidArgumentException('Inconsistent prices. Ensure low <= high <= median and median > 0.');
+            throw new \InvalidArgumentException('Inconsistent prices. Ensure positive prices, low <= median, and high >= low.');
         }
 
         $highGrosz = min($highGrosz, $medianGrosz);
 
         if ($lowGrosz >= $highGrosz) {
             if ($lowGrosz > $highGrosz) {
-                throw new \InvalidArgumentException('Inconsistent prices. Ensure low <= high <= median and median > 0.');
+                throw new \InvalidArgumentException('Inconsistent prices. Ensure positive prices, low <= median, and high >= low.');
             }
 
-            $lowGrosz = max(1, (int) round($highGrosz * 0.88));
+            $highGrosz = max($highGrosz, (int) round($lowGrosz * 1.12));
         }
 
-        if ($highGrosz > $medianGrosz || $medianGrosz < $lowGrosz) {
+        if ($medianGrosz < $lowGrosz) {
             throw new \InvalidArgumentException('Inconsistent prices. Ensure low <= high <= median and median > 0.');
         }
 
