@@ -139,7 +139,7 @@ final class TransactionalPriceAlertMailerTest extends TestCase
             medianGrosz: 230000,
             lowGrosz: 210000,
             highGrosz: 250000,
-            confidence: 'high',
+            availability: 'available',
             summary: '',
             methodology: PriceObservation::METHODOLOGY_MANUAL
         );

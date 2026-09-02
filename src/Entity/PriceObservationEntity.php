@@ -36,7 +36,7 @@ class PriceObservationEntity
     private Grosz $highGrosz;
 
     #[ORM\Column(type: Types::STRING, length: 20)]
-    private string $confidence;
+    private string $availability;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $summary = null;
@@ -50,7 +50,7 @@ class PriceObservationEntity
         Grosz|int $medianGrosz,
         Grosz|int $lowGrosz,
         Grosz|int $highGrosz,
-        string $confidence,
+        string $availability,
         ?string $summary,
         string $methodology
     ) {
@@ -59,7 +59,9 @@ class PriceObservationEntity
         $this->medianGrosz = $medianGrosz instanceof Grosz ? $medianGrosz : Grosz::fromGrosz($medianGrosz);
         $this->lowGrosz = $lowGrosz instanceof Grosz ? $lowGrosz : Grosz::fromGrosz($lowGrosz);
         $this->highGrosz = $highGrosz instanceof Grosz ? $highGrosz : Grosz::fromGrosz($highGrosz);
-        $this->confidence = $confidence;
+        $this->availability = in_array($availability, ['low', 'medium', 'high'], true)
+            ? 'available'
+            : $availability;
         $this->summary = $summary;
         $this->methodology = $methodology;
     }
@@ -109,9 +111,9 @@ class PriceObservationEntity
         return $this->highGrosz->amount;
     }
 
-    public function getConfidence(): string
+    public function getAvailability(): string
     {
-        return $this->confidence;
+        return $this->availability;
     }
 
     public function getSummary(): ?string
@@ -129,7 +131,7 @@ class PriceObservationEntity
         $this->medianGrosz = Grosz::fromGrosz($observation->medianGrosz);
         $this->lowGrosz = Grosz::fromGrosz($observation->lowGrosz);
         $this->highGrosz = Grosz::fromGrosz($observation->highGrosz);
-        $this->confidence = $observation->confidence;
+        $this->availability = $observation->availability;
         $this->summary = $observation->summary !== '' ? $observation->summary : null;
         $this->methodology = $observation->methodology !== '' ? $observation->methodology : PriceObservation::METHODOLOGY_MANUAL;
     }

@@ -315,11 +315,14 @@ market:
     history: "Historia ceny"
     observations: "obserwacji"
     date: "Data"
-    confidence_label: "Pewność"
-    confidence:
-        low: "Niska pewność"
-        medium: "Średnia pewność"
-        high: "Wysoka pewność"
+    availability:
+        available: "Dostępny"
+        unavailable: "Niedostępny"
+    unavailable_short: "Niedostępny"
+    unavailable:
+        title: "Obecnie niedostępny"
+        label: "Brak potwierdzonego używalnego ogłoszenia"
+        text: "Nie znaleźliśmy teraz dokładnej konfiguracji w stanie używalnym. Ostatnia obserwacja pozostaje w historii, ale nie jest pokazywana jako aktualna cena."
     methodology_label: "Metodologia obserwacji"
     latest_snapshot: "najnowsza obserwacja"
     no_data:

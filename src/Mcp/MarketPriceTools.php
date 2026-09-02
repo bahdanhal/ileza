@@ -31,17 +31,22 @@ final readonly class MarketPriceTools
     public function listProducts(): string
     {
         return $this->json([
-            'products' => array_map(fn ($product) => [
-                'slug' => $product->slug,
-                'name' => $product->name,
-                'category' => $product->category,
-                'family_slug' => $product->familySlug,
-                'family_name' => $product->familyName,
-                'image' => $product->image,
-                'configuration' => $product->specifications,
-                'has_observations' => $this->priceHistory->latestForProduct($product->slug) !== null,
-                'canonical_url' => $this->canonicalUrl($product->slug),
-            ], $this->catalog->all()),
+            'products' => array_map(function ($product): array {
+                $latest = $this->priceHistory->latestForProduct($product->slug);
+
+                return [
+                    'slug' => $product->slug,
+                    'name' => $product->name,
+                    'category' => $product->category,
+                    'family_slug' => $product->familySlug,
+                    'family_name' => $product->familyName,
+                    'image' => $product->image,
+                    'configuration' => $product->specifications,
+                    'has_observations' => $latest !== null,
+                    'availability' => $latest?->availability,
+                    'canonical_url' => $this->canonicalUrl($product->slug),
+                ];
+            }, $this->catalog->all()),
             'terms' => 'Public read-only estimates; no account or API key required.',
         ]);
     }
@@ -71,7 +76,8 @@ final readonly class MarketPriceTools
                 'image_credit' => $product->imageCredit,
                 'image_source' => $product->imageSource,
                 'specifications' => $product->specifications,
-                'latest_fair_price_pln' => $latest !== null ? $latest->medianGrosz / 100 : null,
+                'latest_fair_price_pln' => $latest?->availability === 'available' ? $latest->medianGrosz / 100 : null,
+                'availability' => $latest?->availability,
                 'latest_observed_at' => $latest?->observedAt->format('Y-m-d'),
             ],
             'canonical_url' => $this->canonicalUrl($slug),
@@ -99,7 +105,7 @@ final readonly class MarketPriceTools
                 'fair_price_pln' => $item->medianGrosz / 100,
                 'reasonable_low_pln' => $item->lowGrosz / 100,
                 'reasonable_high_pln' => $item->highGrosz / 100,
-                'confidence' => $item->confidence,
+                'availability' => $item->availability,
             ], $this->priceHistory->forProduct($slug)),
             // phpcs:ignore Generic.Files.LineLength
             'methodology' => 'Manual editorial estimate based on product knowledge and available market information. It is not a statistical sample, automated pricing algorithm, completed-sale statistic, or purchasing advice.',
@@ -110,14 +116,14 @@ final readonly class MarketPriceTools
     #[McpTool(
         name: 'update_polish_fair_price_observation',
         // phpcs:ignore Generic.Files.LineLength
-        description: 'Admin-only tool: Add or update a manual editorial fair-price estimate for Poland. Authorization is handled via the Authorization header - do NOT pass any token argument.'
+        description: 'Admin-only tool: Add or update the current cheapest usable listing price for Poland, or mark the exact product unavailable. Authorization is handled via the Authorization header - do NOT pass any token argument.'
     )]
     public function updateObservation(
         #[Schema(description: 'Product slug to update (must exist in catalog).')] string $slug,
-        #[Schema(description: 'Manual editorial fair-price estimate in PLN.')] float $fair_price_pln,
-        #[Schema(description: 'Optional lower bound of the reasonable price range in PLN.')] ?float $low_pln = null,
-        #[Schema(description: 'Optional upper bound of the reasonable price range in PLN.')] ?float $high_pln = null,
-        #[Schema(description: 'Optional confidence level: low, medium, high (defaults to high).')] ?string $confidence = null,
+        #[Schema(description: 'Current cheapest valid usable listing price in PLN.')] float $fair_price_pln,
+        #[Schema(description: 'Optional cheap-market reference lower bound in PLN, based on the ten cheapest valid listings.')] ?float $low_pln = null,
+        #[Schema(description: 'Optional cheap-market reference upper bound in PLN, based on the ten cheapest valid listings.')] ?float $high_pln = null,
+        #[Schema(description: 'Whether an exact usable listing is currently available (available or unavailable).')] ?string $availability = null,
         #[Schema(description: 'Optional observation date in YYYY-MM-DD or ISO 8601 format (defaults to current date).')] ?string $observed_at = null,
         #[Schema(description: 'Optional summary note or verification details.')] ?string $summary = null,
     ): string {
@@ -138,9 +144,9 @@ final readonly class MarketPriceTools
             return $this->json(['error' => 'Inconsistent prices. Ensure low <= median <= high and median > 0.']);
         }
 
-        $confidenceLevel = $confidence ?? 'high';
-        if (!in_array($confidenceLevel, ['low', 'medium', 'high'], true)) {
-            return $this->json(['error' => 'Confidence must be one of: low, medium, high.']);
+        $availabilityStatus = $availability ?? 'available';
+        if (!in_array($availabilityStatus, ['available', 'unavailable'], true)) {
+            return $this->json(['error' => 'Availability must be one of: available, unavailable.']);
         }
 
         try {
@@ -158,7 +164,7 @@ final readonly class MarketPriceTools
                 $medianGrosz,
                 $lowGrosz,
                 $highGrosz,
-                $confidenceLevel,
+                $availabilityStatus,
                 $note,
                 PriceObservation::METHODOLOGY_MANUAL
             );
@@ -178,7 +184,7 @@ final readonly class MarketPriceTools
                 'fair_price_pln' => $medianGrosz / 100,
                 'reasonable_low_pln' => $lowGrosz / 100,
                 'reasonable_high_pln' => $highGrosz / 100,
-                'confidence' => $confidenceLevel,
+                'availability' => $availabilityStatus,
                 'summary' => $note,
             ],
             'canonical_url' => $this->canonicalUrl($slug),

@@ -6,21 +6,28 @@ namespace App\Market\Domain;
 
 final readonly class PriceObservation
 {
+    public readonly string $availability;
+
     public function __construct(
         public string $productSlug,
         public \DateTimeImmutable $observedAt,
         public int $medianGrosz,
         public int $lowGrosz,
         public int $highGrosz,
-        public string $confidence,
+        string $availability,
         public string $summary,
         public string $methodology,
     ) {
+        // Accept historical serialized values while callers migrate to availability.
+        if (in_array($availability, ['low', 'medium', 'high'], true)) {
+            $availability = 'available';
+        }
+        $this->availability = $availability;
         if ($medianGrosz <= 0 || $lowGrosz <= 0 || $highGrosz < $medianGrosz || $medianGrosz < $lowGrosz) {
             throw new \InvalidArgumentException('Observed prices are inconsistent.');
         }
-        if (!in_array($confidence, ['low', 'medium', 'high'], true)) {
-            throw new \InvalidArgumentException('Observation evidence is insufficient.');
+        if (!in_array($availability, ['available', 'unavailable'], true)) {
+            throw new \InvalidArgumentException('Observation availability must be available or unavailable.');
         }
     }
 
@@ -31,7 +38,7 @@ final readonly class PriceObservation
      *     median_grosz: int,
      *     low_grosz: int,
      *     high_grosz: int,
-     *     confidence: string,
+     *     availability: string,
      *     summary: string,
      *     methodology: string
      * }
@@ -44,7 +51,7 @@ final readonly class PriceObservation
             'median_grosz' => $this->medianGrosz,
             'low_grosz' => $this->lowGrosz,
             'high_grosz' => $this->highGrosz,
-            'confidence' => $this->confidence,
+            'availability' => $this->availability,
             'summary' => $this->summary,
             'methodology' => $this->methodology,
         ];
@@ -65,7 +72,7 @@ final readonly class PriceObservation
             (int) $data['median_grosz'],
             (int) $data['low_grosz'],
             (int) $data['high_grosz'],
-            (string) $data['confidence'],
+            isset($data['availability']) ? (string) $data['availability'] : 'available',
             '',
             self::METHODOLOGY_MANUAL
         );

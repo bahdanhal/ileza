@@ -143,7 +143,7 @@ final class MarketPriceToolsTest extends TestCase
             950,
             830,
             1080,
-            'high',
+            'available',
             '2026-08-22',
             'Personal verification'
         );
@@ -175,7 +175,7 @@ final class MarketPriceToolsTest extends TestCase
             950,
             830,
             1080,
-            'high',
+            'available',
             '2026-08-22',
             'Personal verification'
         );

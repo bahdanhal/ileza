@@ -47,7 +47,7 @@ final class MigrateStorageToDatabaseCommandTest extends DoctrineTestCase
                     'low_grosz' => 280000,
                     'high_grosz' => 360000,
                     'sample_size' => 12,
-                    'confidence' => 'high',
+                    'availability' => 'available',
                     'summary' => 'Stable market price',
                     'methodology' => 'manual',
                 ],

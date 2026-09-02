@@ -80,10 +80,10 @@
           "required": false
         },
         {
-          "name": "confidence",
+          "name": "availability",
           "type": "string",
           "required": false,
-          "enum": ["low", "medium", "high"]
+          "enum": ["available", "unavailable"]
         },
         {
           "name": "observed_at",

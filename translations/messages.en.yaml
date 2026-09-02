@@ -315,11 +315,14 @@ market:
     history: "Price history"
     observations: "observations"
     date: "Date"
-    confidence_label: "Confidence"
-    confidence:
-        low: "Low confidence"
-        medium: "Medium confidence"
-        high: "High confidence"
+    availability:
+        available: "Available"
+        unavailable: "Unavailable"
+    unavailable_short: "Unavailable"
+    unavailable:
+        title: "Currently unavailable"
+        label: "No confirmed usable listing"
+        text: "No exact usable-condition listing is currently confirmed. The last observation remains in the history but is not shown as the current price."
     methodology_label: "Observation methodology"
     latest_snapshot: "latest observation"
     no_data:

@@ -108,6 +108,9 @@
         </div>
 
         {% if latest %}
+            {% if latest.availability == 'unavailable' %}
+                <section class="market-empty"><h2>{{ 'market.unavailable.title'|trans }}</h2><p>{{ 'market.unavailable.text'|trans }}</p><strong>{{ 'market.unavailable.label'|trans }}</strong><small>{{ latest.observedAt|date(app.request.locale == 'pl' ? 'd.m.Y' : 'M j, Y') }}</small></section>
+            {% else %}
             {% set previous = history|length > 1 ? history[1] : null %}
             {% set diff = previous ? (latest.medianGrosz - previous.medianGrosz) : 0 %}
             {% set diff_pct = previous ? ((diff / previous.medianGrosz) * 100)|round(1) : 0 %}
@@ -219,6 +222,7 @@
                 <details><summary>{{ 'market.faq.estimate.q'|trans }}</summary><p>{{ 'market.faq.estimate.a'|trans }}</p></details>
                 <details><summary>{{ 'market.faq.sources.q'|trans }}</summary><p>{{ 'market.faq.sources.a'|trans }}</p></details>
             </section>
+            {% endif %}
         {% else %}
             <section class="market-empty"><h2>{{ 'market.no_data.title'|trans }}</h2><p>{{ 'market.no_data.text'|trans }}</p></section>
         {% endif %}

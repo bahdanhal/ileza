@@ -16,7 +16,7 @@ Manual editorial fair-price histories for products in Poland, paired with a priv
 
 ### Core Features & Canonical Routes:
 - **Fair-Price Catalog (`/`, PL: `/pl/`)**: Catalog of products with manual editorial price estimates.
-- **Product History (`/ceny/{slug}`, EN: `/prices/{slug}`)**: Dated editorial fair prices, reasonable ranges, confidence, and historical changes.
+- **Product History (`/ceny/{slug}`, EN: `/prices/{slug}`)**: Dated editorial fair prices, reasonable ranges, availability, and historical changes.
 - **Employment & Tax Calculator (`/kalkulator-wynagrodzen`, EN: `/salary-calculator`)**: Browser-only comparison of UoP, Umowa Zlecenie, Umowa o Dzieło, and B2B from a single company employer budget using 2026 Polish tax rules.
 - **Product Addition Request (`/zglos`, EN: `/request`)**: Community submission queue for new models.
 - **Price Tip Submission (`/ceny/{slug}/okazja`, EN: `/prices/{slug}/price-tip`)**: Community price alerts for admin review.

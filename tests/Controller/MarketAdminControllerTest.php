@@ -234,7 +234,7 @@ final class MarketAdminControllerTest extends TestCase
                 'median_pln' => '2150',
                 'low_pln' => '1900',
                 'high_pln' => '2400',
-                'confidence' => 'high',
+                'availability' => 'available',
                 '_token' => $validToken,
             ],
             cookies: ['market_admin_auth' => $authCookie]

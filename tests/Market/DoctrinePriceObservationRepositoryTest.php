@@ -96,7 +96,7 @@ final class DoctrinePriceObservationRepositoryTest extends DoctrineTestCase
         self::assertSame(215000, $history[0]->medianGrosz);
         self::assertSame(195000, $history[0]->lowGrosz);
         self::assertSame(235000, $history[0]->highGrosz);
-        self::assertSame('high', $history[0]->confidence);
+        self::assertSame('available', $history[0]->availability);
         self::assertSame('Updated estimate', $history[0]->summary);
     }
 }

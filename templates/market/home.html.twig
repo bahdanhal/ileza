@@ -48,7 +48,7 @@
                     name: _self.localized_label(config.product.name, app.request.locale),
                     category: config.product.category,
                     category_label: ('market.category.' ~ config.product.category)|trans,
-                    price: config.latest ? _self.smart_money(config.latest.medianGrosz, app.request.locale) : 'market.awaiting'|trans,
+                    price: config.latest and config.latest.availability == 'available' ? _self.smart_money(config.latest.medianGrosz, app.request.locale) : 'market.unavailable_short'|trans,
                     url: path('market_product', {_locale: app.request.locale, slug: config.product.slug}),
                     search_text: (config.product.name ~ ' ' ~ spec_text|join(' ') ~ ' ' ~ config.product.category ~ ' ' ~ item.family.name)|lower
                 }]) %}
@@ -150,7 +150,7 @@
                 {% for configuration in item.configurations %}
                     {% set config_data = config_data|merge([{
                         url: path('market_product', {_locale: app.request.locale, slug: configuration.product.slug}),
-                        price: configuration.latest ? _self.smart_money(configuration.latest.medianGrosz, app.request.locale) : 'market.awaiting'|trans,
+                        price: configuration.latest and configuration.latest.availability == 'available' ? _self.smart_money(configuration.latest.medianGrosz, app.request.locale) : 'market.unavailable_short'|trans,
                         note: configuration.latest ? ('market.observed'|trans ~ ' ' ~ configuration.latest.observedAt|date(app.request.locale == 'pl' ? 'd.m.Y' : 'M j, Y')) : 'market.awaiting_note'|trans,
                         specs: configuration.product.specifications
                     }]) %}
@@ -181,7 +181,7 @@
                                 {% endif %}
                             {% endfor %}
                         </div>
-                        <strong data-market-price>{{ initial.latest ? _self.smart_money(initial.latest.medianGrosz, app.request.locale) : 'market.awaiting'|trans }}</strong>
+                            <strong data-market-price>{{ initial.latest and initial.latest.availability == 'available' ? _self.smart_money(initial.latest.medianGrosz, app.request.locale) : 'market.unavailable_short'|trans }}</strong>
                         <small data-market-note>{{ initial.latest ? ('market.observed'|trans ~ ' ' ~ initial.latest.observedAt|date(app.request.locale == 'pl' ? 'd.m.Y' : 'M j, Y')) : 'market.awaiting_note'|trans }}</small>
                         <a class="market-open" data-market-link href="{{ path('market_product', {_locale: app.request.locale, slug: initial.product.slug}) }}">{{ 'market.open_history'|trans }} →</a>
                     </div>

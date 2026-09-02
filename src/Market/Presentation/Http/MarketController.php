@@ -81,7 +81,9 @@ final class MarketController extends AbstractController
      */
     private static function compareConfigurationsByPrice(array $left, array $right): int
     {
-        $priceComparison = ($right['latest']->medianGrosz ?? -1) <=> ($left['latest']->medianGrosz ?? -1);
+        $rightPrice = $right['latest']?->availability === 'available' ? $right['latest']->medianGrosz : -1;
+        $leftPrice = $left['latest']?->availability === 'available' ? $left['latest']->medianGrosz : -1;
+        $priceComparison = $rightPrice <=> $leftPrice;
 
         return $priceComparison !== 0
             ? $priceComparison
@@ -94,8 +96,10 @@ final class MarketController extends AbstractController
      */
     private static function compareFamiliesByPrice(array $left, array $right): int
     {
-        $leftPrice = $left['configurations'][0]['latest']->medianGrosz ?? -1;
-        $rightPrice = $right['configurations'][0]['latest']->medianGrosz ?? -1;
+        $leftLatest = $left['configurations'][0]['latest'];
+        $rightLatest = $right['configurations'][0]['latest'];
+        $leftPrice = $leftLatest?->availability === 'available' ? $leftLatest->medianGrosz : -1;
+        $rightPrice = $rightLatest?->availability === 'available' ? $rightLatest->medianGrosz : -1;
         $priceComparison = $rightPrice <=> $leftPrice;
 
         return $priceComparison !== 0

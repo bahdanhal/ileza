@@ -35,7 +35,7 @@ final readonly class DoctrinePriceObservationRepository implements PriceObservat
                 $observation->medianGrosz,
                 $observation->lowGrosz,
                 $observation->highGrosz,
-                $observation->confidence,
+                $observation->availability,
                 $observation->summary !== '' ? $observation->summary : null,
                 $observation->methodology !== '' ? $observation->methodology : PriceObservation::METHODOLOGY_MANUAL,
             );
@@ -117,7 +117,7 @@ final readonly class DoctrinePriceObservationRepository implements PriceObservat
             $entity->getMedianGrosz(),
             $entity->getLowGrosz(),
             $entity->getHighGrosz(),
-            $entity->getConfidence(),
+            $entity->getAvailability(),
             $entity->getSummary() ?? '',
             $entity->getMethodology(),
         );

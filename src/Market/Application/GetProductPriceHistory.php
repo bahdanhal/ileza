@@ -122,7 +122,11 @@ final class GetProductPriceHistory
         $movers = [];
         foreach ($products as $product) {
             $detailed = $this->detailedHistory($product->slug);
-            if ($detailed === null || $detailed['latest'] === null || $detailed['one_month_ago'] === null) {
+            if (
+                $detailed === null || $detailed['latest'] === null || $detailed['one_month_ago'] === null
+                || $detailed['latest']->availability !== 'available'
+                || $detailed['one_month_ago']->availability !== 'available'
+            ) {
                 continue;
             }
 
@@ -177,7 +181,7 @@ final class GetProductPriceHistory
         $prices = [];
         foreach ($products as $product) {
             $latest = $this->latestForProduct($product->slug);
-            if ($latest !== null && $latest->medianGrosz > 0) {
+            if ($latest !== null && $latest->availability === 'available' && $latest->medianGrosz > 0) {
                 $prices[] = $latest->medianGrosz;
             }
         }
@@ -245,8 +249,8 @@ final class GetProductPriceHistory
         }
 
         usort($rows, static function (array $a, array $b): int {
-            $priceA = $a['latest']->medianGrosz ?? -1;
-            $priceB = $b['latest']->medianGrosz ?? -1;
+            $priceA = $a['latest']?->availability === 'available' ? $a['latest']->medianGrosz : -1;
+            $priceB = $b['latest']?->availability === 'available' ? $b['latest']->medianGrosz : -1;
             if ($priceA !== $priceB) {
                 return $priceB <=> $priceA;
             }

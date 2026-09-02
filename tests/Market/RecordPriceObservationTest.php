@@ -23,7 +23,7 @@ final class RecordPriceObservationTest extends TestCase
                     && $obs->medianGrosz === 210000
                     && $obs->lowGrosz === 190000
                     && $obs->highGrosz === 230000
-                    && $obs->confidence === 'high';
+                    && $obs->availability === 'available';
             }));
 
         $service = new RecordPriceObservation($catalog, $repository);

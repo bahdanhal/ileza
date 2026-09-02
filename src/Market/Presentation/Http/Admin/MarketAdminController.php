@@ -197,7 +197,7 @@ final class MarketAdminController extends AbstractController
         $medianPln = (float) $request->request->get('median_pln');
         $lowPln = (float) $request->request->get('low_pln');
         $highPln = (float) $request->request->get('high_pln');
-        $confidence = (string) $request->request->get('confidence', 'high');
+        $availability = (string) $request->request->get('availability', 'available');
 
         $product = $this->catalog->get($slug);
         if ($product === null) {
@@ -216,7 +216,7 @@ final class MarketAdminController extends AbstractController
                 (int) round($medianPln * 100),
                 (int) round($lowPln * 100),
                 (int) round($highPln * 100),
-                $confidence,
+                $availability,
                 '',
                 PriceObservation::METHODOLOGY_MANUAL
             );
