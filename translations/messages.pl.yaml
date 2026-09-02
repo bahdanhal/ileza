@@ -403,7 +403,7 @@ income:
     limitations:
         title: "Sytuacje zmieniające wynik"
         text: "Inne dochody, wspólne rozliczenie, ulga dla młodych, autorskie KUP, PPK, zbieg tytułów, niepełnosprawność, dokładna wypadkowa, roczne rozliczenie zdrowotnej, urlop i właściwa stawka ryczałtu mogą istotnie zmienić wynik."
-        disclaimer: "Wyłącznie szacunek informacyjny. Rzeczywistą umowę sprawdź w programie kadrowo-księgowym lub u polskiego specjalisty."
+        disclaimer: "Kalkulacja ma charakter wyłącznie poglądowy. Dokładne warunki i rozliczenie umowy skonsultuj z księgowym lub doradcą podatkowym."
     faq:
         title: "Często zadawane pytania o formy zatrudnienia w Polsce"
         q1: "Czym różnią się formy UoP, UZ, UoD, B2B i Spółka z o.o.?"
