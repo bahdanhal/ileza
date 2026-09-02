@@ -22,7 +22,7 @@ final class RecordPriceObservationTest extends TestCase
                 return $obs->productSlug === 'iphone-13-128gb'
                     && $obs->medianGrosz === 210000
                     && $obs->lowGrosz === 190000
-                    && $obs->highGrosz === 230000
+                && $obs->highGrosz === 210000
                     && $obs->availability === 'available';
             }));
 

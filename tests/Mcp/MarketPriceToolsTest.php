@@ -151,6 +151,7 @@ final class MarketPriceToolsTest extends TestCase
         $data = json_decode($json, true, flags: JSON_THROW_ON_ERROR);
         self::assertSame('success', $data['status']);
         self::assertEquals(950, $data['observation']['fair_price_pln']);
+        self::assertEquals(950, $data['observation']['reasonable_high_pln']);
     }
 
     public function testAdminUpdateObservationSavesSuccessfullyWithAuthorizationHeader(): void

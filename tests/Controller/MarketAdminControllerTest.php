@@ -197,7 +197,7 @@ final class MarketAdminControllerTest extends TestCase
                 return $obs->productSlug === 'iphone-13-128gb'
                     && $obs->medianGrosz === 215000
                     && $obs->lowGrosz === 190000
-                    && $obs->highGrosz === 240000;
+                    && $obs->highGrosz === 215000;
             }));
 
         $productRequests = $this->createStub(ProductRequestStore::class);
