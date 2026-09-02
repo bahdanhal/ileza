@@ -211,7 +211,7 @@
                 <h2>{{ 'market.faq.title'|trans }}</h2>
                 <details open>
                     <summary>{{ 'market.faq.price_now.q'|trans({'%product%': localized_product_name}) }}</summary>
-                    <p>{{ 'market.faq.price_now.a'|trans({'%product%': localized_product_name, '%median%': _self.money(latest.medianGrosz, app.request.locale), '%low%': _self.money(latest.lowGrosz, app.request.locale), '%high%': _self.money(latest.highGrosz, app.request.locale)}) }}</p>
+                    <p>{{ latest.availability == 'available' ? 'market.faq.price_now.a'|trans({'%product%': localized_product_name, '%median%': _self.money(latest.medianGrosz, app.request.locale), '%low%': _self.money(latest.lowGrosz, app.request.locale), '%high%': _self.money(latest.highGrosz, app.request.locale)}) : 'market.unavailable.text'|trans }}</p>
                 </details>
                 {% if one_month_ago %}
                     <details open>
