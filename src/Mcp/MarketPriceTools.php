@@ -138,12 +138,20 @@ final readonly class MarketPriceTools
 
         $medianGrosz = (int) round($fair_price_pln * 100);
         $lowGrosz = $low_pln !== null ? (int) round($low_pln * 100) : (int) round($medianGrosz * 0.88);
+        if ($medianGrosz <= 0 || $lowGrosz <= 0 || $lowGrosz > $medianGrosz) {
+            return $this->json(['error' => 'Inconsistent prices. Ensure low <= high <= median and median > 0.']);
+        }
+
         $highGrosz = $high_pln !== null
             ? min((int) round($high_pln * 100), $medianGrosz)
             : $medianGrosz;
 
-        if ($medianGrosz <= 0 || $lowGrosz <= 0 || $highGrosz > $medianGrosz || $medianGrosz < $lowGrosz) {
-            return $this->json(['error' => 'Inconsistent prices. Ensure low <= high <= median and median > 0.']);
+        if ($lowGrosz >= $highGrosz) {
+            if ($lowGrosz > $highGrosz) {
+                return $this->json(['error' => 'Inconsistent prices. Ensure low <= high <= median and median > 0.']);
+            }
+
+            $lowGrosz = max(1, (int) round($highGrosz * 0.88));
         }
 
         $availabilityStatus = $availability ?? 'available';

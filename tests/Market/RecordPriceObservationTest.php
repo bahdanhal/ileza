@@ -41,6 +41,28 @@ final class RecordPriceObservationTest extends TestCase
         self::assertSame(210000, $result->medianGrosz);
     }
 
+    public function testWidensCollapsedRangeBelowMedian(): void
+    {
+        $catalog = new ProductCatalog();
+        $repository = $this->createMock(PriceObservationRepository::class);
+        $repository->expects(self::once())
+            ->method('save')
+            ->with(self::callback(static function (PriceObservation $obs): bool {
+                return $obs->medianGrosz === 26000
+                    && $obs->lowGrosz === 22880
+                    && $obs->highGrosz === 26000;
+            }));
+
+        $service = new RecordPriceObservation($catalog, $repository);
+        $service->execute(
+            'iphone-13-128gb',
+            new \DateTimeImmutable('2026-08-20'),
+            26000,
+            26000,
+            79900,
+        );
+    }
+
     public function testThrowsExceptionForUnknownProduct(): void
     {
         $catalog = new ProductCatalog();

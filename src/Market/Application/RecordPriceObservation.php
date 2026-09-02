@@ -30,9 +30,21 @@ final readonly class RecordPriceObservation
             throw new \InvalidArgumentException(sprintf('Unknown product slug: %s', $slug));
         }
 
+        if ($medianGrosz <= 0 || $lowGrosz <= 0 || $highGrosz <= 0 || $lowGrosz > $medianGrosz) {
+            throw new \InvalidArgumentException('Inconsistent prices. Ensure low <= high <= median and median > 0.');
+        }
+
         $highGrosz = min($highGrosz, $medianGrosz);
 
-        if ($medianGrosz <= 0 || $lowGrosz <= 0 || $highGrosz > $medianGrosz || $medianGrosz < $lowGrosz) {
+        if ($lowGrosz >= $highGrosz) {
+            if ($lowGrosz > $highGrosz) {
+                throw new \InvalidArgumentException('Inconsistent prices. Ensure low <= high <= median and median > 0.');
+            }
+
+            $lowGrosz = max(1, (int) round($highGrosz * 0.88));
+        }
+
+        if ($highGrosz > $medianGrosz || $medianGrosz < $lowGrosz) {
             throw new \InvalidArgumentException('Inconsistent prices. Ensure low <= high <= median and median > 0.');
         }
 
