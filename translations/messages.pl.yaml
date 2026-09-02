@@ -49,7 +49,7 @@ contact:
     phone_optional: "Telefon (opcjonalny, jeśli zostawisz e-mail)"
     message_optional: "W czym mogę pomóc? (opcjonalnie)"
     message_placeholder: "Wystarczy link i dwa zdania."
-    submit: "Poproś Bahdana"
+    submit: "Napisz do Bahdana"
     company: "Firma"
     note: "Dane zostaną zapisane prywatnie na tym serwerze, aby Bahdan mógł się odezwać. Bez newslettera i automatycznej sprzedaży."
     invalid_origin: "Nieprawidłowe źródło formularza."
@@ -321,8 +321,8 @@ market:
     unavailable_short: "Niedostępny"
     unavailable:
         title: "Obecnie niedostępny"
-        label: "Brak potwierdzonego używalnego ogłoszenia"
-        text: "Nie znaleźliśmy teraz dokładnej konfiguracji w stanie używalnym. Ostatnia obserwacja pozostaje w historii, ale nie jest pokazywana jako aktualna cena."
+        label: "Brak potwierdzonych ogłoszeń sprawnego sprzętu"
+        text: "Nie znaleźliśmy obecnie tej konfiguracji w stanie sprawnym technicznie. Ostatnia obserwacja pozostaje w historii, ale nie jest pokazywana jako aktualna cena."
     methodology_label: "Metodologia obserwacji"
     latest_snapshot: "najnowsza obserwacja"
     no_data:
@@ -390,14 +390,14 @@ income:
         tax: "PIT"
     assumptions:
         title: "Wspólne założenia porównania"
-        text: "To porównanie planistyczne, a nie program kadrowo-płacowy. Zakłada tę samą kwotę przez 12 miesięcy i stosuje skalę oraz typowe składki z 2026 r."
+        text: "To zestawienie ma charakter poglądowy, a nie kadrowo-płacowy. Zakłada tę samą kwotę przez 12 miesięcy i stosuje skalę oraz typowe składki z 2026 r."
         one: "UoP obejmuje składki pracownika i szacowane obciążenia pracodawcy przy składce wypadkowej 1,67%; KUP pracownika to 250 zł/mies."
         two: "UZ zakłada pełne oskładkowanie z dobrowolnym chorobowym, chyba że zaznaczysz studenta do 26 lat; uwzględniamy roczny limit ulgi dla młodych. UoD stosuje 20% KUP bez ZUS i składki zdrowotnej."
         three: "B2B pomija VAT jako zwykle neutralny, używa wybranego ZUS i podatku oraz nie modeluje urlopu, księgowości, każdej ulgi i rozliczenia rocznego."
         four: "Spółka z o.o. modeluje wynagrodzenie członka zarządu z powołania (uchwała wspólników): brak składek na ubezpieczenia społeczne, składka zdrowotna 9%, skala podatkowa 12%/32% oraz koszty stałe prowadzenia spółki."
     sources:
         title: "Oficjalne źródła 2026"
-        text: "Parametry wynikają z aktualnych informacji polskiego rządu i ZUS, sprawdzonych w dniu podanym wyżej."
+        text: "Parametry bazują na oficjalnych wytycznych gov.pl oraz ZUS, sprawdzonych w dniu podanym wyżej."
         health: "składka zdrowotna"
         business: "zdrowotna przedsiębiorcy"
     limitations:

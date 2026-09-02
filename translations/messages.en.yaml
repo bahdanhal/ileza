@@ -390,14 +390,14 @@ income:
         tax: "PIT"
     assumptions:
         title: "Comparable assumptions"
-        text: "This is a planning comparison, not payroll software. It annualizes one unchanged monthly amount and applies the 2026 tax scale and common contribution rules."
+        text: "This is an informational comparison, not payroll software. It annualizes one unchanged monthly amount and applies the 2026 tax scale and common contribution rules."
         one: "UoP includes employee contributions and an estimated employer burden using a 1.67% accident rate; employee costs are 250 PLN/month."
         two: "UZ assumes full social insurance including voluntary sickness unless the under-26 student option is selected; the annual youth-relief limit is included. UoD uses 20% deductible costs and no social or health contributions."
         three: "B2B excludes VAT as normally neutral, assumes the selected ZUS/tax regime, and does not model holidays, accounting fees or every relief and annual adjustment."
         four: "Spółka z o.o. models remuneration under a board member resolution (uchwała wspólników): 0 PLN social ZUS, 9% health contribution, 12%/32% progressive tax scale, and company operating overhead."
     sources:
         title: "Official 2026 references"
-        text: "Parameters are based on current Polish government and ZUS guidance checked on the date above."
+        text: "Parameters are based on official gov.pl and ZUS guidance checked on the date above."
         health: "health contribution"
         business: "business health rules"
     limitations:
