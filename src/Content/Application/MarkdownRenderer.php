@@ -8,7 +8,7 @@ final class MarkdownRenderer
 {
     public function render(string $markdown): string
     {
-        $lines = preg_split('/\R/', trim($markdown)) ?: [];
+        $lines = preg_split('/\R/u', trim($markdown)) ?: [];
         $html = [];
         /** @var list<string> $paragraph */
         $paragraph = [];
@@ -31,7 +31,7 @@ final class MarkdownRenderer
                 }
                 continue;
             }
-            if (preg_match('/^(#{2,3})\s+(.+)$/', $trimmed, $heading) === 1) {
+            if (preg_match('/^(#{2,3})\s+(.+)$/u', $trimmed, $heading) === 1) {
                 $flushParagraph();
                 if ($inList) {
                     $html[] = '</ul>';
@@ -41,7 +41,7 @@ final class MarkdownRenderer
                 $html[] = sprintf('<h%d>%s</h%d>', $level, $this->inline($heading[2]), $level);
                 continue;
             }
-            if (preg_match('/^-\s+(.+)$/', $trimmed, $item) === 1) {
+            if (preg_match('/^-\s+(.+)$/u', $trimmed, $item) === 1) {
                 $flushParagraph();
                 if (!$inList) {
                     $html[] = '<ul>';
@@ -67,11 +67,11 @@ final class MarkdownRenderer
     private function inline(string $text): string
     {
         $escaped = htmlspecialchars($text, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-        $escaped = preg_replace('/\*\*(.+?)\*\*/', '<strong>$1</strong>', $escaped) ?? $escaped;
-        $escaped = preg_replace('/`([^`]+)`/', '<code>$1</code>', $escaped) ?? $escaped;
+        $escaped = preg_replace('/\*\*(.+?)\*\*/u', '<strong>$1</strong>', $escaped) ?? $escaped;
+        $escaped = preg_replace('/`([^`]+)`/u', '<code>$1</code>', $escaped) ?? $escaped;
 
         return preg_replace_callback(
-            '/\[([^\]]+)\]\((https?:\/\/[^\s)]+|\/[^\s)]*)\)/',
+            '/\[([^\]]+)\]\((https?:\/\/[^\s)]+|\/[^\s)]*)\)/u',
             static fn (array $match): string => sprintf('<a href="%s">%s</a>', $match[2], $match[1]),
             $escaped
         ) ?? $escaped;

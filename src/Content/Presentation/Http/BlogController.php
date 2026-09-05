@@ -47,7 +47,7 @@ final class BlogController extends AbstractController
         $this->priceHistory->preload($article->getPriceSlugs());
         $blocks = [];
         $parts = preg_split(
-            '/\{\{\s*price\(["\']([a-z0-9-]+)["\']\)\s*\}\}/',
+            '/\{\{\s*price\(["\']([a-z0-9-]+)["\']\)\s*\}\}/u',
             $article->getBodyMarkdown(),
             -1,
             PREG_SPLIT_DELIM_CAPTURE

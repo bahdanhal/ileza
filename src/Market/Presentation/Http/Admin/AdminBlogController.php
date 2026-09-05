@@ -222,8 +222,8 @@ final class AdminBlogController extends AbstractController
         $renderedHtml = $this->markdown->render($markdownText);
 
         $plain = trim((string) preg_replace('/\s+/', ' ', strip_tags($renderedHtml)));
-        $sentences = array_values(array_filter(preg_split('/[.!?]+/', $plain) ?: []));
-        $words = array_values(array_filter(preg_split('/\s+/', $plain) ?: []));
+        $sentences = array_values(array_filter(preg_split('/[.!?]+/u', $plain) ?: []));
+        $words = array_values(array_filter(preg_split('/\s+/u', $plain) ?: []));
         $numSentences = max(1, count($sentences));
         $numWords = max(1, count($words));
 

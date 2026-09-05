@@ -38,4 +38,20 @@ final class BlogContentTest extends TestCase
         self::assertStringNotContainsString('<script>', $html);
         self::assertStringContainsString('<li>Item</li>', $html);
     }
+
+    public function testPreservesPolishDiacriticsWithoutSplitting(): void
+    {
+        $input = "- Twój model pracy wymaga ciągłości operacyjnej.\n"
+            . "- Chcesz uniknąć jakichkolwiek formalności związanych z weryfikacją.\n"
+            . "- Kupujesz na 3-letnią ratę.";
+
+        $html = (new MarkdownRenderer())->render($input);
+
+        self::assertStringContainsString('ciągłości', $html);
+        self::assertStringContainsString('uniknąć', $html);
+        self::assertStringContainsString('związanych', $html);
+        self::assertStringContainsString('weryfikacją', $html);
+        self::assertStringContainsString('3-letnią', $html);
+        self::assertStringNotContainsString('wymaga ci</li>', $html);
+    }
 }
