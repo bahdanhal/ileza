@@ -56,7 +56,7 @@ final class Version20260905140000 extends AbstractMigration
                 'slug' => 'ekonomia-smartfonow-uzywany-czy-nowy',
                 'alternate_slug' => 'smartphone-economics-used-vs-new',
                 'title' => 'Ekonomia smartfonów: używane czy nowe. Twarde liczby, podatki i pułapki rynkowe',
-                'description' => 'Krzywa utraty wartości kontra koszty nowości. Rzeczywisty rachunek TCO na 2 lata, podatki w JDG i spółce, pułapka faktury VAT-marża oraz analiza opłacalności od fabrycznie nowych po 6-letnie telefony.',
+                'description' => 'Krzywa utraty wartości kontra koszty nowości. Rzeczywisty rachunek TCO na 2 lata, podatki w JDG i spółce z o.o., pułapka faktury VAT-marża oraz analiza opłacalności od fabrycznie nowych po 6-letnie telefony.',
                 'body_markdown' => <<<'MARKDOWN'
 ## 1. Krzywa utraty wartości: kto płaci za zerwanie plomby
 
@@ -74,37 +74,37 @@ W elektronice użytkowej zjawisko to ma charakter gwałtowny:
 
 ---
 
-## 2. Rachunek TCO na 2 lata: Nowy flagowiec vs 2-latek z własnej kieszeni
+## 2. Rachunek TCO na 2 lata: Nowy model bazowy vs 2-latek z własnej kieszeni
 
 Gdy kupujesz telefon za prywatne, opodatkowane oszczędności, liczy się całkowity koszt posiadania (Total Cost of Ownership, TCO).
 
-Porównajmy 2-letni okres użytkowania dwóch scenariuszy:
-- **Wariant A:** Zakup fabrycznie nowego flagowca w salonie za 4 800 zł brutto.
-- **Wariant B:** Zakup zadbanego 2-letniego flagowca za 1 400 zł brutto i profesjonalna wymiana baterii.
+Dla zachowania precyzji porównujemy tę samą linię produktową: bazowy model flagowy o pojemności 128 GB (segment iPhone 13-16 / Samsung Galaxy S):
+- **Wariant A:** Zakup fabrycznie nowego bazowego flagowca w salonie za 4 200 zł brutto (cena premierowa).
+- **Wariant B:** Zakup zadbanego 2-letniego flagowca bazowego za 1 400 zł brutto i wymiana baterii.
 
 Oto bilans wydatków po 24 miesiącach:
 
-- **Wariant A: Nowy flagowiec (0-2 lata)**
-  - Cena zakupu: 4 800 zł
-  - Wartość po 2 latach (odsprzedaż): ~2 200 zł
-  - Utrata wartości (deprecjacja): 2 600 zł
-  - Akcesoria (ładowarka 30W, etui, szkło hartowane): 250 zł
-  - Ubezpieczenie wyświetlacza lub AppleCare+: 500 zł
+- **Wariant A: Nowy bazowy flagowiec (0-2 lata)**
+  - Cena zakupu: 4 200 zł
+  - Wartość po 2 latach (odsprzedaż): ~2 000 zł
+  - Utrata wartości (deprecjacja): 2 200 zł
+  - Akcesoria (ładowarka 30W, etui, szkło): 200 zł
+  - Ubezpieczenie ekranu lub AppleCare+: 400 zł
   - Serwis i naprawy gwarancyjne: 0 zł
-  - **Łączny realny koszt za 2 lata: ~3 350 zł (~140 zł miesięcznie)**
+  - **Łączny realny koszt za 2 lata: ~2 800 zł (~117 zł miesięcznie)**
 
-- **Wariant B: 2-letni flagowiec (2-4 lata)**
+- **Wariant B: 2-letni flagowiec bazowy (2-4 lata)**
   - Cena zakupu: 1 400 zł
-  - Wartość po 2 latach (odsprzedaż jako 4-latek): ~900 zł
-  - Utrata wartości (deprecjacja): 500 zł
-  - Wymiana baterii w autoryzowanym lub zaufanym serwisie: 400 zł
+  - Wartość po 2 latach (odsprzedaż jako 4-latek): ~800 zł
+  - Utrata wartości (deprecjacja): 600 zł
+  - Wymiana baterii w zaufanym serwisie: 400 zł
   - Akcesoria (etui, szkło): 100 zł
-  - Bufor na drobne naprawy: 150 zł
-  - **Łączny realny koszt za 2 lata: ~1 150 zł (~48 zł miesięcznie)**
+  - Bufor na drobne naprawy: 100 zł
+  - **Łączny realny koszt za 2 lata: ~1 200 zł (~50 zł miesięcznie)**
 
-Różnica wynosi aż **2 200 zł na korzyść telefonu używanego**. To ponad **90 zł czystej oszczędności w każdym miesiącu**.
+Różnica wynosi aż **1 600 zł na korzyść telefonu używanego**. To ponad **66 zł czystej oszczędności w każdym miesiącu**.
 
-Do tego dochodzi koszt alternatywny kapitału. Różnica 3 400 zł w gotówce na starcie, pozostawiona na rachunku oszczędnościowym na 6% w skali roku, przynosi po odliczeniu podatku Belki kolejne ~340 zł zysku w ciągu dwóch lat.
+Do tego dochodzi koszt alternatywny kapitału. Różnica 2 800 zł w gotówce na starcie, ulokowana na rachunku oszczędnościowym na 6% w skali roku, przynosi po odliczeniu podatku Belki kolejne ~280 zł zysku w ciągu dwóch lat.
 
 {{ price("iphone-13-128gb") }}
 
@@ -112,28 +112,36 @@ Do tego dochodzi koszt alternatywny kapitału. Różnica 3 400 zł w gotówce na
 
 ## 3. Podatki dla firm: kiedy nowy telefon z salonu ma sens biznesowy
 
-Wiele osób powtarza argument: "wezmę na firmę, wrzucę w koszty i wyjdzie za grosze". W praktyce opłacalność zależy bezpośrednio od wybranej formy opodatkowania i statusu VAT.
+Wielu przedsiębiorców powtarza slogan: "wezmę na firmę, wrzucę w koszty i telefon będzie za darmo". W praktyce podatki łagodzą wydatek, ale go nie kasują.
 
-W przeciwieństwie do samochodów, smartfon kosztuje poniżej 10 000 zł netto, co oznacza brak konieczności wieloletniej amortyzacji. Wydatek można zaliczyć bezpośrednio do kosztów uzyskania przychodów (KUP) w miesiącu zakupu.
+Smartfon kosztuje poniżej ustawowego progu 10 000 zł netto, dzięki czemu nie wymaga wieloletniej amortyzacji i trafia bezpośrednio w koszty uzyskania przychodów (KUP) w miesiącu zakupu.
 
 ### JDG na podatku liniowym (19%) lub skali podatkowej (32%) + czynny VAT
-Dla przedsiębiorcy rozliczającego podatek liniowy z pełnym prawem do odliczenia VAT, zakup nowego telefonu jest wysoce efektywny podatkowo:
-- Telefon za 4 800 zł brutto to 3 902 zł netto i 898 zł VAT.
-- Pełne odliczenie 100% VAT (telefon wykorzystywany służbowo): zysk 898 zł.
-- Zaliczenie kwoty netto w koszty zmniejsza podatek dochodowy (19%) oraz składkę zdrowotną (4,9%), dając tarczę 932 zł.
-- **Realny koszt zakupu nowego telefonu z salonu: ok. 2 072 zł** (tarcza podatkowa pokrywa aż 57% ceny wyjściowej).
+Dla przedsiębiorcy na podatku liniowym z pełnym prawem do odliczenia VAT, zakup nowego telefonu za 4 200 zł brutto wygląda następująco:
+- Cena brutto: 4 200 zł (netto: 3 415 zł, VAT 23%: 785 zł).
+- Odliczenie 100% VAT (telefon służbowy): odzyskujesz **785 zł**.
+- Do kosztów uzyskania przychodów trafia kwota netto: 3 415 zł.
+- Tarcza dochodowa (19% PIT + 4,9% składka zdrowotna = 23,9% z 3 415 zł): zysk **816 zł**.
+- Łączna tarcza podatkowa: `785 zł + 816 zł` = **1 601 zł** (ok. 38% ceny brutto).
+- **Realny koszt zakupu nowego telefonu z salonu: ok. 2 599 zł** (`3 415 zł netto - 816 zł tarczy dochodowej`).
 
 ### JDG na Ryczałcie od przychodów ewidencjonowanych
-Na ryczałcie zasady są zupełnie inne:
+Na ryczałcie sytuacja jest diametralnie inna:
 - Koszty uzyskania przychodów nie istnieją (KUP = 0 zł). Nie odliczysz ani złotówki od podatku dochodowego.
-- Przedsiębiorca będący czynnym podatnikiem VAT odzyska jedynie podatek VAT (898 zł), więc telefon kosztuje go 3 902 zł netto.
-- Przedsiębiorca na ryczałcie zwolniony z VAT płaci pełne 4 800 zł z własnej kieszeni. W tym wariancie kupowanie drogiego salonowego urządzenia w celach optymalizacji podatkowej jest ekonomicznym błędem.
+- Czynny podatnik VAT odzyska jedynie VAT (785 zł), więc telefon kosztuje go 3 415 zł.
+- Przedsiębiorca na ryczałcie zwolniony z VAT płaci pełne 4 200 zł z własnej kieszeni.
+
+### Spółka z o.o. (Klasyczny CIT vs Estoński CIT)
+- **Klasyczny CIT (9% mały podatnik / 19% stawka standardowa):** Spółka odlicza 100% VAT, a kwota netto trafia w koszty podatkowe. Tarcza CIT wynosi 9% (307 zł) lub 19% (649 zł), co daje realny koszt zakupu na poziomie odpowiednio 3 108 zł lub 2 766 zł.
+- **Estoński CIT:** Należy uważać na telefony i abonamenty kupowane dla wspólników lub członków zarządu. Jeżeli urządzenie nie ma udokumentowanego, wyłącznego związku z pracą operacyjną spółki, urząd skarbowy może zakwalifikować wydatek jako ukryty zysk lub wydatek niezwiązany z działalnością gospodarczą (opodatkowany stawką 10% lub 20% ryczałtu).
 
 ### Pułapka faktury VAT-marża na rynku wtórnym
-Przedsiębiorcy często nie zdają sobie sprawy z pułapki faktury VAT-marża, powszechnie stosowanej przez komisy i sprzedawców urządzeń używanych:
-- Faktura VAT-marża **nie pozwala na odliczenie podatku VAT**. Podatek VAT w deklaracji JPK_V7 wynosi równe 0 zł.
-- Kupując używany telefon za 1 800 zł na fakturę VAT-marża, firma na liniowym odliczy jedynie PIT i zdrowotną od kwoty brutto (~430 zł). Realny koszt wynosi ~1 370 zł.
-- W efekcie różnica w cenie dla przedsiębiorcy między nowym telefonem (2 072 zł) a używanym z komisu (1 370 zł) wynosi zaledwie ok. 700 zł, a nie 3 000 zł, jak wskazywałyby ceny na półce.
+Przedsiębiorcy często zapominają o specyfice faktury VAT-marża, powszechnie wystawianej przez komisy i sprzedawców urządzeń używanych:
+- Faktura VAT-marża **nie zawiera podatku VAT do odliczenia**. Kwota VAT w deklaracji JPK_V7 wynosi 0 zł.
+- Kupując używany telefon za 1 400 zł na fakturę VAT-marża, przedsiębiorca na podatku liniowym zalicza do KUP całą kwotę 1 400 zł, zyskując tarczę PIT i zdrowotną (23,9%): **335 zł**.
+- **Realny koszt używanego telefonu z komisu: ok. 1 065 zł** (`1 400 zł - 335 zł`).
+
+> **Zasada IleZa:** Tarcza podatkowa nie jest darmowym rabatem od państwa. Przy fakturze VAT-marża tracisz odliczenie 23% VAT, ale ze względu na niską bazę zakupu, używany flagowiec (1 065 zł) nadal kosztuje firmę o ponad 1 500 zł mniej niż nowy model z salonu (2 599 zł).
 
 ---
 
@@ -190,10 +198,12 @@ Dla twórcy wideo, menedżera czy osoby prowadzącej handel mobilny telefon jest
 Producenci w okresach premierowych oferują dopłaty do odkupu starego telefonu (nawet 500-1 000 zł bonusu) oraz prawdziwe raty 0% bez prowizji. Przy stabilnej inflacji rozłożenie płatności na 20 nieoprocentowanych rat obniża realny koszt kapitału.
 
 3. **Strategia jednego właściciela na 5-6 lat:**
-Kupienie nowego flagowca z zamiarem eksploatacji przez cały okres wsparcia producenta (5-7 lat) to znakomita strategia. Jednorazowy wydatek 4 800 zł plus jedna planowa wymiana baterii po 3 latach (~400 zł) rozkłada się na 60-72 miesiące, dając średni koszt rzędu 75-85 zł miesięcznie przy pełnej kontroli nad historią sprzętu.
+Kupienie nowego flagowca z zamiarem eksploatacji przez cały okres wsparcia producenta (5-7 lat) to znakomita strategia. Jednorazowy wydatek 4 200 zł plus jedna planowa wymiana baterii po 3 latach (~400 zł) rozkłada się na 60-72 miesiące, dając średni koszt rzędu 65-75 zł miesięcznie przy pełnej kontroli nad historią sprzętu.
 
 4. **Eliminacja ryzyka blokad ratalnych i asymetrii informacji:**
 Polski rynek wtórny niesie ze sobą ryzyko blokady IMEI przez operatorów (Plus, Play, T-Mobile, Orange) w przypadku niespłacania rat przez pierwotnego właściciela. Dochodzą do tego nieautoryzowane chińskie zamienniki ekranów bez True Tone oraz ukryte profile korporacyjne MDM. Zakup od oficjalnego dystrybutora eliminuje to ryzyko w całości.
+
+> **Zasada IleZa:** Najdroższy telefon z drugiej ręki to ten kupiony bez weryfikacji numeru IMEI u operatora. Wystarczy jedna niespłacona rata pierwotnego abonenta w Plusie, Play, T-Mobile czy Orange, by flagowiec stał się bezużyteczną cegłą z zablokowanym modemem GSM.
 
 ---
 
@@ -203,10 +213,10 @@ Wybierz **używanego flagowca (wiek 2-3 lata)**, jeżeli:
 - Płacisz z własnych, opodatkowanych oszczędności jako osoba prywatna.
 - Prowadzisz działalność na ryczałcie lub nie jesteś podatnikiem VAT.
 - Chcesz mieć bezkompromisowy aparat, ekran OLED, wodoszczelność IP68 i płynność działania bez płacenia haraczu za nowość.
-- Twój miesięczny budżet na sprzęt nie powinien przekraczać 45-50 zł.
+- Twój miesięczny budżet na sprzęt nie powinien przekraczać 50 zł.
 
 Wybierz **nowy telefon z salonu**, jeżeli:
-- Rozliczasz JDG na podatku liniowym lub skali podatkowej i odliczasz pełny VAT 23% na firmę.
+- Rozliczasz JDG na podatku liniowym lub spółkę z o.o. i odliczasz pełny VAT 23% na firmę.
 - Twój model pracy wymaga ciągłości operacyjnej, a każda godzina awarii generuje straty finansowe.
 - Planujesz kupić telefon raz i użytkować go przez 5-6 lat aż do wygaszenia wsparcia.
 - Chcesz uniknąć jakichkolwiek formalności związanych z weryfikacją numeru IMEI, profili MDM czy historii napraw.
@@ -221,7 +231,7 @@ MARKDOWN,
                 'slug' => 'smartphone-economics-used-vs-new',
                 'alternate_slug' => 'ekonomia-smartfonow-uzywany-czy-nowy',
                 'title' => 'Smartphone economics: used vs new. Hard numbers, taxes, and market traps',
-                'description' => 'Depreciation curve vs unboxing costs. A real two-year TCO balance, Polish business taxes, the VAT-margin trap, and market value analysis from factory-new to six-year-old phones.',
+                'description' => 'Depreciation curve vs unboxing costs. A real two-year TCO balance, Polish business taxes and Sp. z o.o., the VAT-margin trap, and market value analysis from factory-new to six-year-old phones.',
                 'body_markdown' => <<<'MARKDOWN'
 ## 1. The depreciation curve: who pays for unboxing
 
@@ -239,37 +249,37 @@ In consumer electronics, this drop is fast:
 
 ---
 
-## 2. The two-year TCO bill: new flagship vs two-year-old used
+## 2. The two-year TCO bill: new base model vs two-year-old used
 
 When you pay with taxed personal savings, total cost of ownership (TCO) is what counts.
 
-Let us compare two typical paths over 24 months:
-- **Option A:** Buy a brand-new retail flagship for 4,800 PLN.
-- **Option B:** Buy a clean two-year-old flagship for 1,400 PLN and install a fresh battery.
+To keep the comparison fair, we look at the same product tier: a base premium flagship with 128 GB of storage (the iPhone 13-16 or Samsung Galaxy S tier):
+- **Option A:** Buy a brand-new retail base flagship at launch for 4,200 PLN.
+- **Option B:** Buy a clean two-year-old base flagship for 1,400 PLN and install a fresh battery.
 
 Here is the real money balance after two years:
 
-- **Option A: New flagship (years 0 to 2)**
-  - Purchase price: 4,800 PLN
-  - Resale value after two years: ~2,200 PLN
-  - Value loss (depreciation): 2,600 PLN
-  - Accessories (fast charger, case, screen protector): 250 PLN
-  - Screen insurance: 500 PLN
+- **Option A: New base flagship (years 0 to 2)**
+  - Purchase price: 4,200 PLN
+  - Resale value after two years: ~2,000 PLN
+  - Value loss (depreciation): 2,200 PLN
+  - Accessories (fast charger, case, screen protector): 200 PLN
+  - Screen insurance: 400 PLN
   - Warranty repairs: 0 PLN
-  - **Total real cost over 2 years: ~3,350 PLN (~140 PLN per month)**
+  - **Total real cost over 2 years: ~2,800 PLN (~117 PLN per month)**
 
-- **Option B: Two-year-old used flagship (years 2 to 4)**
+- **Option B: Two-year-old used base flagship (years 2 to 4)**
   - Purchase price: 1,400 PLN
-  - Resale value after two years: ~900 PLN
-  - Value loss (depreciation): 500 PLN
+  - Resale value after two years: ~800 PLN
+  - Value loss (depreciation): 600 PLN
   - Fresh battery from a good repair shop: 400 PLN
   - Basic case and glass: 100 PLN
-  - Minor repair buffer: 150 PLN
-  - **Total real cost over 2 years: ~1,150 PLN (~48 PLN per month)**
+  - Minor repair buffer: 100 PLN
+  - **Total real cost over 2 years: ~1,200 PLN (~50 PLN per month)**
 
-The gap is **2,200 PLN in favor of the used phone**. That equals **over 90 PLN of clean cash saved every month**.
+The gap is **1,600 PLN in favor of the used phone**. That equals **over 66 PLN of clean cash saved every month**.
 
-Capital opportunity cost widens this gap even more. Putting that 3,400 PLN starting difference into a 6% savings account yields around 340 PLN after Polish Belka tax over two years.
+Capital opportunity cost widens this gap even more. Putting that 2,800 PLN starting difference into a 6% savings account yields around 280 PLN after Polish Belka tax over two years.
 
 {{ price("iphone-13-128gb") }}
 
@@ -277,28 +287,36 @@ Capital opportunity cost widens this gap even more. Putting that 3,400 PLN start
 
 ## 3. Business taxes: when a brand-new retail phone makes sense
 
-Many contractors claim that buying on a company card makes a phone almost free. In practice, actual savings depend on your tax setup and VAT status.
+Many contractors claim that buying on a company card makes a phone almost free. In practice, taxes soften the bill, but they never erase it.
 
-Unlike cars, a phone costs well under the 10,000 PLN limit. You can write it off at once in the month of purchase without multi-year accounting schedules.
+A phone costs well under the 10,000 PLN statutory threshold. You can write it off at once in the month of purchase without multi-year accounting schedules.
 
 ### Sole proprietorship on linear tax (19%) and active 23% VAT
-For a business owner on a 19% linear tax with full VAT deduction, buying new is tax-efficient:
-- A phone at 4,800 PLN gross equals 3,902 PLN net and 898 PLN VAT.
-- You reclaim the full 898 PLN VAT for business equipment.
-- Writing off the net amount reduces personal income tax (19%) and health contributions (4.9%). That shaves off another 932 PLN.
-- **Effective purchase cost: around 2,072 PLN.** The tax shield covers roughly 57% of retail price.
+For a business owner on a 19% linear tax with full VAT deduction, buying a new 4,200 PLN phone breaks down like this:
+- Gross price: 4,200 PLN (net: 3,415 PLN, VAT 23%: 785 PLN).
+- Full 100% VAT deduction (work phone): you recover **785 PLN**.
+- You write off the net amount in operating costs: 3,415 PLN.
+- Income tax and health contribution relief (23.9% of 3,415 PLN): saves **816 PLN**.
+- Total tax shield: `785 PLN + 816 PLN` = **1,601 PLN** (about 38% of gross retail price).
+- **Effective purchase cost: around 2,599 PLN** (`3,415 PLN net - 816 PLN income tax relief`).
 
 ### Sole proprietorship on Polish flat lump-sum tax (Ryczalt)
 Rules change completely under Ryczalt:
 - You have zero deductible revenue costs (KUP = 0 PLN). You cannot deduct a single zloty from your income tax.
-- A VAT-registered contractor reclaims only the 898 PLN VAT, paying 3,902 PLN net.
-- A contractor exempt from VAT pays the full 4,800 PLN out of pocket. Buying high-end gear here for tax write-offs makes no financial sense.
+- A VAT-registered contractor reclaims only the 785 PLN VAT, paying 3,415 PLN net.
+- A contractor exempt from VAT pays the full 4,200 PLN out of pocket.
+
+### Limited liability company (Spolka z o.o.)
+- **Standard CIT (9% small business or 19% standard):** The company deducts 100% VAT and expenses the net amount. CIT tax relief cuts the bill by 9% (307 PLN) or 19% (649 PLN), giving a real cost of 3,108 PLN or 2,766 PLN.
+- **Estonian CIT:** Be careful with phones and plans bought for partners or board members. Unless you prove exclusive operational use, tax inspectors can treat the cost as a hidden profit or non-business expense, taxing it at 10% or 20%.
 
 ### The VAT-margin trap on the second-hand market
 Many buyers overlook the VAT-margin invoice (faktura VAT-marza) used by most pawn shops and used device dealers:
 - A VAT-margin invoice **offers zero deductible VAT**. The VAT amount in your tax filing is strictly 0 PLN.
-- If you buy a used phone for 1,800 PLN on VAT-margin, a linear taxpayer deducts only income tax (~430 PLN). The real cost is ~1,370 PLN.
-- As a result, the business gap between a new retail phone (2,072 PLN) and a used shop phone (1,370 PLN) shrinks to only ~700 PLN.
+- If you buy a used phone for 1,400 PLN on VAT-margin, a linear taxpayer writes off the full 1,400 PLN, gaining income tax and health relief (23.9%): **335 PLN**.
+- **Real cost of the used shop phone: around 1,065 PLN** (`1,400 PLN - 335 PLN`).
+
+> **IleZa Rule:** Tax write-offs are not free store discounts. With a VAT-margin invoice you lose the 23% VAT deduction. Yet thanks to a lower starting price, a used flagship (1,065 PLN) still leaves company cash reserves over 1,500 PLN higher than buying new at retail (2,599 PLN).
 
 ---
 
@@ -355,10 +373,12 @@ If your phone is your main income tool (video creation, mobile trading, or clien
 Launch promotions often include trade-in extras (up to 500 or 1,000 PLN in bonus credit) alongside genuine 0% APR installment plans. When general inflation stays steady, spreading payments over 20 fee-free installments lowers real capital cost.
 
 3. **The single-owner five-year plan:**
-Buying a retail flagship and keeping it for its full support window (5 to 7 years) is a sound strategy. A single 4,800 PLN purchase plus one battery swap at year three (~400 PLN) spreads over 60 to 72 months. That works out to 75 to 85 PLN per month with total trust in device history.
+Buying a retail flagship and keeping it for its full support window (5 to 7 years) is a sound strategy. A single 4,200 PLN purchase plus one battery swap at year three (~400 PLN) spreads over 60 to 72 months. That works out to 65 to 75 PLN per month with total trust in device history.
 
 4. **Avoiding carrier blacklists and market traps:**
 The Polish used market carries real risks of carrier IMEI blacklisting (Plus, Play, T-Mobile, Orange) if a previous owner stops paying installments. There are also risks of cheap screen replacements without True Tone and hidden corporate MDM locks. Buying from an authorized dealer removes these risks entirely.
+
+> **IleZa Rule:** The costliest second-hand phone is one bought without checking the carrier IMEI database. A single missed installment payment by the original buyer turns a premium flagship into a locked brick.
 
 ---
 
@@ -368,10 +388,10 @@ Pick a **used flagship (2 to 3 years old)** if:
 - You pay out of pocket with taxed personal savings.
 - You run a small business under flat Ryczalt or operate without VAT.
 - You want flagship cameras, OLED displays, water resistance, and smooth speed without paying novelty markups.
-- Your monthly hardware target is 45 to 50 PLN.
+- Your monthly hardware target is under 50 PLN.
 
 Pick a **brand-new retail phone** if:
-- You run a business under 19% linear tax and claim full 23% VAT.
+- You run a business under 19% linear tax or a company and claim full 23% VAT.
 - Your work demands total uptime, where hours of downtime cost more than monthly hardware bills.
 - You plan to keep the device for 5 to 6 years until security patches end.
 - You want zero hassle with IMEI verification, MDM checks, or third-party repair history.
