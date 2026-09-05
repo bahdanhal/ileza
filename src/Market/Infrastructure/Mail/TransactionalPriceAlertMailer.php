@@ -13,15 +13,19 @@ use Twig\Environment;
 
 final readonly class TransactionalPriceAlertMailer implements PriceAlertMailerInterface
 {
+    private ?EmailTransportInterface $emailTransport;
+
     public function __construct(
         private Environment $twig,
         private TranslatorInterface $translator,
-        private string $senderEmail = 'powiadomienia@ileza.pl',
+        private string $senderEmail = 'powiadomienia@mail.ileza.pl',
         private string $senderName = 'IleZa.pl',
         private string $baseUrl = 'https://ileza.pl',
         private string $logDirectory = '',
-        private ?SmtpTransportInterface $smtpTransport = null,
+        ?EmailTransportInterface $emailTransport = null,
+        ?SmtpTransportInterface $smtpTransport = null,
     ) {
+        $this->emailTransport = $emailTransport ?? $smtpTransport;
     }
 
     public function sendVerificationEmail(PriceAlert $alert, Product $product): bool
@@ -105,9 +109,9 @@ final readonly class TransactionalPriceAlertMailer implements PriceAlertMailerIn
 
     private function dispatchEmail(string $recipient, string $subject, string $htmlBody, string $textBody): bool
     {
-        $smtpSent = false;
-        if ($this->smtpTransport !== null) {
-            $smtpSent = $this->smtpTransport->send(
+        $transportSent = false;
+        if ($this->emailTransport !== null) {
+            $transportSent = $this->emailTransport->send(
                 $this->senderEmail,
                 $this->senderName,
                 $recipient,
@@ -117,19 +121,19 @@ final readonly class TransactionalPriceAlertMailer implements PriceAlertMailerIn
             );
         }
 
-        // Safe logging / file persistence for backup audit and environments without SMTP
+        // Safe logging / file persistence for backup audit and environments without configured transport
         if ($this->logDirectory !== '' && is_dir($this->logDirectory)) {
             $logEntry = json_encode([
                 'timestamp' => gmdate('c'),
                 'from' => sprintf('%s <%s>', $this->senderName, $this->senderEmail),
                 'recipient' => $recipient,
                 'subject' => $subject,
-                'smtp_sent' => $smtpSent,
+                'transport_sent' => $transportSent,
                 'text_preview' => mb_substr($textBody, 0, 200),
             ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . "\n";
             file_put_contents($this->logDirectory . '/dispatched_emails.jsonl', $logEntry, FILE_APPEND | LOCK_EX);
         }
 
-        return $smtpSent || $this->smtpTransport === null;
+        return $transportSent || $this->emailTransport === null;
     }
 }

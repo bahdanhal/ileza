@@ -9,12 +9,18 @@ parameters:
   env(SMTP_USERNAME): ''
   env(SMTP_PASSWORD): ''
   env(SMTP_ENCRYPTION): 'tls'
-  env(MAILER_SENDER_EMAIL): 'powiadomienia@ileza.pl'
+  env(SCW_SECRET_KEY): ''
+  env(SCW_DEFAULT_PROJECT_ID): 'eed5908f-6ad7-4644-934e-cde61c0ca55a'
+  env(SCW_TEM_REGION): 'fr-par'
+  env(MAILER_SENDER_EMAIL): 'powiadomienia@mail.ileza.pl'
   env(MAILER_SENDER_NAME): 'IleZa.pl'
   contact.lead_directory: '%env(CONTACT_LEAD_DIRECTORY)%'
   market.data_directory: '%env(MARKET_DATA_DIRECTORY)%'
   analytics.data_directory: '%env(ANALYTICS_DATA_DIRECTORY)%'
   analytics.retention_days: '%env(int:ANALYTICS_RETENTION_DAYS)%'
+  scw.secret_key: '%env(SCW_SECRET_KEY)%'
+  scw.project_id: '%env(SCW_DEFAULT_PROJECT_ID)%'
+  scw.tem_region: '%env(SCW_TEM_REGION)%'
   smtp.host: '%env(SMTP_HOST)%'
   smtp.port: '%env(int:SMTP_PORT)%'
   smtp.username: '%env(SMTP_USERNAME)%'
@@ -117,8 +123,17 @@ services:
     arguments:
       $secret: '%env(APP_SECRET)%'
 
+  App\Market\Infrastructure\Mail\EmailTransportInterface:
+    alias: App\Market\Infrastructure\Mail\ScalewayEmailTransport
+
   App\Market\Infrastructure\Mail\SmtpTransportInterface:
     alias: App\Market\Infrastructure\Mail\SmtpTransport
+
+  App\Market\Infrastructure\Mail\ScalewayEmailTransport:
+    arguments:
+      $secretKey: '%scw.secret_key%'
+      $projectId: '%scw.project_id%'
+      $region: '%scw.tem_region%'
 
   App\Market\Infrastructure\Mail\SmtpTransport:
     arguments:
@@ -133,7 +148,7 @@ services:
       $senderEmail: '%mailer.sender_email%'
       $senderName: '%mailer.sender_name%'
       $logDirectory: '%contact.lead_directory%'
-      $smtpTransport: '@App\Market\Infrastructure\Mail\SmtpTransport'
+      $emailTransport: '@App\Market\Infrastructure\Mail\EmailTransportInterface'
 
   App\Market\Presentation\Http\MarketController:
     arguments:
