@@ -1,6 +1,14 @@
 document.querySelectorAll('[data-market-family]').forEach((family) => {
   const selects = [...family.querySelectorAll('[data-market-spec-select]')];
-  const configurations = JSON.parse(family.dataset.marketConfigurations || '[]');
+  const scriptEl = family.querySelector('.market-family-data');
+  let configurations = [];
+  try {
+    configurations = scriptEl
+      ? JSON.parse(scriptEl.textContent || '[]')
+      : JSON.parse(family.dataset.marketConfigurations || '[]');
+  } catch (_) {
+    configurations = [];
+  }
   const link = family.querySelector('[data-market-link]');
   const price = family.querySelector('[data-market-price]');
   const note = family.querySelector('[data-market-note]');
@@ -52,8 +60,11 @@ document.querySelectorAll('[data-market-family]').forEach((family) => {
   if (!input || !dropdown) return;
 
   let products = [];
+  const searchScript = document.getElementById('market-search-data');
   try {
-    products = JSON.parse(searchRoot.dataset.products || '[]');
+    products = searchScript
+      ? JSON.parse(searchScript.textContent || '[]')
+      : JSON.parse(searchRoot.dataset.products || '[]');
   } catch (_) {
     products = [];
   }

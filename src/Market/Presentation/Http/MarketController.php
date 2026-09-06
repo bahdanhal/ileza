@@ -46,33 +46,162 @@ final class MarketController extends AbstractController
         name: 'market_home',
         methods: ['GET']
     )]
-    public function home(): Response
+    public function home(?Request $request = null): Response
     {
+        $locale = $request?->getLocale() ?? 'pl';
         $catalogFamilies = $this->catalog->families();
         $this->priceHistory->preload($this->productSlugs($catalogFamilies));
 
-        /** @var list<array{family: ProductFamily, configurations: list<array{product: Product, latest: ?PriceObservation}>}> $families */
-        $families = array_map(function (ProductFamily $family): array {
+        /** @var list<array{
+         *     family: ProductFamily,
+         *     configurations: list<array{product: Product, latest: ?PriceObservation}>,
+         *     initial: array{product: Product, latest: ?PriceObservation},
+         *     spec_fields: list<array{key: string, values: list<string>}>,
+         *     config_json: string
+         * }> $families */
+        $families = array_map(function (ProductFamily $family) use ($locale): array {
             $configurations = array_map(fn (Product $product): array => [
                 'product' => $product,
                 'latest' => $this->priceHistory->latestForProduct($product->slug),
             ], $family->configurations);
             usort($configurations, self::compareConfigurationsByPrice(...));
 
+            $initial = $configurations[0];
+
+            $specKeys = [];
+            foreach ($configurations as $cfg) {
+                foreach (array_keys($cfg['product']->specifications) as $key) {
+                    if (!in_array($key, $specKeys, true)) {
+                        $specKeys[] = $key;
+                    }
+                }
+            }
+
+            $specFields = [];
+            foreach ($specKeys as $key) {
+                $values = [];
+                foreach ($configurations as $cfg) {
+                    $val = $cfg['product']->specifications[$key] ?? null;
+                    if ($val !== null && !in_array((string) $val, $values, true)) {
+                        $values[] = (string) $val;
+                    }
+                }
+                if (count($values) > 1) {
+                    $specFields[] = [
+                        'key' => $key,
+                        'values' => $values,
+                    ];
+                }
+            }
+
+            $configData = [];
+            if (count($configurations) > 1) {
+                foreach ($configurations as $cfg) {
+                    $product = $cfg['product'];
+                    $latest = $cfg['latest'];
+                    $price = $latest && $latest->availability === 'available'
+                        ? self::formatSmartMoney($latest->medianGrosz, $locale)
+                        : $this->translator->trans('market.unavailable_short', locale: $locale);
+                    $note = $latest
+                        ? sprintf(
+                            '%s %s',
+                            $this->translator->trans('market.observed', locale: $locale),
+                            $latest->observedAt->format($locale === 'pl' ? 'd.m.Y' : 'M j, Y')
+                        )
+                        : $this->translator->trans('market.awaiting_note', locale: $locale);
+
+                    $configData[] = [
+                        'url' => $locale === 'en' ? '/prices/' . $product->slug : '/ceny/' . $product->slug,
+                        'price' => $price,
+                        'note' => $note,
+                        'specs' => $product->specifications,
+                    ];
+                }
+            }
+
             return [
                 'family' => $family,
                 'configurations' => $configurations,
+                'initial' => $initial,
+                'spec_fields' => $specFields,
+                'config_json' => $configData !== [] ? (json_encode($configData, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?: '') : '',
             ];
         }, $catalogFamilies);
         usort($families, self::compareFamiliesByPrice(...));
 
         $topDrops = $this->priceHistory->marketMovers(limit: 4, dropsOnly: true);
 
-        return $this->render('market/home.html.twig', [
+        $searchProducts = [];
+        foreach ($families as $item) {
+            $family = $item['family'];
+            foreach ($item['configurations'] as $cfg) {
+                $product = $cfg['product'];
+                $latest = $cfg['latest'];
+                $price = $latest && $latest->availability === 'available'
+                    ? self::formatSmartMoney($latest->medianGrosz, $locale)
+                    : $this->translator->trans('market.unavailable_short', locale: $locale);
+
+                $specTexts = array_values(array_map('strval', $product->specifications));
+                $searchText = strtolower($product->name . ' ' . implode(' ', $specTexts) . ' ' . $product->category . ' ' . $family->name);
+
+                $searchProducts[] = [
+                    'slug' => $product->slug,
+                    'name' => self::localizeLabel($product->name, $locale),
+                    'category' => $product->category,
+                    'category_label' => $this->translator->trans('market.category.' . $product->category, locale: $locale),
+                    'price' => $price,
+                    'url' => $locale === 'en' ? '/prices/' . $product->slug : '/ceny/' . $product->slug,
+                    'search_text' => $searchText,
+                ];
+            }
+        }
+        $searchJson = json_encode($searchProducts, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?: '[]';
+
+        $response = $this->render('market/home.html.twig', [
             'families' => $families,
             'top_drops' => $topDrops,
             'hubs' => $this->catalog->hubs(),
+            'search_json' => $searchJson,
         ]);
+
+        $response->setPublic();
+        $response->setMaxAge(60);
+        $response->setSharedMaxAge(300);
+        $response->headers->addCacheControlDirective('stale-while-revalidate', '600');
+
+        return $response;
+    }
+
+    public static function formatSmartMoney(int $grosz, string $locale): string
+    {
+        $pln = $grosz / 100;
+        $unit = $locale === 'pl' ? 'zł' : 'PLN';
+        if ($pln <= 0) {
+            return '0 ' . $unit;
+        }
+        if ($pln < 100) {
+            $rounded = round($pln / 5) * 5;
+        } elseif ($pln < 2000) {
+            $rounded = round($pln / 10) * 10;
+        } elseif ($pln <= 20000) {
+            $rounded = round($pln / 100) * 100;
+        } else {
+            $rounded = round($pln / 500) * 500;
+        }
+
+        $thousandsSep = $locale === 'pl' ? ' ' : ',';
+        $decPoint = $locale === 'pl' ? ',' : '.';
+
+        return number_format($rounded, 0, $decPoint, $thousandsSep) . ' ' . $unit;
+    }
+
+    public static function localizeLabel(string $label, string $locale): string
+    {
+        if ($locale === 'pl') {
+            return str_replace(['-inch', ' petrol'], ['″', ' benzyna'], $label);
+        }
+
+        return $label;
     }
 
     /**

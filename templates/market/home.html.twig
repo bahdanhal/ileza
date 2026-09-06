@@ -36,26 +36,7 @@
         <h1>{{ 'market.heading_start'|trans }}</h1>
         <p class="lede">{{ 'market.lede'|trans }}</p>
 
-        {% set search_products = [] %}
-        {% for item in families %}
-            {% for config in item.configurations %}
-                {% set spec_text = [] %}
-                {% for k, v in config.product.specifications %}
-                    {% set spec_text = spec_text|merge([v]) %}
-                {% endfor %}
-                {% set search_products = search_products|merge([{
-                    slug: config.product.slug,
-                    name: _self.localized_label(config.product.name, app.request.locale),
-                    category: config.product.category,
-                    category_label: ('market.category.' ~ config.product.category)|trans,
-                    price: config.latest and config.latest.availability == 'available' ? _self.smart_money(config.latest.medianGrosz, app.request.locale) : 'market.unavailable_short'|trans,
-                    url: path('market_product', {_locale: app.request.locale, slug: config.product.slug}),
-                    search_text: (config.product.name ~ ' ' ~ spec_text|join(' ') ~ ' ' ~ config.product.category ~ ' ' ~ item.family.name)|lower
-                }]) %}
-            {% endfor %}
-        {% endfor %}
-
-        <div class="market-hero-search" data-hero-search data-products="{{ search_products|json_encode }}" data-locale="{{ app.request.locale }}">
+        <div class="market-hero-search" data-hero-search data-locale="{{ app.request.locale }}">
             <div class="search-input-wrap">
                 <span class="search-icon" aria-hidden="true">🔍</span>
                 <label for="market-hero-input" class="visually-hidden">{{ 'market.search.label'|trans }}</label>
@@ -88,6 +69,9 @@
                  data-request-prompt="{{ 'market.search.request_prompt'|trans }}"
                  data-request-cta="{{ 'market.search.request_cta'|trans }}">
             </div>
+            {% if search_json is defined and search_json is not empty %}
+                <script id="market-search-data" type="application/json">{{ search_json|raw }}</script>
+            {% endif %}
         </div>
 
         <ul class="market-service-strip" aria-label="IleZa service information">
@@ -144,47 +128,29 @@
 
         <div class="market-products">
             {% for item in families %}
-                {% set initial = item.configurations[0] %}
-                {% set config_data = [] %}
-                {% set spec_keys = [] %}
-                {% for configuration in item.configurations %}
-                    {% set config_data = config_data|merge([{
-                        url: path('market_product', {_locale: app.request.locale, slug: configuration.product.slug}),
-                        price: configuration.latest and configuration.latest.availability == 'available' ? _self.smart_money(configuration.latest.medianGrosz, app.request.locale) : 'market.unavailable_short'|trans,
-                        note: configuration.latest ? ('market.observed'|trans ~ ' ' ~ configuration.latest.observedAt|date(app.request.locale == 'pl' ? 'd.m.Y' : 'M j, Y')) : 'market.awaiting_note'|trans,
-                        specs: configuration.product.specifications
-                    }]) %}
-                    {% for key in configuration.product.specifications|keys %}
-                        {% if key not in spec_keys %}{% set spec_keys = spec_keys|merge([key]) %}{% endif %}
-                    {% endfor %}
-                {% endfor %}
-                <article class="market-product" data-market-family data-market-configurations="{{ config_data|json_encode }}">
+                {% set initial = item.initial %}
+                <article class="market-product" data-market-family>
                     <figure><img src="{{ item.family.image }}" alt="{{ _self.localized_label(item.family.name, app.request.locale) }}" width="640" height="480" loading="lazy"><figcaption><a href="{{ item.family.imageSource }}">{{ item.family.imageCredit }}</a> · <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a></figcaption></figure>
                     <div class="market-product-body">
                         <span class="market-category">{{ ('market.category.' ~ item.family.category)|trans }}</span>
                         <h2>{{ _self.localized_label(item.family.name, app.request.locale) }}</h2>
                         <div class="market-configuration-selects" data-market-selects>
-                            {% for key in spec_keys %}
-                                {% set values = [] %}
-                                {% for configuration in item.configurations %}
-                                    {% if configuration.product.specifications[key] is defined and configuration.product.specifications[key] not in values %}
-                                        {% set values = values|merge([configuration.product.specifications[key]]) %}
-                                    {% endif %}
-                                {% endfor %}
-                                {% if values|length > 1 %}
-                                    <div class="market-configuration-field">
-                                        <label for="configuration-{{ item.family.slug }}-{{ key }}">{{ ('market.spec.' ~ key)|trans }}</label>
-                                        <select id="configuration-{{ item.family.slug }}-{{ key }}" data-market-spec-select="{{ key }}">
-                                            {% for value in values %}<option value="{{ value }}" {{ value == initial.product.specifications[key] ? 'selected' : '' }}>{{ _self.localized_label(value, app.request.locale) }}</option>{% endfor %}
-                                        </select>
-                                    </div>
-                                {% endif %}
+                            {% for field in item.spec_fields %}
+                                <div class="market-configuration-field">
+                                    <label for="configuration-{{ item.family.slug }}-{{ field.key }}">{{ ('market.spec.' ~ field.key)|trans }}</label>
+                                    <select id="configuration-{{ item.family.slug }}-{{ field.key }}" data-market-spec-select="{{ field.key }}">
+                                        {% for value in field.values %}<option value="{{ value }}" {{ value == initial.product.specifications[field.key] ? 'selected' : '' }}>{{ _self.localized_label(value, app.request.locale) }}</option>{% endfor %}
+                                    </select>
+                                </div>
                             {% endfor %}
                         </div>
-                            <strong data-market-price>{{ initial.latest and initial.latest.availability == 'available' ? _self.smart_money(initial.latest.medianGrosz, app.request.locale) : 'market.unavailable_short'|trans }}</strong>
+                        <strong data-market-price>{{ initial.latest and initial.latest.availability == 'available' ? _self.smart_money(initial.latest.medianGrosz, app.request.locale) : 'market.unavailable_short'|trans }}</strong>
                         <small data-market-note>{{ initial.latest ? ('market.observed'|trans ~ ' ' ~ initial.latest.observedAt|date(app.request.locale == 'pl' ? 'd.m.Y' : 'M j, Y')) : 'market.awaiting_note'|trans }}</small>
                         <a class="market-open" data-market-link href="{{ path('market_product', {_locale: app.request.locale, slug: initial.product.slug}) }}">{{ 'market.open_history'|trans }} →</a>
                     </div>
+                    {% if item.config_json is defined and item.config_json is not empty %}
+                        <script type="application/json" class="market-family-data">{{ item.config_json|raw }}</script>
+                    {% endif %}
                 </article>
             {% endfor %}
         </div>
