@@ -28,7 +28,7 @@ body.ileza-site {
 }
 
 .ileza-site .site-header {
-  border-top: 5px solid #173f54;
+  border-top: none;
 }
 
 .ileza-site .topbar {
@@ -44,7 +44,7 @@ body.ileza-site {
   gap: 11px;
   font-size: 18px;
   font-weight: 800;
-  letter-spacing: -.035em;
+  letter-spacing: -0.015em;
 }
 
 .ileza-site .brand-mark {
@@ -130,10 +130,9 @@ body.ileza-site {
 .ileza-site .market-shell > .eyebrow,
 .ileza-site .market-category {
   color: #50636c;
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: .15em;
-  text-transform: uppercase;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: normal;
 }
 
 .ileza-site .market-shell > .eyebrow::before {
@@ -148,7 +147,7 @@ body.ileza-site {
   font-size: clamp(40px, 4.9vw, 62px);
   font-weight: 800;
   line-height: 1.02;
-  letter-spacing: -.055em;
+  letter-spacing: -0.015em;
 }
 
 .ileza-site .market-shell > .lede {
@@ -243,8 +242,7 @@ body.ileza-site {
 
 .ileza-site .market-product label {
   color: #52636b;
-  text-transform: uppercase;
-  letter-spacing: .06em;
+  letter-spacing: normal;
 }
 
 .ileza-site .market-product select,
@@ -308,7 +306,7 @@ body.ileza-site {
 
 .ileza-site .market-request {
   margin-top: 42px;
-  border-top: 5px solid #f3d458;
+  border: 1px solid #ccd3d4;
   background: #fff;
 }
 
@@ -320,7 +318,7 @@ body.ileza-site {
 .ileza-site .deal-checker h2 {
   font-family: "Arial Nova", Arial, Helvetica, sans-serif;
   font-weight: 750;
-  letter-spacing: -.03em;
+  letter-spacing: -0.015em;
 }
 
 .ileza-site .lead-row button,
@@ -333,7 +331,8 @@ body.ileza-site {
 
 .ileza-site .market-method,
 .ileza-site .market-caveat {
-  border-left: 5px solid #f3d458;
+  border: 1px solid #ccd3d4;
+  border-radius: 2px;
   background: #e7ecea;
 }
 

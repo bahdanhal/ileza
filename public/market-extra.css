@@ -29,8 +29,6 @@
     color: var(--muted);
     font-size: 10px;
     font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
     margin: 0;
     line-height: 1;
 }
@@ -95,8 +93,6 @@
     color: var(--muted);
     font-size: 10px;
     font-weight: 800;
-    letter-spacing: .08em;
-    text-transform: uppercase;
 }
 
 .market-configuration-field select {
@@ -700,8 +696,6 @@
     font-size: 12px;
     font-weight: 800;
     color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
     margin-right: 4px;
 }
 
@@ -789,9 +783,7 @@
 .mover-category {
     font-size: 10px;
     font-weight: 800;
-    letter-spacing: 0.08em;
     color: var(--orange);
-    text-transform: uppercase;
 }
 
 .market-mover-card h3 {
@@ -825,7 +817,6 @@
     font-size: 10px;
     color: var(--muted);
     font-weight: 600;
-    text-transform: uppercase;
 }
 
 .mover-price-now strong {
@@ -875,7 +866,7 @@
 .market-facets-heading small { color: var(--muted); }
 .market-facets-heading a { color: var(--orange); font-weight: 800; }
 .market-facet-fields { display: grid; grid-template-columns: repeat(5, minmax(120px, 1fr)) auto; gap: 12px; align-items: end; }
-.market-facet-fields label { display: flex; flex-direction: column; gap: 6px; color: var(--muted); font-size: 11px; font-weight: 900; text-transform: uppercase; }
+.market-facet-fields label { display: flex; flex-direction: column; gap: 6px; color: var(--muted); font-size: 11px; font-weight: 900; }
 .market-facet-fields select { min-width: 0; padding: 11px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--ink); }
 .market-facet-fields button { padding: 12px 17px; border: 0; border-radius: 8px; background: var(--orange); color: #07101e; font-weight: 900; cursor: pointer; }
 .market-empty-results { padding: 38px !important; color: var(--muted); text-align: center; }
@@ -896,8 +887,6 @@
     padding: 10px 12px;
     font-size: 11px;
     font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
     color: var(--muted);
     border-bottom: 2px solid var(--line);
 }

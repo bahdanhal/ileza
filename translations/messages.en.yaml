@@ -31,7 +31,7 @@ base:
 
 error404:
     title: "404 - Price Radar Not Found · IleZa.pl"
-    eyebrow: "404 · OFF RADAR"
+    eyebrow: "404 · Off radar"
     heading: "Item missing from the radar."
     description: "The product, category, or article you were looking for doesn't exist or has moved. Browse our tracked electronics or calculate net income below."
     home_button: "Used Price Radar"
@@ -65,11 +65,11 @@ blog:
     meta:
         title: "Used-tech buying guides · IleZa.pl"
         description: "Practical, editorial buying guides for used Apple hardware, memory, and PCs, connected to live Polish market prices."
-    eyebrow: "BUY BETTER · KEEP HARDWARE LONGER"
+    eyebrow: "Buy better · Keep hardware longer"
     heading: "Practical used-tech buying guides"
     lede: "Clear checklists and value analysis for choosing configurations, inspecting devices, and deciding when an upgrade is worthwhile."
     articles_label: "Buying guides"
-    guide_eyebrow: "ILEZA.PL BUYING GUIDE"
+    guide_eyebrow: "IleZa.pl buying guide"
     reading_time: "%minutes% min read"
     read_article: "Read guide"
     published: "Published"
@@ -82,12 +82,12 @@ market:
     product_meta:
         title: "What is %product% really worth? Fair Price & History"
         description: "Check the editorial fair-price estimate for %product%, its reasonable range, and its price history in Poland."
-    eyebrow: "POLAND · FAIR PRICES · EDITORIAL JUDGMENT"
+    eyebrow: "Poland · Fair prices · Editorial judgment"
     heading_start: "What is it really worth?"
     heading_emphasis: ""
     lede: "IleZa.pl is a Polish second-hand tech and electronics price radar without premiums for novelty, retail margins, or aggressive marketing. Every historical price point reflects a deliberate, manually verified editorial assessment of actual market value."
     home_faq:
-        eyebrow: "FAQ"
+        eyebrow: "Questions & answers"
         title: "Frequently Asked Questions About IleZa.pl"
         q1: "What is the fair price concept on IleZa.pl?"
         a1: "It is an independent editorial assessment of the actual market value of second-hand electronics and hardware, excluding premiums for novelty, retail margins, or aggressive marketing."
@@ -96,10 +96,10 @@ market:
         q3: "Can I check income comparisons or specific product price histories?"
         a3: "Yes, IleZa.pl provides a comprehensive Polish employment income calculator alongside interactive historical fair-price charts for laptops, MacBooks, smartphones, RAM, and vehicles."
     category:
-        smartphones: "SMARTPHONES"
-        laptops: "LAPTOPS"
-        ram: "RAM MEMORY"
-        cars: "CARS"
+        smartphones: "Smartphones"
+        laptops: "Laptops"
+        ram: "RAM memory"
+        cars: "Cars"
     hubs:
         all: "All categories"
         laptops: "Laptops"
@@ -121,7 +121,7 @@ market:
         col_trend: "30-Day Change"
         col_link: "History"
         view_history: "Chart →"
-        hero_eyebrow: "EDITORIAL FAIR-PRICE INDEX"
+        hero_eyebrow: "Editorial fair-price index"
         price_band_label: "Category price band"
         price_band_from: "From %min% to %max%"
         models_count: "tracked configurations"
@@ -202,7 +202,7 @@ market:
         verified_editorially: "Every published point is a deliberate IleZa.pl editorial judgment based on product knowledge and available market context."
         verified_badge: "Manual IleZa.pl editorial judgment"
     back: "All fair price histories"
-    product_eyebrow: "EDITORIAL FAIR-PRICE HISTORY"
+    product_eyebrow: "Editorial fair-price history"
     product_lede: "This page answers one question: what is the product itself reasonably worth without a premium for novelty, packaging, marketing, or a large retailer's markup?"
     median: "Fair Price"
     asking_price: "Editorial reference price"
@@ -239,7 +239,7 @@ market:
         engine: "Engine"
         market: "Market"
     request:
-        eyebrow: "MISSING SOMETHING?"
+        eyebrow: "Missing something?"
         title: "Request another product"
         text: "Tell me what you want tracked next. A precise model, version or configuration helps me add a useful comparison series."
         product: "Product and exact version"
@@ -253,7 +253,7 @@ market:
         failed: "The request could not be saved right now."
         too_many: "Too many requests from this connection today. Please try again tomorrow."
     tip:
-        eyebrow: "FOUND IT CHEAPER?"
+        eyebrow: "Found it cheaper?"
         title: "Help improve this price"
         text: "Send a public sales page for this exact product. The IleZa.pl editorial team will consider it as additional context for the next judgment."
         url: "Public sales page URL"
@@ -267,7 +267,7 @@ market:
         too_many: "Too many price tips from this connection today. Please try again tomorrow."
     alert:
         cta_short: "Price drop alert"
-        eyebrow: "EMAIL NOTIFICATIONS"
+        eyebrow: "Email notifications"
         title: "Track price & receive price drop alerts"
         text: "Enter your email address and select a threshold for %product%. We will notify you when the editorial fair-price estimate is lowered."
         email: "Your email address"
@@ -294,7 +294,7 @@ market:
         drop:
             subject: "🔔 Price drop: %product% - new fair price %price% on IleZa.pl"
     mcp:
-        eyebrow: "OPEN MCP SERVER"
+        eyebrow: "Open MCP server"
         title: "Use the price history in your own tools"
         text: "The public, read-only MCP endpoint lets compatible clients list tracked products and retrieve dated price history. No account or API key is required."
     choose_configuration: "Choose a configuration"
@@ -348,7 +348,7 @@ income:
     meta:
         title: "Poland Salary & Contract Calculator 2026 · UoP, UZ, UoD, B2B and Sp. z o.o."
         description: "Compare Polish take-home net income from the same employer budget or gross pay for Umowa o Pracę (UoP), Umowa Zlecenie (UZ), Umowa o Dzieło (UoD), B2B, and Sp. z o.o. board resolution under 2026 tax and ZUS rules."
-    eyebrow: "POLAND · CONTRACTS · 2026"
+    eyebrow: "Poland · Contracts · 2026"
     heading: "UoP / UZ / UoD / B2B / Sp. z o.o. calculator"
     lede: "Compare what reaches you from the same monthly company budget or UoP gross salary. See gross amount, social and health contributions, PIT, business costs, and estimated take-home pay side by side."
     verified: "Rules checked"

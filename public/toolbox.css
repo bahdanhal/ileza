@@ -64,7 +64,7 @@
   box-shadow: none;
   font-size: 12px;
   font-weight: 900;
-  letter-spacing: -.04em;
+  letter-spacing: normal;
 }
 
 .topbar-actions {
@@ -217,8 +217,6 @@
 .tool-category-header h2 {
   margin: 0;
   font-size: 12px;
-  letter-spacing: .12em;
-  text-transform: uppercase;
 }
 
 .tool-category-header::after {

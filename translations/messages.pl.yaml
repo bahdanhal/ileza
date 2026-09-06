@@ -31,7 +31,7 @@ base:
 
 error404:
     title: "404 - Poza radarem cenowym · IleZa.pl"
-    eyebrow: "404 · POZA RADAREM"
+    eyebrow: "404 · Poza radarem"
     heading: "Brak pozycji na radarze."
     description: "Szukany produkt, kategoria lub poradnik nie istnieje bądź zmienił swój adres. Sprawdź monitorowane ceny elektroniki lub oblicz wynagrodzenie."
     home_button: "Radar cen używanych"
@@ -65,11 +65,11 @@ blog:
     meta:
         title: "Poradniki zakupu używanego sprzętu · IleZa.pl"
         description: "Praktyczne poradniki zakupu używanego sprzętu Apple, pamięci RAM i komputerów połączone z aktualnymi cenami w Polsce."
-    eyebrow: "KUPUJ MĄDRZEJ · UŻYWAJ SPRZĘTU DŁUŻEJ"
+    eyebrow: "Kupuj mądrzej · Używaj sprzętu dłużej"
     heading: "Praktyczne poradniki zakupu używanego sprzętu"
     lede: "Konkretne checklisty i analizy opłacalności pomagające wybrać konfigurację, sprawdzić urządzenie i zaplanować modernizację."
     articles_label: "Poradniki zakupowe"
-    guide_eyebrow: "PORADNIK ILEZA.PL"
+    guide_eyebrow: "Poradnik IleZa.pl"
     reading_time: "%minutes% min czytania"
     read_article: "Czytaj poradnik"
     published: "Opublikowano"
@@ -82,12 +82,12 @@ market:
     product_meta:
         title: "Ile naprawdę wart jest %product%? Uczciwa cena i historia"
         description: "Sprawdź redakcyjną ocenę uczciwej ceny %product%, rozsądny przedział i historię zmian w Polsce."
-    eyebrow: "POLSKA · UCZCIWE CENY · OCENA REDAKCYJNA"
+    eyebrow: "Polska · Uczciwe ceny · Ocena redakcyjna"
     heading_start: "Ile to naprawdę jest warte?"
     heading_emphasis: ""
     lede: "IleZa.pl to polski radar cen używanej elektroniki i sprzętu komputerowego bez premii za nowość, marketing czy marżę dużej sieci. Każdy punkt historii cen jest świadomą, ręcznie weryfikowaną oceną redakcyjną realnej wartości rynkowej."
     home_faq:
-        eyebrow: "PYTANIA I ODPOWIEDZI"
+        eyebrow: "Pytania i odpowiedzi"
         title: "Często zadawane pytania o IleZa.pl"
         q1: "Czym jest uczciwa cena (fair price) na IleZa.pl?"
         a1: "To niezależna, redakcyjna ocena realnej wartości rynkowej używanego sprzętu, oczyszczona z premii za nowość, ładne opakowanie, agresywny marketing czy marże dużych sieci handlowych."
@@ -96,10 +96,10 @@ market:
         q3: "Czy mogę sprawdzić kalkulator wynagrodzeń lub historię konkretnego modelu?"
         a3: "Tak, udostępniamy bezpłatny kalkulator porównawczy form zatrudnienia (UoP, B2B, UZ, UoD, Spółka z o.o.) oraz profile cenowe z pełnymi wykresami historii dla laptopów, smartfonów, pamięci RAM i samochodów."
     category:
-        smartphones: "SMARTFONY"
-        laptops: "LAPTOPY"
-        ram: "PAMIĘĆ RAM"
-        cars: "SAMOCHODY"
+        smartphones: "Smartfony"
+        laptops: "Laptopy"
+        ram: "Pamięć RAM"
+        cars: "Samochody"
     hubs:
         all: "Wszystkie kategorie"
         laptops: "Laptopy"
@@ -121,7 +121,7 @@ market:
         col_trend: "Zmiana w 30 dni"
         col_link: "Historia"
         view_history: "Wykres →"
-        hero_eyebrow: "REDAKCYJNY INDEKS UCZCIWYCH CEN"
+        hero_eyebrow: "Redakcyjny indeks uczciwych cen"
         price_band_label: "Przedział cenowy w kategorii"
         price_band_from: "Od %min% do %max%"
         models_count: "obserwowanych konfiguracji"
@@ -202,7 +202,7 @@ market:
         verified_editorially: "Każdy opublikowany punkt jest świadomą oceną redakcji IleZa.pl, opartą na wiedzy o produkcie i dostępnym kontekście rynkowym."
         verified_badge: "Ręczna ocena redakcji IleZa.pl"
     back: "Wszystkie historie cen"
-    product_eyebrow: "REDAKCYJNA HISTORIA UCZCIWEJ CENY"
+    product_eyebrow: "Redakcyjna historia uczciwej ceny"
     product_lede: "Ta strona odpowiada na jedno pytanie: ile sam produkt jest rozsądnie wart bez premii za nowość, opakowanie, marketing lub marżę dużego sprzedawcy."
     median: "Uczciwa cena"
     asking_price: "Redakcyjna cena odniesienia"
@@ -239,7 +239,7 @@ market:
         engine: "Silnik"
         market: "Rynek"
     request:
-        eyebrow: "BRAKUJE PRODUKTU?"
+        eyebrow: "Brakuje produktu?"
         title: "Zaproponuj kolejny produkt"
         text: "Napisz, co warto śledzić. Dokładny model, wersja lub konfiguracja pomogą stworzyć użyteczną serię porównawczą."
         product: "Produkt i dokładna wersja"
@@ -253,7 +253,7 @@ market:
         failed: "Nie udało się teraz zapisać zgłoszenia."
         too_many: "Zbyt wiele zgłoszeń z tego połączenia. Spróbuj ponownie jutro."
     tip:
-        eyebrow: "ZNALAZŁEŚ TANIEJ?"
+        eyebrow: "Znalazłeś taniej?"
         title: "Pomóż poprawić tę cenę"
         text: "Podeślij publiczną stronę sprzedaży dokładnie tego produktu. Redakcja IleZa.pl uwzględni ją jako dodatkowy kontekst przy kolejnej ocenie."
         url: "Link do publicznej strony sprzedaży"
@@ -267,7 +267,7 @@ market:
         too_many: "Zbyt wiele zgłoszeń cenowych z tego połączenia. Spróbuj ponownie jutro."
     alert:
         cta_short: "Powiadom o spadku"
-        eyebrow: "POWIADOMIENIA E-MAIL"
+        eyebrow: "Powiadomienia e-mail"
         title: "Śledź cenę i otrzymaj alert o spadku"
         text: "Wpisz swój e-mail i wybierz próg cenowy dla %product%. Wyślemy powiadomienie, gdy redakcja obniży ocenę uczciwej ceny."
         email: "Twój adres e-mail"
@@ -294,7 +294,7 @@ market:
         drop:
             subject: "🔔 Spadek ceny: %product% - nowa uczciwa cena %price% na IleZa.pl"
     mcp:
-        eyebrow: "OTWARTY SERWER MCP"
+        eyebrow: "Otwarty serwer MCP"
         title: "Użyj historii cen we własnych narzędziach"
         text: "Publiczny serwer MCP tylko do odczytu pozwala zgodnym klientom wyświetlać śledzone produkty i pobierać historię cen z datami. Nie wymaga konta ani klucza API."
     choose_configuration: "Wybierz konfigurację"
@@ -348,7 +348,7 @@ income:
     meta:
         title: "Kalkulator wynagrodzeń 2026 · Porównanie UoP, UZ, UoD, B2B i Sp. z o.o."
         description: "Porównaj zarobki na rękę z tego samego budżetu pracodawcy lub kwoty brutto dla umowy o pracę (UoP), zlecenia (UZ), o dzieło (UoD), B2B oraz powołania w Sp. z o.o. w 2026 roku."
-    eyebrow: "POLSKA · FORMY ZATRUDNIENIA · 2026"
+    eyebrow: "Polska · Formy zatrudnienia · 2026"
     heading: "Kalkulator UoP / UZ / UoD / B2B / Sp. z o.o."
     lede: "Porównaj, ile trafia do Ciebie z tego samego miesięcznego budżetu firmy lub stawki brutto UoP. Zobacz obok siebie kwotę brutto, składki społeczne i zdrowotne, PIT, koszty firmy oraz szacowaną wypłatę."
     verified: "Zasady sprawdzone"
