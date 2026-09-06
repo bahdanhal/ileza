@@ -146,7 +146,7 @@
                     </div>
                     <div class="traffic-chart" role="img" aria-label="Daily page views and unique visitors for the last 30 days">
                         {% for day in traffic.daily %}
-                            <div class="traffic-day" title="{{ day.date }}: {{ day.page_views }} page views, {{ day.unique_visitors }} unique visitors">
+                            <div class="traffic-day" title="{{ day.date }}: {{ day.page_views }} page views, {{ day.unique_visitors }} unique visitors{% if day.top_paths is not empty %} — Top: {{ day.top_paths|keys|first }} ({{ day.top_paths|first }}){% endif %}">
                                 <div class="traffic-bar-wrap">
                                     <i class="traffic-bar" style="height: {{ day.height_percent }}%"></i>
                                     <i class="traffic-bar traffic-bar-visitors" style="height: {{ day.page_views > 0 ? (day.unique_visitors / day.page_views * day.height_percent)|round : 2 }}%"></i>
@@ -183,14 +183,14 @@
                     <article class="analytics-panel">
                         <div class="analytics-panel-head">
                             <h3>Popular pages</h3>
-                            <span>30 days</span>
+                            <span>7d / 30d</span>
                         </div>
                         <div class="ranking-list">
-                            {% for page, count in traffic.last_30_days.top_paths|slice(0, 5) %}
+                            {% for page, count in traffic.last_7_days.top_paths|slice(0, 5) %}
                                 <div class="ranking-row">
                                     <span title="{{ page }}">{{ page }}</span>
-                                    <strong>{{ count }}</strong>
-                                    <div class="ranking-track"><i style="width: {{ traffic.last_30_days.page_views > 0 ? (count / traffic.last_30_days.page_views * 100)|round : 0 }}%"></i></div>
+                                    <strong>{{ count }} <small style="font-weight: normal; color: var(--muted); font-size: 11px;">/ {{ traffic.last_30_days.top_paths[page] ?? count }}</small></strong>
+                                    <div class="ranking-track"><i style="width: {{ traffic.last_7_days.page_views > 0 ? (count / traffic.last_7_days.page_views * 100)|round : 0 }}%"></i></div>
                                 </div>
                             {% else %}
                                 <p class="ranking-empty">No page data recorded yet.</p>
@@ -199,6 +199,45 @@
                     </article>
                 </div>
             </div>
+
+            {% if traffic.weekly is defined and traffic.weekly is not empty %}
+                <article class="analytics-panel" style="margin-top: 24px;">
+                    <div class="analytics-panel-head">
+                        <h3>Weekly breakdown</h3>
+                        <span>ISO weeks & top paths</span>
+                    </div>
+                    <div class="table-wrap" style="overflow-x: auto;">
+                        <table class="admin-table" style="font-size: 13px;">
+                            <thead>
+                                <tr>
+                                    <th>Week</th>
+                                    <th>Dates</th>
+                                    <th style="text-align: right;">Page Views</th>
+                                    <th style="text-align: right;">Unique Visitors</th>
+                                    <th>Top Paths</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for w in traffic.weekly %}
+                                    <tr>
+                                        <td><strong>{{ w.week }}</strong></td>
+                                        <td style="color: var(--muted); font-size: 12px;">{{ w.start_date }} – {{ w.end_date }}</td>
+                                        <td style="text-align: right; font-weight: 700;">{{ w.page_views }}</td>
+                                        <td style="text-align: right;">{{ w.unique_visitors }}</td>
+                                        <td style="font-family: monospace; font-size: 12px;">
+                                            {% for path, count in w.top_paths %}
+                                                <span style="display: inline-block; margin-right: 8px;">{{ path }} ({{ count }})</span>
+                                            {% else %}
+                                                <span style="color: var(--muted);">—</span>
+                                            {% endfor %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </article>
+            {% endif %}
         </section>
 
         <div class="admin-cards">
