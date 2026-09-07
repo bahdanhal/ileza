@@ -1,17 +1,20 @@
 mcp:
-  app: 'IleZa.pl Price Radar & Tax MCP'
-  version: '2.0.0'
-  description: 'Manual editorial fair-price histories for products in Poland and a net salary/tax calculator, plus Bearer-protected administration and market statistics.'
-  website_url: 'https://ileza.pl/'
-  instructions: |
-    Public tools provide manual editorial fair-price histories and Polish net salary calculations. Price estimates are subjective editorial judgments, not statistical samples or algorithmic valuations. Administrative tools require an Authorization: Bearer header.
-  client_transports:
-    http: true
-    stdio: true
-  http:
-    path: '/mcp'
-    allowed_hosts: ['ileza.pl', 'www.ileza.pl', 'localhost', '127.0.0.1']
-    session:
-      store: file
-      directory: '%kernel.project_dir%/var/mcp-sessions'
-      ttl: 3600
+  servers:
+    default:
+      name: 'IleZa.pl Price Radar & Tax MCP'
+      version: '2.0.0'
+      description: 'Manual editorial fair-price histories for products in Poland and a net salary/tax calculator, plus Bearer-protected administration and market statistics.'
+      website_url: 'https://ileza.pl/'
+      instructions: |
+        Public tools provide manual editorial fair-price histories and Polish net salary calculations. Price estimates are subjective editorial judgments, not statistical samples or algorithmic valuations. Administrative tools require an Authorization: Bearer header.
+      transports:
+        http: true
+        stdio: true
+      http:
+        path: '/mcp'
+        allowed_hosts: ['ileza.pl', 'www.ileza.pl', 'localhost', '127.0.0.1']
+      session:
+        store: file
+        directory: '%kernel.project_dir%/var/mcp-sessions'
+        ttl: 3600
+      registry: '*'
