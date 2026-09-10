@@ -25,4 +25,16 @@ const uopMode = compare({ inputMode: 'uop_gross', grossUop: 10000 });
 assert.equal(uopMode.employment.cost, 12048);
 assert.equal(uopMode.employment.gross, 10000);
 
+// Bidirectional conversion tests for employer factor 1.2048
+const EMPLOYER_COST_FACTOR = 1.2048;
+const grossFromBudget = Math.round((12000 / EMPLOYER_COST_FACTOR) * 100) / 100;
+assert.equal(grossFromBudget, 9960.16);
+
+const budgetFromGross = Math.round((10000 * EMPLOYER_COST_FACTOR) * 100) / 100;
+assert.equal(budgetFromGross, 12048);
+
+const syncedComparison = compare({ inputMode: 'budget', budget: 12048 });
+assert.equal(syncedComparison.employment.gross, 10000);
+assert.equal(syncedComparison.employment.cost, 12048);
+
 console.log('Income comparison tests passed');

@@ -47,26 +47,122 @@
     badge_label: 'income.verified'|trans,
     badge_value: verified_at|date(app.request.locale == 'pl' ? 'd.m.Y' : 'M j, Y')
   } only %}
-  <div class="income-calculator" data-income-calculator data-locale="{{ app.request.locale }}" data-labels="{{ {employment:'income.types.employment'|trans,mandate:'income.types.mandate'|trans,work:'income.types.work'|trans,b2b:'income.types.b2b'|trans,spolka:'income.types.spolka'|trans,net:'income.result.net'|trans,budget:'income.result.budget'|trans,gross:'income.result.gross'|trans,costs:'income.result.costs'|trans,social:'income.result.social'|trans,health:'income.result.health'|trans,tax:'income.result.tax'|trans,uop_gross:'income.form.uop_gross'|trans,uop_gross_help:'income.form.uop_gross_help'|trans,budget_label:'income.form.budget'|trans,budget_help:'income.form.budget_help'|trans}|json_encode }}">
-    <div class="income-mode-switch" role="radiogroup" aria-label="{{ 'income.form.mode_label'|trans }}">
-      <button type="button" class="mode-btn active" data-mode-btn="budget" aria-pressed="true">{{ 'income.form.mode_budget'|trans }}</button>
-      <button type="button" class="mode-btn" data-mode-btn="uop_gross" aria-pressed="false">{{ 'income.form.mode_uop_gross'|trans }}</button>
-    </div>
-    <div class="income-controls">
-      <div class="field">
-        <label for="income-amount" data-amount-label>{{ 'income.form.budget'|trans }}</label>
-        <div class="money-input">
-          <input id="income-amount" data-control="amount" inputmode="decimal" value="12000">
-          <span>PLN</span>
-        </div>
-        <small data-amount-help>{{ 'income.form.budget_help'|trans }}</small>
+  <div class="income-calculator" data-income-calculator data-locale="{{ app.request.locale }}" data-labels="{{ {employment:'income.types.employment'|trans,mandate:'income.types.mandate'|trans,work:'income.types.work'|trans,b2b:'income.types.b2b'|trans,spolka:'income.types.spolka'|trans,net:'income.result.net'|trans,budget:'income.result.budget'|trans,gross:'income.result.gross'|trans,costs:'income.result.costs'|trans,social:'income.result.social'|trans,health:'income.result.health'|trans,tax:'income.result.tax'|trans}|json_encode }}">
+    <div class="income-base-card">
+      <div class="income-base-header">
+        <h2>{{ 'income.form.base_title'|trans }}</h2>
+        <p>{{ 'income.form.base_subtitle'|trans }}</p>
       </div>
-      <label class="check-field"><input type="checkbox" data-control="student"> <span>{{ 'income.form.student'|trans }}</span></label>
-      <div class="field"><label for="income-costs">{{ 'income.form.costs'|trans }}</label><div class="money-input"><input id="income-costs" data-control="costs" inputmode="decimal" value="500"><span>PLN</span></div></div>
-      <div class="field"><label for="income-llc-costs">{{ 'income.form.llc_costs'|trans }}</label><div class="money-input"><input id="income-llc-costs" data-control="llcCosts" inputmode="decimal" value="600"><span>PLN</span></div></div>
-      <div class="field"><label for="income-taxation">{{ 'income.form.taxation'|trans }}</label><select id="income-taxation" data-control="taxation"><option value="linear">{{ 'income.taxation.linear'|trans }}</option><option value="scale">{{ 'income.taxation.scale'|trans }}</option><option value="lump">{{ 'income.taxation.lump'|trans }}</option></select></div>
-      <div class="field"><label for="income-zus">{{ 'income.form.zus'|trans }}</label><select id="income-zus" data-control="zus"><option value="standard">{{ 'income.zus.standard'|trans }}</option><option value="preferential">{{ 'income.zus.preferential'|trans }}</option><option value="start">{{ 'income.zus.start'|trans }}</option></select></div>
-      <div class="field" hidden><label for="income-lump-rate">{{ 'income.form.lump_rate'|trans }}</label><div class="percent-input"><input id="income-lump-rate" data-control="lumpRate" type="number" min="0" max="17" step="0.5" value="12"><span>%</span></div></div>
+      <div class="income-base-grid">
+        <div class="field income-field-highlight">
+          <label for="income-budget">{{ 'income.form.budget'|trans }}</label>
+          <div class="money-input">
+            <input id="income-budget" data-control="budget" inputmode="decimal" value="12000" autocomplete="off">
+            <span>PLN</span>
+          </div>
+          <small>{{ 'income.form.budget_help'|trans }}</small>
+        </div>
+        <div class="income-sync-indicator" aria-hidden="true" title="{{ 'income.form.sync_tooltip'|trans }}">
+          <span>⇄</span>
+        </div>
+        <div class="field income-field-highlight">
+          <label for="income-uop-gross">{{ 'income.form.uop_gross'|trans }}</label>
+          <div class="money-input">
+            <input id="income-uop-gross" data-control="uopGross" inputmode="decimal" value="9960.16" autocomplete="off">
+            <span>PLN</span>
+          </div>
+          <small>{{ 'income.form.uop_gross_help'|trans }}</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="income-options-section">
+      <div class="income-options-header">
+        <h3>{{ 'income.form.options_title'|trans }}</h3>
+        <p>{{ 'income.form.options_help'|trans }}</p>
+      </div>
+
+      <div class="income-contracts-grid">
+        <fieldset class="income-contract-card contract-b2b">
+          <legend class="contract-legend">
+            <span class="contract-badge b2b-badge">{{ 'income.form.b2b_badge'|trans }}</span>
+            <span class="contract-title">{{ 'income.form.b2b_title'|trans }}</span>
+          </legend>
+          <p class="contract-help">{{ 'income.form.b2b_help'|trans }}</p>
+          <div class="contract-fields">
+            <div class="field">
+              <label for="income-taxation">{{ 'income.form.taxation'|trans }}</label>
+              <select id="income-taxation" data-control="taxation">
+                <option value="linear">{{ 'income.taxation.linear'|trans }}</option>
+                <option value="scale">{{ 'income.taxation.scale'|trans }}</option>
+                <option value="lump">{{ 'income.taxation.lump'|trans }}</option>
+              </select>
+            </div>
+            <div class="field" hidden data-field="lumpRate">
+              <label for="income-lump-rate">{{ 'income.form.lump_rate'|trans }}</label>
+              <div class="percent-input">
+                <input id="income-lump-rate" data-control="lumpRate" type="number" min="0" max="17" step="0.5" value="12">
+                <span>%</span>
+              </div>
+            </div>
+            <div class="field">
+              <label for="income-zus">{{ 'income.form.zus'|trans }}</label>
+              <select id="income-zus" data-control="zus">
+                <option value="standard">{{ 'income.zus.standard'|trans }}</option>
+                <option value="preferential">{{ 'income.zus.preferential'|trans }}</option>
+                <option value="start">{{ 'income.zus.start'|trans }}</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="income-costs">{{ 'income.form.costs'|trans }}</label>
+              <div class="money-input">
+                <input id="income-costs" data-control="costs" inputmode="decimal" value="500">
+                <span>PLN</span>
+              </div>
+              <small>{{ 'income.form.costs_help'|trans }}</small>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset class="income-contract-card contract-uz">
+          <legend class="contract-legend">
+            <span class="contract-badge uz-badge">{{ 'income.form.uz_badge'|trans }}</span>
+            <span class="contract-title">{{ 'income.form.uz_title'|trans }}</span>
+          </legend>
+          <p class="contract-help">{{ 'income.form.uz_help'|trans }}</p>
+          <div class="contract-fields">
+            <label class="check-field">
+              <input type="checkbox" id="income-student" data-control="student">
+              <span>{{ 'income.form.student'|trans }}</span>
+            </label>
+            <small class="field-note">{{ 'income.form.student_help'|trans }}</small>
+          </div>
+        </fieldset>
+
+        <fieldset class="income-contract-card contract-spolka">
+          <legend class="contract-legend">
+            <span class="contract-badge spolka-badge">{{ 'income.form.llc_badge'|trans }}</span>
+            <span class="contract-title">{{ 'income.form.llc_title'|trans }}</span>
+          </legend>
+          <p class="contract-help">{{ 'income.form.llc_help'|trans }}</p>
+          <div class="contract-fields">
+            <div class="field">
+              <label for="income-llc-costs">{{ 'income.form.llc_costs'|trans }}</label>
+              <div class="money-input">
+                <input id="income-llc-costs" data-control="llcCosts" inputmode="decimal" value="600">
+                <span>PLN</span>
+              </div>
+              <small>{{ 'income.form.llc_costs_help'|trans }}</small>
+            </div>
+            <small class="field-note">{{ 'income.form.llc_note'|trans }}</small>
+          </div>
+        </fieldset>
+      </div>
+
+      <div class="income-statutory-notice">
+        <span class="notice-icon" aria-hidden="true">ℹ</span>
+        <span>{{ 'income.form.statutory_notice'|trans }}</span>
+      </div>
     </div>
     <div class="income-results" data-results aria-live="polite"></div>
   </div>
