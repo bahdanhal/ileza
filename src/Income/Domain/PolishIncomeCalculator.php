@@ -18,7 +18,8 @@ final readonly class PolishIncomeCalculator
      *     lumpRate?: float|int,
      *     costs?: float|int,
      *     llcCosts?: float|int,
-     *     studentUnder26?: bool
+     *     studentUnder26?: bool,
+     *     uopUnder26?: bool
      * } $options
      * @return array<string, array{cost: float, gross: float, social: float, health: float, tax: float, businessCosts: float, net: float}>
      */
@@ -32,9 +33,10 @@ final readonly class PolishIncomeCalculator
         }
 
         $studentUnder26 = (bool) ($options['studentUnder26'] ?? false);
+        $uopUnder26 = (bool) ($options['uopUnder26'] ?? false);
 
         return [
-            'employment' => $this->employment($budget),
+            'employment' => $this->employment($budget, $uopUnder26),
             'mandate' => $this->mandate($budget, $studentUnder26),
             'work' => $this->workContract($budget),
             'b2b' => $this->b2b($budget, $options),
@@ -60,13 +62,25 @@ final readonly class PolishIncomeCalculator
     /**
      * @return array{cost: float, gross: float, social: float, health: float, tax: float, businessCosts: float, net: float}
      */
-    private function employment(float $budget): array
+    private function employment(float $budget, bool $uopUnder26 = false): array
     {
         $gross = $this->round($budget / 1.2048);
         $social = $this->round($gross * 0.1371);
         $healthBase = max(0.0, $gross - $social);
         $health = $this->round($healthBase * 0.09);
-        $tax = $this->monthlyProgressiveTax($gross - $social - 250);
+
+        if ($uopUnder26) {
+            $annualGross = $gross * 12;
+            $taxableAnnual = max(0.0, $annualGross - 85528);
+            if ($taxableAnnual > 0) {
+                $taxableBase = max(0.0, ($taxableAnnual * (1 - 0.1371)) - (250 * 12));
+                $tax = $this->round($this->progressiveAnnualTax($taxableBase) / 12);
+            } else {
+                $tax = 0.0;
+            }
+        } else {
+            $tax = $this->monthlyProgressiveTax($gross - $social - 250);
+        }
 
         return $this->result($budget, $gross, $social, $health, $tax, 0.0);
     }

@@ -65,4 +65,28 @@ final class PolishIncomeCalculatorTest extends TestCase
         // Over 120,000 PLN in 32% bracket
         self::assertSame(17200.0, $calculator->progressiveAnnualTax(140000));
     }
+
+    public function testUopUnder26YouthRelief(): void
+    {
+        $calculator = new PolishIncomeCalculator();
+        $comparison = $calculator->compare([
+            'inputMode' => 'uop_gross',
+            'grossUop' => 7000.0,
+            'uopUnder26' => true,
+        ]);
+
+        self::assertSame(0.0, $comparison['employment']['tax']);
+        self::assertSame(959.7, $comparison['employment']['social']);
+        self::assertSame(543.63, $comparison['employment']['health']);
+        self::assertSame(5496.67, $comparison['employment']['net']);
+
+        $regular = $calculator->compare([
+            'inputMode' => 'uop_gross',
+            'grossUop' => 7000.0,
+            'uopUnder26' => false,
+        ]);
+
+        self::assertGreaterThan(0.0, $regular['employment']['tax']);
+        self::assertGreaterThan($regular['employment']['net'], $comparison['employment']['net']);
+    }
 }

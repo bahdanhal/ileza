@@ -83,6 +83,36 @@
       </div>
 
       <div class="income-contracts-grid">
+        <fieldset class="income-contract-card contract-uop">
+          <legend class="contract-legend">
+            <span class="contract-badge uop-badge">{{ 'income.form.uop_badge'|trans }}</span>
+            <span class="contract-title">{{ 'income.form.uop_title'|trans }}</span>
+          </legend>
+          <p class="contract-help">{{ 'income.form.uop_help'|trans }}</p>
+          <div class="contract-fields">
+            <label class="check-field">
+              <input type="checkbox" id="income-uop-under26" data-control="uopUnder26">
+              <span>{{ 'income.form.uop_under26'|trans }}</span>
+            </label>
+            <small class="field-note">{{ 'income.form.uop_under26_help'|trans }}</small>
+          </div>
+        </fieldset>
+
+        <fieldset class="income-contract-card contract-uz">
+          <legend class="contract-legend">
+            <span class="contract-badge uz-badge">{{ 'income.form.uz_badge'|trans }}</span>
+            <span class="contract-title">{{ 'income.form.uz_title'|trans }}</span>
+          </legend>
+          <p class="contract-help">{{ 'income.form.uz_help'|trans }}</p>
+          <div class="contract-fields">
+            <label class="check-field">
+              <input type="checkbox" id="income-student" data-control="student">
+              <span>{{ 'income.form.student'|trans }}</span>
+            </label>
+            <small class="field-note">{{ 'income.form.student_help'|trans }}</small>
+          </div>
+        </fieldset>
+
         <fieldset class="income-contract-card contract-b2b">
           <legend class="contract-legend">
             <span class="contract-badge b2b-badge">{{ 'income.form.b2b_badge'|trans }}</span>
@@ -121,21 +151,6 @@
               </div>
               <small>{{ 'income.form.costs_help'|trans }}</small>
             </div>
-          </div>
-        </fieldset>
-
-        <fieldset class="income-contract-card contract-uz">
-          <legend class="contract-legend">
-            <span class="contract-badge uz-badge">{{ 'income.form.uz_badge'|trans }}</span>
-            <span class="contract-title">{{ 'income.form.uz_title'|trans }}</span>
-          </legend>
-          <p class="contract-help">{{ 'income.form.uz_help'|trans }}</p>
-          <div class="contract-fields">
-            <label class="check-field">
-              <input type="checkbox" id="income-student" data-control="student">
-              <span>{{ 'income.form.student'|trans }}</span>
-            </label>
-            <small class="field-note">{{ 'income.form.student_help'|trans }}</small>
           </div>
         </fieldset>
 

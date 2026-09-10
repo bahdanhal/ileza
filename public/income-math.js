@@ -9,11 +9,23 @@
   const employeeSocial = gross => round(gross * 0.1371);
   const health = base => round(Math.max(0, base) * 0.09);
 
-  function employment(budget) {
+  function employment(budget, uopUnder26) {
     const gross = round(budget / 1.2048);
     const social = employeeSocial(gross);
     const healthContribution = health(gross - social);
-    const tax = monthlyProgressiveTax(gross - social - 250);
+    let tax;
+    if (uopUnder26) {
+      const annualGross = gross * 12;
+      const taxableAnnual = Math.max(0, annualGross - 85528);
+      if (taxableAnnual > 0) {
+        const taxableBase = Math.max(0, (taxableAnnual * (1 - 0.1371)) - (250 * 12));
+        tax = round(progressiveAnnualTax(taxableBase) / 12);
+      } else {
+        tax = 0;
+      }
+    } else {
+      tax = monthlyProgressiveTax(gross - social - 250);
+    }
     return result(budget, gross, social, healthContribution, tax, 0);
   }
 
@@ -87,7 +99,7 @@
       budget = Math.max(0, Number(options.budget) || 0);
     }
     return {
-      employment: employment(budget),
+      employment: employment(budget, !!options.uopUnder26),
       mandate: mandate(budget, !!options.studentUnder26),
       work: workContract(budget),
       b2b: b2b(budget, options),

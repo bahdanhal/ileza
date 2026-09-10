@@ -38,6 +38,8 @@ final readonly class IncomeCalculatorTools
         string $inputMode = 'budget',
         #[Schema(description: 'Gross employment contract salary if inputMode is uop_gross.')]
         ?float $grossUop = null,
+        #[Schema(description: 'Whether the employment (UoP) employee is under 26 (exempt from PIT up to limit).')]
+        bool $uopUnder26 = false,
     ): string {
         $result = $this->calculator->compare([
             'budget' => $budget,
@@ -49,6 +51,7 @@ final readonly class IncomeCalculatorTools
             'costs' => $costs,
             'llcCosts' => $llcCosts,
             'studentUnder26' => $studentUnder26,
+            'uopUnder26' => $uopUnder26,
         ]);
 
         return $this->json([

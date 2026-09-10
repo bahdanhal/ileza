@@ -69,6 +69,7 @@
       inputMode: activeSource === 'uopGross' ? 'uop_gross' : 'budget',
       budget: activeSource === 'budget' ? numVal : undefined,
       grossUop: activeSource === 'uopGross' ? numVal : undefined,
+      uopUnder26: controls.uopUnder26 ? controls.uopUnder26.checked : false,
       studentUnder26: controls.student ? controls.student.checked : false,
       costs: controls.costs ? controls.costs.value.replace(',', '.') : 0,
       llcCosts: controls.llcCosts ? controls.llcCosts.value.replace(',', '.') : 600,

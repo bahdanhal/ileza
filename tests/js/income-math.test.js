@@ -37,4 +37,14 @@ const syncedComparison = compare({ inputMode: 'budget', budget: 12048 });
 assert.equal(syncedComparison.employment.gross, 10000);
 assert.equal(syncedComparison.employment.cost, 12048);
 
+// UoP under 26 test (Ulga dla młodych / zero-rate PIT)
+const uopUnder26Standard = compare({ inputMode: 'uop_gross', grossUop: 7000, uopUnder26: true });
+assert.equal(uopUnder26Standard.employment.tax, 0);
+assert.equal(uopUnder26Standard.employment.social, 959.7);
+assert.equal(uopUnder26Standard.employment.health, 543.63);
+assert.equal(uopUnder26Standard.employment.net, Math.round((7000 - 959.7 - 543.63) * 100) / 100);
+
+const uopRegular = compare({ inputMode: 'uop_gross', grossUop: 7000, uopUnder26: false });
+assert.ok(uopUnder26Standard.employment.net > uopRegular.employment.net);
+
 console.log('Income comparison tests passed');
