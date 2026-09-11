@@ -3,6 +3,7 @@ parameters:
   env(MARKET_DATA_DIRECTORY): '/app/var/market-data'
   env(ANALYTICS_DATA_DIRECTORY): '/app/var/analytics-data'
   env(ANALYTICS_RETENTION_DAYS): '90'
+  env(ANALYTICS_BEACON_MODE): 'true'
   env(MARKET_ADMIN_TOKEN): ''
   env(SMTP_HOST): ''
   env(SMTP_PORT): '587'
@@ -18,6 +19,7 @@ parameters:
   market.data_directory: '%env(MARKET_DATA_DIRECTORY)%'
   analytics.data_directory: '%env(ANALYTICS_DATA_DIRECTORY)%'
   analytics.retention_days: '%env(int:ANALYTICS_RETENTION_DAYS)%'
+  analytics.beacon_mode: '%env(bool:ANALYTICS_BEACON_MODE)%'
   scw.secret_key: '%env(SCW_SECRET_KEY)%'
   scw.project_id: '%env(SCW_DEFAULT_PROJECT_ID)%'
   scw.tem_region: '%env(SCW_TEM_REGION)%'
@@ -80,6 +82,11 @@ services:
       $retentionDays: '%analytics.retention_days%'
 
   App\Analytics\Infrastructure\PageViewSubscriber:
+    arguments:
+      $secret: '%env(APP_SECRET)%'
+      $beaconMode: '%analytics.beacon_mode%'
+
+  App\Analytics\Presentation\Http\BeaconController:
     arguments:
       $secret: '%env(APP_SECRET)%'
 

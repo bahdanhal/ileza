@@ -67,5 +67,13 @@
   <main>{% block body %}{% endblock %}</main>
   <footer>{{ 'base.footer'|trans }} · <a class="footer-contact" href="mailto:bahdan.hal@hotmail.com">{{ 'base.contact'|trans }}</a> · <a class="footer-contact" href="https://stackhal.com/">StackHal</a><br><span class="copyright">© {{ "now"|date("Y") }} <a class="copyright-link" href="https://bahdanhal.pl/">Bahdan Hal</a></span></footer>
   {% block scripts %}{% endblock %}
+  <script>
+    (function(){
+      if(location.pathname.startsWith('/admin')||navigator.doNotTrack==='1'||window.doNotTrack==='1'||navigator.globalPrivacyControl)return;
+      var d=JSON.stringify({p:location.pathname,r:document.referrer||null});
+      if(navigator.sendBeacon){navigator.sendBeacon('/api/pa/hit',new Blob([d],{type:'application/json'}));}
+      else{fetch('/api/pa/hit',{method:'POST',body:d,headers:{'Content-Type':'application/json'},keepalive:true});}
+    })();
+  </script>
 </body>
 </html>
