@@ -23,7 +23,10 @@ final readonly class PriceObservation
             $availability = 'available';
         }
         $this->availability = $availability;
-        if ($medianGrosz <= 0 || $lowGrosz <= 0 || $highGrosz < $medianGrosz || $medianGrosz < $lowGrosz) {
+        if (
+            $availability === 'available'
+            && ($medianGrosz <= 0 || $lowGrosz <= 0 || $highGrosz < $medianGrosz || $medianGrosz < $lowGrosz)
+        ) {
             throw new \InvalidArgumentException('Observed prices are inconsistent.');
         }
         if (!in_array($availability, ['available', 'unavailable'], true)) {

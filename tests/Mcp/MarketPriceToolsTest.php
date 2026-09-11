@@ -186,6 +186,46 @@ final class MarketPriceToolsTest extends TestCase
         self::assertEquals(950, $data['observation']['fair_price_pln']);
     }
 
+    public function testAdminCanMarkProductUnavailableWithoutPrice(): void
+    {
+        $catalog = new ProductCatalog();
+        $repository = $this->createMock(PriceObservationRepository::class);
+        $repository->expects(self::once())
+            ->method('save')
+            ->with(self::callback(static function (PriceObservation $observation): bool {
+                return $observation->productSlug === 'iphone-13-128gb'
+                    && $observation->availability === 'unavailable'
+                    && $observation->medianGrosz === 0
+                    && $observation->lowGrosz === 0
+                    && $observation->highGrosz === 0;
+            }));
+
+        $requestStack = new RequestStack();
+        $request = new Request();
+        $request->headers->set('Authorization', 'Bearer test-token-123');
+        $requestStack->push($request);
+        $tools = new MarketPriceTools(
+            $catalog,
+            new GetProductPriceHistory($catalog, $repository),
+            new RecordPriceObservation($catalog, $repository),
+            new AdminAccess($requestStack, 'test-token-123'),
+        );
+
+        $json = $tools->updateObservation(
+            slug: 'iphone-13-128gb',
+            availability: 'unavailable',
+            observed_at: '2026-09-11',
+            summary: 'No exact usable listing found on OLX or Allegro.',
+        );
+        $data = json_decode($json, true, flags: JSON_THROW_ON_ERROR);
+
+        self::assertSame('success', $data['status']);
+        self::assertSame('unavailable', $data['observation']['availability']);
+        self::assertNull($data['observation']['fair_price_pln']);
+        self::assertNull($data['observation']['reasonable_low_pln']);
+        self::assertNull($data['observation']['reasonable_high_pln']);
+    }
+
     public function testGetProductReturnsProductData(): void
     {
         $catalog = new ProductCatalog();

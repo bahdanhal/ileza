@@ -102,9 +102,9 @@ final readonly class MarketPriceTools
             'currency' => 'PLN',
             'observations' => array_map(static fn ($item) => [
                 'observed_at' => $item->observedAt->format('Y-m-d'),
-                'fair_price_pln' => $item->medianGrosz / 100,
-                'reasonable_low_pln' => $item->lowGrosz / 100,
-                'reasonable_high_pln' => $item->highGrosz / 100,
+                'fair_price_pln' => $item->availability === 'available' ? $item->medianGrosz / 100 : null,
+                'reasonable_low_pln' => $item->availability === 'available' ? $item->lowGrosz / 100 : null,
+                'reasonable_high_pln' => $item->availability === 'available' ? $item->highGrosz / 100 : null,
                 'availability' => $item->availability,
             ], $this->priceHistory->forProduct($slug)),
             // phpcs:ignore Generic.Files.LineLength
@@ -120,7 +120,7 @@ final readonly class MarketPriceTools
     )]
     public function updateObservation(
         #[Schema(description: 'Product slug to update (must exist in catalog).')] string $slug,
-        #[Schema(description: 'Current cheapest valid usable listing price in PLN.')] float $fair_price_pln,
+        #[Schema(description: 'Current cheapest valid usable listing price in PLN. Omit when unavailable.')] ?float $fair_price_pln = null,
         #[Schema(description: 'Optional cheap-market reference lower bound in PLN, based on the ten cheapest valid listings.')] ?float $low_pln = null,
         #[Schema(description: 'Optional cheap-market reference upper bound in PLN, based on the ten cheapest valid listings.')] ?float $high_pln = null,
         #[Schema(description: 'Whether an exact usable listing is currently available (available or unavailable).')] ?string $availability = null,
@@ -136,27 +136,37 @@ final readonly class MarketPriceTools
             return $this->json(['error' => 'Unknown product slug.', 'suggestion' => 'Call list_polish_fair_price_products first.']);
         }
 
-        $medianGrosz = (int) round($fair_price_pln * 100);
-        $lowGrosz = $low_pln !== null ? (int) round($low_pln * 100) : (int) round($medianGrosz * 0.88);
-        if ($medianGrosz <= 0 || $lowGrosz <= 0 || $lowGrosz > $medianGrosz) {
-            return $this->json(['error' => 'Inconsistent prices. Ensure positive prices, low <= median, and high >= low.']);
-        }
-
-        $highGrosz = $high_pln !== null
-            ? min((int) round($high_pln * 100), $medianGrosz)
-            : $medianGrosz;
-
-        if ($lowGrosz >= $highGrosz) {
-            if ($lowGrosz > $highGrosz) {
-                return $this->json(['error' => 'Inconsistent prices. Ensure positive prices, low <= median, and high >= low.']);
-            }
-
-            $highGrosz = max($highGrosz, (int) round($lowGrosz * 1.12));
-        }
-
         $availabilityStatus = $availability ?? 'available';
         if (!in_array($availabilityStatus, ['available', 'unavailable'], true)) {
             return $this->json(['error' => 'Availability must be one of: available, unavailable.']);
+        }
+
+        if ($availabilityStatus === 'unavailable') {
+            $medianGrosz = 0;
+            $lowGrosz = 0;
+            $highGrosz = 0;
+        } else {
+            if ($fair_price_pln === null) {
+                return $this->json(['error' => 'Fair price is required when availability is available.']);
+            }
+
+            $medianGrosz = (int) round($fair_price_pln * 100);
+            $lowGrosz = $low_pln !== null ? (int) round($low_pln * 100) : (int) round($medianGrosz * 0.88);
+            if ($medianGrosz <= 0 || $lowGrosz <= 0 || $lowGrosz > $medianGrosz) {
+                return $this->json(['error' => 'Inconsistent prices. Ensure positive prices, low <= median, and high >= low.']);
+            }
+
+            $highGrosz = $high_pln !== null
+                ? min((int) round($high_pln * 100), $medianGrosz)
+                : $medianGrosz;
+
+            if ($lowGrosz >= $highGrosz) {
+                if ($lowGrosz > $highGrosz) {
+                    return $this->json(['error' => 'Inconsistent prices. Ensure positive prices, low <= median, and high >= low.']);
+                }
+
+                $highGrosz = max($highGrosz, (int) round($lowGrosz * 1.12));
+            }
         }
 
         try {
@@ -191,9 +201,9 @@ final readonly class MarketPriceTools
             ],
             'observation' => [
                 'observed_at' => $observedDate->format('Y-m-d H:i:sP'),
-                'fair_price_pln' => $medianGrosz / 100,
-                'reasonable_low_pln' => $lowGrosz / 100,
-                'reasonable_high_pln' => $highGrosz / 100,
+                'fair_price_pln' => $availabilityStatus === 'available' ? $medianGrosz / 100 : null,
+                'reasonable_low_pln' => $availabilityStatus === 'available' ? $lowGrosz / 100 : null,
+                'reasonable_high_pln' => $availabilityStatus === 'available' ? $highGrosz / 100 : null,
                 'availability' => $availabilityStatus,
                 'summary' => $note,
             ],

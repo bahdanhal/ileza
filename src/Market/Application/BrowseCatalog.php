@@ -155,7 +155,7 @@ final class BrowseCatalog
 
     private function matchesPrice(?PriceObservation $latest, string $price): bool
     {
-        if ($latest === null) {
+        if ($latest === null || $latest->availability !== 'available') {
             return false;
         }
         $pln = $latest->medianGrosz / 100;

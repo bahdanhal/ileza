@@ -31,6 +31,23 @@ final class PriceObservationTest extends TestCase
         );
     }
 
+    public function testUnavailableObservationMayHaveNoPrice(): void
+    {
+        $observation = new PriceObservation(
+            'iphone-14-128gb',
+            new \DateTimeImmutable('2026-09-11'),
+            0,
+            0,
+            0,
+            'unavailable',
+            'No exact usable listing found.',
+            PriceObservation::METHODOLOGY_MANUAL,
+        );
+
+        self::assertSame('unavailable', $observation->availability);
+        self::assertSame(0, $observation->medianGrosz);
+    }
+
     public function testLegacyResearchProseIsDiscardedOnRead(): void
     {
         $data = $this->observation()->toArray();

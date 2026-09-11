@@ -30,22 +30,28 @@ final readonly class RecordPriceObservation
             throw new \InvalidArgumentException(sprintf('Unknown product slug: %s', $slug));
         }
 
-        if ($medianGrosz <= 0 || $lowGrosz <= 0 || $highGrosz <= 0 || $lowGrosz > $medianGrosz) {
-            throw new \InvalidArgumentException('Inconsistent prices. Ensure positive prices, low <= median, and high >= low.');
-        }
-
-        $highGrosz = min($highGrosz, $medianGrosz);
-
-        if ($lowGrosz >= $highGrosz) {
-            if ($lowGrosz > $highGrosz) {
+        if ($availability === 'unavailable') {
+            $medianGrosz = 0;
+            $lowGrosz = 0;
+            $highGrosz = 0;
+        } else {
+            if ($medianGrosz <= 0 || $lowGrosz <= 0 || $highGrosz <= 0 || $lowGrosz > $medianGrosz) {
                 throw new \InvalidArgumentException('Inconsistent prices. Ensure positive prices, low <= median, and high >= low.');
             }
 
-            $highGrosz = max($highGrosz, (int) round($lowGrosz * 1.12));
-        }
+            $highGrosz = min($highGrosz, $medianGrosz);
 
-        if ($medianGrosz < $lowGrosz) {
-            throw new \InvalidArgumentException('Inconsistent prices. Ensure low <= high <= median and median > 0.');
+            if ($lowGrosz >= $highGrosz) {
+                if ($lowGrosz > $highGrosz) {
+                    throw new \InvalidArgumentException('Inconsistent prices. Ensure positive prices, low <= median, and high >= low.');
+                }
+
+                $highGrosz = max($highGrosz, (int) round($lowGrosz * 1.12));
+            }
+
+            if ($medianGrosz < $lowGrosz) {
+                throw new \InvalidArgumentException('Inconsistent prices. Ensure low <= high <= median and median > 0.');
+            }
         }
 
         $observation = new PriceObservation(
@@ -61,7 +67,7 @@ final readonly class RecordPriceObservation
 
         $this->observations->save($observation);
 
-        if ($this->checkPriceAlerts !== null) {
+        if ($availability === 'available' && $this->checkPriceAlerts !== null) {
             try {
                 $this->checkPriceAlerts->execute($slug);
             } catch (\Throwable) {
