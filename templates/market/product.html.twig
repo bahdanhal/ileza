@@ -112,16 +112,16 @@
                 <section class="market-empty"><h2>{{ 'market.unavailable.title'|trans }}</h2><p>{{ 'market.unavailable.text'|trans }}</p><strong>{{ 'market.unavailable.label'|trans }}</strong><small>{{ latest.observedAt|date(app.request.locale == 'pl' ? 'd.m.Y' : 'M j, Y') }}</small></section>
             {% else %}
             {% set previous = history|length > 1 ? history[1] : null %}
-            {% set diff = previous ? (latest.medianGrosz - previous.medianGrosz) : 0 %}
-            {% set diff_pct = previous ? ((diff / previous.medianGrosz) * 100)|round(1) : 0 %}
-            {% set month_diff = one_month_ago ? (latest.medianGrosz - one_month_ago.medianGrosz) : null %}
-            {% set month_pct = one_month_ago ? ((month_diff / one_month_ago.medianGrosz) * 100)|round(1) : null %}
+            {% set diff = (previous and previous.medianGrosz > 0) ? (latest.medianGrosz - previous.medianGrosz) : 0 %}
+            {% set diff_pct = (previous and previous.medianGrosz > 0) ? ((diff / previous.medianGrosz) * 100)|round(1) : 0 %}
+            {% set month_diff = (one_month_ago and one_month_ago.medianGrosz > 0) ? (latest.medianGrosz - one_month_ago.medianGrosz) : null %}
+            {% set month_pct = (one_month_ago and one_month_ago.medianGrosz > 0) ? ((month_diff / one_month_ago.medianGrosz) * 100)|round(1) : null %}
 
             <section class="market-latest">
                 <div>
                     <span>{{ 'market.median'|trans }}</span>
                     <strong>{{ _self.money(latest.medianGrosz, app.request.locale) }}</strong>
-                    {% if previous %}
+                    {% if previous and previous.medianGrosz > 0 %}
                         <span class="trend-badge trend-{{ diff < 0 ? 'down' : (diff > 0 ? 'up' : 'flat') }}">
                             {{ diff < 0 ? '📉' : (diff > 0 ? '📈' : '🟢') }} {{ diff > 0 ? '+' : '' }}{{ (diff / 100)|number_format(0) }} zł ({{ diff > 0 ? '+' : '' }}{{ diff_pct }}%)
                         </span>
@@ -131,7 +131,7 @@
                 </div>
                 <div>
                     <span>{{ 'market.month_change'|trans }}</span>
-                    {% if one_month_ago %}
+                    {% if one_month_ago and one_month_ago.medianGrosz > 0 %}
                         <strong>{{ month_diff < 0 ? '📉 ' : (month_diff > 0 ? '📈 +' : '🟢 ') }}{{ (month_diff / 100)|number_format(0) }} zł</strong>
                         <small>{{ 'market.month_ago'|trans }}: {{ _self.money(one_month_ago.medianGrosz, app.request.locale) }} ({{ month_diff > 0 ? '+' : '' }}{{ month_pct }}%)</small>
                     {% else %}
@@ -150,15 +150,18 @@
             {% if history|length >= 2 %}
                 {% set chart_data = [] %}
                 {% for item in history %}
-                    {% set chart_data = chart_data|merge([{
-                        date: item.observedAt|date('Y-m-d'),
-                        date_short: item.observedAt|date('d.m'),
-                        date_formatted: item.observedAt|date(app.request.locale == 'pl' ? 'd.m.Y' : 'M j, Y'),
-                        median_pln: item.medianGrosz / 100,
-                        low_pln: item.lowGrosz / 100,
-                        high_pln: item.highGrosz / 100
-                    }]) %}
+                    {% if item.availability == 'available' and item.medianGrosz > 0 %}
+                        {% set chart_data = chart_data|merge([{
+                            date: item.observedAt|date('Y-m-d'),
+                            date_short: item.observedAt|date('d.m'),
+                            date_formatted: item.observedAt|date(app.request.locale == 'pl' ? 'd.m.Y' : 'M j, Y'),
+                            median_pln: item.medianGrosz / 100,
+                            low_pln: item.lowGrosz / 100,
+                            high_pln: item.highGrosz / 100
+                        }]) %}
+                    {% endif %}
                 {% endfor %}
+                {% if chart_data|length >= 2 %}
                 <section class="market-chart-card">
                     <div class="chart-header">
                         <h2>{{ 'market.chart.title'|trans }}</h2>
@@ -172,6 +175,7 @@
                          data-label-median="{{ 'market.median'|trans }}"
                          data-label-range="{{ 'market.range'|trans }}"></div>
                 </section>
+                {% endif %}
             {% endif %}
 
             <section class="deal-checker"
@@ -203,7 +207,7 @@
             <section class="section">
                 <div class="section-title"><h2>{{ 'market.history'|trans }}</h2><span>{{ history|length }} {{ 'market.observations'|trans }}</span></div>
                 <div class="table-wrap"><table><thead><tr><th>{{ 'market.date'|trans }}</th><th>{{ 'market.median'|trans }}</th><th>{{ 'market.range'|trans }}</th></tr></thead><tbody>
-                        {% for observation in history %}<tr><td><time datetime="{{ observation.observedAt|date('c') }}">{{ observation.observedAt|date(app.request.locale == 'pl' ? 'd.m.Y' : 'M j, Y') }}</time></td><td><strong>{{ _self.money(observation.medianGrosz, app.request.locale) }}</strong></td><td>{{ _self.money(observation.lowGrosz, app.request.locale) }} - {{ _self.money(observation.highGrosz, app.request.locale) }}</td></tr>{% endfor %}
+                        {% for observation in history %}<tr><td><time datetime="{{ observation.observedAt|date('c') }}">{{ observation.observedAt|date(app.request.locale == 'pl' ? 'd.m.Y' : 'M j, Y') }}</time></td><td><strong>{{ observation.availability == 'available' ? _self.money(observation.medianGrosz, app.request.locale) : 'market.unavailable_short'|trans }}</strong></td><td>{{ observation.availability == 'available' ? (_self.money(observation.lowGrosz, app.request.locale) ~ ' - ' ~ _self.money(observation.highGrosz, app.request.locale)) : 'market.unavailable.label'|trans }}</td></tr>{% endfor %}
                         </tbody></table></div>
             </section>
             <section class="section market-evidence"><div class="section-title"><h2>{{ 'market.methodology_label'|trans }}</h2><span>{{ 'market.method.verified_badge'|trans }}</span></div><p>{{ 'market.method.public'|trans }}</p><p class="market-curation-note">✓ {{ 'market.method.verified_editorially'|trans }}</p></section>
@@ -213,7 +217,7 @@
                     <summary>{{ 'market.faq.price_now.q'|trans({'%product%': localized_product_name}) }}</summary>
                     <p>{{ latest.availability == 'available' ? 'market.faq.price_now.a'|trans({'%product%': localized_product_name, '%median%': _self.money(latest.medianGrosz, app.request.locale), '%low%': _self.money(latest.lowGrosz, app.request.locale), '%high%': _self.money(latest.highGrosz, app.request.locale)}) : 'market.unavailable.text'|trans }}</p>
                 </details>
-                {% if one_month_ago %}
+                {% if one_month_ago and one_month_ago.medianGrosz > 0 %}
                     <details open>
                         <summary>{{ 'market.faq.month_ago.q'|trans({'%product%': localized_product_name}) }}</summary>
                         <p>{{ 'market.faq.month_ago.a'|trans({'%product%': localized_product_name, '%median%': _self.money(one_month_ago.medianGrosz, app.request.locale), '%diff%': (month_diff > 0 ? '+' : '') ~ ((month_diff / 100)|number_format(0)) ~ ' zł', '%diff_pct%': (month_diff > 0 ? '+' : '') ~ month_pct}) }}</p>
