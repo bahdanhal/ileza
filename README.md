@@ -22,6 +22,21 @@ Manual editorial fair-price histories for products in Poland, paired with a priv
 - **Price Tip Submission (`/ceny/{slug}/okazja`, EN: `/prices/{slug}/price-tip`)**: Community price alerts for admin review.
 - **Model Context Protocol (`POST /mcp`)**: MCP tools for price lookups, tax calculations, and authenticated admin operations.
 
+### Price research queue
+
+The authenticated `get_next_polish_fair_price_batch` MCP tool returns up to ten products,
+with exact definitions, configurations, latest prices, availability, and observation dates.
+Products without observations come first, followed by the oldest observation date and slug.
+Observations from today or yesterday in Europe/Warsaw are excluded, including unavailable observations.
+The response includes `eligible_count` and `has_more` for the current queue.
+
+Call it again after saving a verified batch. It reads observation histories in bulk on every call;
+it does not make one database query per product or reserve work. Concurrent coordinators must
+coordinate assignments separately. Optional `exclude_slugs` defers explicitly tracked products;
+excluded products are not included in `eligible_count` and must remain in the coordinator's ledger.
+Repeated calls without writes or exclusions return the same batch. An empty batch means no
+eligible products under these freshness and exclusion rules, not proof that deferred work is complete.
+
 ---
 
 ## 2. Verification
