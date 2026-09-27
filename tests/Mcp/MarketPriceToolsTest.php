@@ -32,6 +32,48 @@ final class MarketPriceToolsTest extends TestCase
 
         self::assertArrayHasKey('products', $data);
         self::assertNotEmpty($data['products']);
+        self::assertArrayHasKey('latest_observed_at', $data['products'][0]);
+        self::assertArrayHasKey('latest_fair_price_pln', $data['products'][0]);
+        self::assertNull($data['products'][0]['latest_observed_at']);
+        self::assertNull($data['products'][0]['latest_fair_price_pln']);
+    }
+
+    public function testListProductsIncludesObservationData(): void
+    {
+        $catalog = new ProductCatalog();
+        $repository = $this->createStub(PriceObservationRepository::class);
+        $repository->method('latest')->willReturnCallback(
+            static fn (string $slug): ?PriceObservation => $slug === 'iphone-13-128gb' ? new PriceObservation(
+                'iphone-13-128gb',
+                new \DateTimeImmutable('2026-08-22'),
+                95000,
+                83600,
+                108300,
+                'available',
+                'Verified fair price',
+                'Methodology note'
+            ) : null,
+        );
+        $tools = new MarketPriceTools(
+            $catalog,
+            new GetProductPriceHistory($catalog, $repository),
+            new RecordPriceObservation($catalog, $repository),
+        );
+
+        $json = $tools->listProducts();
+        $data = json_decode($json, true, flags: JSON_THROW_ON_ERROR);
+
+        $match = null;
+        foreach ($data['products'] as $item) {
+            if ($item['slug'] === 'iphone-13-128gb') {
+                $match = $item;
+                break;
+            }
+        }
+
+        self::assertNotNull($match);
+        self::assertSame('2026-08-22', $match['latest_observed_at']);
+        self::assertSame(950, $match['latest_fair_price_pln']);
     }
 
     public function testGetHistoryReturnsHistory(): void

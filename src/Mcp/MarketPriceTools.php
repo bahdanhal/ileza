@@ -44,6 +44,8 @@ final readonly class MarketPriceTools
                     'configuration' => $product->specifications,
                     'has_observations' => $latest !== null,
                     'availability' => $latest?->availability,
+                    'latest_observed_at' => $latest?->observedAt->format('Y-m-d'),
+                    'latest_fair_price_pln' => $latest?->availability === 'available' ? $latest->medianGrosz / 100 : null,
                     'canonical_url' => $this->canonicalUrl($product->slug),
                 ];
             }, $this->catalog->all()),
