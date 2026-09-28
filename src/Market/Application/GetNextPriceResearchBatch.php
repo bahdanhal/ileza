@@ -19,8 +19,9 @@ final readonly class GetNextPriceResearchBatch
      * @param list<string> $excludedSlugs
      * @return array<string, mixed>
      */
-    public function execute(array $excludedSlugs = [], ?\DateTimeImmutable $now = null): array
+    public function execute(array $excludedSlugs = [], int $limit = 20, ?\DateTimeImmutable $now = null): array
     {
+        $limit = max(1, min(50, $limit));
         $timezone = new \DateTimeZone('Europe/Warsaw');
         $today = ($now ?? new \DateTimeImmutable('now', $timezone))->setTimezone($timezone)->setTime(0, 0);
         $cutoff = $today->modify('-1 day')->format('Y-m-d');
@@ -64,10 +65,10 @@ final readonly class GetNextPriceResearchBatch
         return [
             'observed_at' => $today->format('Y-m-d'),
             'reviewed_before' => $cutoff,
-            'batch_size' => 10,
+            'batch_size' => $limit,
             'eligible_count' => count($queue),
-            'has_more' => count($queue) > 10,
-            'products' => array_slice($queue, 0, 10),
+            'has_more' => count($queue) > $limit,
+            'products' => array_slice($queue, 0, $limit),
             'queue_semantics' => 'Read-only, not a reservation. Save verified observations, then request the next batch. '
                 . 'Unwritten products remain eligible; exclude explicitly deferred slugs when continuing other work.',
         ];

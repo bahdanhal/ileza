@@ -24,11 +24,12 @@ Manual editorial fair-price histories for products in Poland, paired with a priv
 
 ### Price research queue
 
-The authenticated `get_next_polish_fair_price_batch` MCP tool returns up to ten products,
-with exact definitions, configurations, latest prices, availability, and observation dates.
-Products without observations come first, followed by the oldest observation date and slug.
-Observations from today or yesterday in Europe/Warsaw are excluded, including unavailable observations.
-The response includes `eligible_count` and `has_more` for the current queue.
+The authenticated `get_next_price_research_batch` MCP tool (with legacy alias `get_next_polish_fair_price_batch`)
+returns up to twenty products by default (configurable up to 50 via `limit`), with exact definitions,
+configurations, latest prices, availability, and observation dates. Products without observations come first,
+followed by the oldest observation date and slug. Observations from today or yesterday in Europe/Warsaw
+are excluded, including unavailable observations. The response includes `eligible_count` and `has_more`
+for the current queue. Verified observations are submitted via `record_price_observation` (alias: `update_polish_fair_price_observation`).
 
 Call it again after saving a verified batch. It reads observation histories in bulk on every call;
 it does not make one database query per product or reserve work. Concurrent coordinators must

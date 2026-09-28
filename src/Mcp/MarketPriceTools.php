@@ -116,9 +116,26 @@ final readonly class MarketPriceTools
     }
 
     #[McpTool(
+        name: 'record_price_observation',
+        // phpcs:ignore Generic.Files.LineLength
+        description: 'Admin-only tool: Record or update verified cheapest usable listing price for Poland, or mark the exact product unavailable. Authorization is handled via the Authorization header - do NOT pass any token argument.'
+    )]
+    public function recordObservation(
+        #[Schema(description: 'Product slug to update (must exist in catalog).')] string $slug,
+        #[Schema(description: 'Current cheapest valid usable listing price in PLN. Omit when unavailable.')] ?float $fair_price_pln = null,
+        #[Schema(description: 'Optional cheap-market reference lower bound in PLN, based on the ten cheapest valid listings.')] ?float $low_pln = null,
+        #[Schema(description: 'Optional cheap-market reference upper bound in PLN, based on the ten cheapest valid listings.')] ?float $high_pln = null,
+        #[Schema(description: 'Whether an exact usable listing is currently available (available or unavailable).')] ?string $availability = null,
+        #[Schema(description: 'Optional observation date in YYYY-MM-DD or ISO 8601 format (defaults to current date).')] ?string $observed_at = null,
+        #[Schema(description: 'Optional summary note or verification details.')] ?string $summary = null,
+    ): string {
+        return $this->updateObservation($slug, $fair_price_pln, $low_pln, $high_pln, $availability, $observed_at, $summary);
+    }
+
+    #[McpTool(
         name: 'update_polish_fair_price_observation',
         // phpcs:ignore Generic.Files.LineLength
-        description: 'Admin-only tool: Add or update the current cheapest usable listing price for Poland, or mark the exact product unavailable. Authorization is handled via the Authorization header - do NOT pass any token argument.'
+        description: 'Admin-only tool (backward-compatible alias for record_price_observation): Add or update the current cheapest usable listing price for Poland, or mark the exact product unavailable. Authorization is handled via the Authorization header - do NOT pass any token argument.'
     )]
     public function updateObservation(
         #[Schema(description: 'Product slug to update (must exist in catalog).')] string $slug,

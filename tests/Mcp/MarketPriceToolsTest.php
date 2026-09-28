@@ -348,4 +348,36 @@ final class MarketPriceToolsTest extends TestCase
         $deleteData = json_decode($deleteJson, true, flags: JSON_THROW_ON_ERROR);
         self::assertSame('success', $deleteData['status']);
     }
+
+    public function testAdminRecordObservationAliasesUpdateObservation(): void
+    {
+        $catalog = new ProductCatalog();
+        $repository = $this->createMock(PriceObservationRepository::class);
+        $repository->expects(self::once())->method('save');
+
+        $requestStack = new RequestStack();
+        $request = new Request();
+        $request->headers->set('Authorization', 'Bearer test-token-123');
+        $requestStack->push($request);
+
+        $tools = new MarketPriceTools(
+            $catalog,
+            new GetProductPriceHistory($catalog, $repository),
+            new RecordPriceObservation($catalog, $repository),
+            new AdminAccess($requestStack, 'test-token-123'),
+        );
+        $json = $tools->recordObservation(
+            'iphone-13-128gb',
+            950,
+            830,
+            1080,
+            'available',
+            '2026-08-22',
+            'Personal verification'
+        );
+
+        $data = json_decode($json, true, flags: JSON_THROW_ON_ERROR);
+        self::assertSame('success', $data['status']);
+        self::assertEquals(950, $data['observation']['fair_price_pln']);
+    }
 }
