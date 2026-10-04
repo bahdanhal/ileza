@@ -1,6 +1,6 @@
 # Architecture Documentation - ileza (ileza.pl)
 
-`ileza` (`ileza.pl`) is the Polish second-hand tech/electronics price radar, financial employment calculator, and editorial fair-price history application.
+`ileza` (`ileza.pl`) publishes manual editorial fair prices and dated fair-price histories for products in any category in Poland. The Polish employment and tax calculator is an additional feature of the same product.
 
 ---
 
@@ -37,7 +37,7 @@ graph TD
    - External presentation is managed through Symfony controllers and Twig templates (`src/Controller/`, `templates/`).
 
 2. **Editorial Fair-Price Histories (Schema.org Dataset)**
-   - The price radar provides manually reviewed editorial fair-price histories rather than algorithmic valuations or scraped listings.
+   - The catalog provides manually reviewed editorial fair-price histories rather than algorithmic valuations or scraped listings.
    - Structured data uses Schema.org `Dataset`, `BreadcrumbList`, and `WebPage` (never `Product` or `AggregateOffer`).
    - Observations preload historical snapshots in a single query (`GetProductPriceHistory::preload()`) to eliminate N+1 queries on category and hub pages.
 
@@ -72,7 +72,7 @@ ileza/
 │   ├── Controller/              # Presentation layer
 │   │   ├── Admin/               # MarketAdminController
 │   │   ├── BlogController.php   # Editorial guides
-│   │   ├── MarketController.php # Price radar, category hubs, product histories
+│   │   ├── MarketController.php # Fair-price catalog, category hubs, product histories
 │   │   ├── SitemapController.php# Dynamic XML sitemap
 │   │   └── ToolsController.php  # Polish income calculator & legacy redirects
 │   ├── Entity/                  # Doctrine ORM entities

@@ -1,7 +1,7 @@
 mcp:
   servers:
     default:
-      name: 'IleZa.pl Price Radar & Tax MCP'
+      name: 'IleZa.pl Fair Prices & Tax MCP'
       version: '2.0.0'
       description: 'Manual editorial fair-price histories for products in Poland and a net salary/tax calculator, plus Bearer-protected administration and market statistics.'
       website_url: 'https://ileza.pl/'

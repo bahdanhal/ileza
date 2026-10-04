@@ -1,6 +1,6 @@
-# IleZa.pl — Used Tech Price Radar & Polish Salary Calculator
+# IleZa.pl — Editorial Fair Prices for Any Product Category
 
-> Free Polish used-tech / electronics price radar, dated editorial fair-price histories, and full Polish employment contract calculator by Bahdan Hal.
+> Manual editorial fair prices and dated fair-price histories for products in any category in Poland, by Bahdan Hal. A full Polish employment contract calculator is included as an additional feature.
 
 ## Primary pages
 

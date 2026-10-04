@@ -30,11 +30,11 @@ base:
     contact: "Kontakt"
 
 error404:
-    title: "404 - Poza radarem cenowym · IleZa.pl"
-    eyebrow: "404 · Poza radarem"
-    heading: "Brak pozycji na radarze."
-    description: "Szukany produkt, kategoria lub poradnik nie istnieje bądź zmienił swój adres. Sprawdź monitorowane ceny elektroniki lub oblicz wynagrodzenie."
-    home_button: "Radar cen używanych"
+    title: "404 - Nie znaleziono strony · IleZa.pl"
+    eyebrow: "404 · Poza katalogiem"
+    heading: "Tej pozycji nie ma w katalogu."
+    description: "Szukany produkt, kategoria lub poradnik nie istnieje bądź zmienił swój adres. Sprawdź katalog uczciwych cen lub oblicz wynagrodzenie."
+    home_button: "Katalog uczciwych cen"
     calculator_button: "Kalkulator wynagrodzeń"
     explore_heading: "Popularne kategorie cenowe:"
     macbook: "MacBook Pro i MacBook Air"
@@ -63,10 +63,10 @@ contact:
 blog:
     context: "Poradniki zakupowe"
     meta:
-        title: "Poradniki zakupu używanego sprzętu · IleZa.pl"
-        description: "Praktyczne poradniki zakupu używanego sprzętu Apple, pamięci RAM i komputerów połączone z aktualnymi cenami w Polsce."
+        title: "Poradniki zakupowe · IleZa.pl"
+        description: "Praktyczne, redakcyjne poradniki zakupowe połączone z uczciwymi cenami w Polsce: od sprzętu Apple i podzespołów komputerowych po inne kategorie produktów."
     eyebrow: "Kupuj mądrzej · Używaj sprzętu dłużej"
-    heading: "Praktyczne poradniki zakupu używanego sprzętu"
+    heading: "Praktyczne poradniki zakupowe"
     lede: "Konkretne checklisty i analizy opłacalności pomagające wybrać konfigurację, sprawdzić urządzenie i zaplanować modernizację."
     articles_label: "Poradniki zakupowe"
     guide_eyebrow: "Poradnik IleZa.pl"
@@ -77,7 +77,7 @@ blog:
 
 market:
     meta:
-        title: "Ile naprawdę warte są używane rzeczy? Uczciwe ceny · IleZa.pl"
+        title: "Ile to naprawdę jest warte? Uczciwe ceny · IleZa.pl"
         description: "Sprawdź redakcyjne ceny odniesienia produktów w Polsce - bez premii za nowość, opakowanie, marketing i marżę dużej sieci."
     product_meta:
         title: "Ile naprawdę wart jest %product%? Uczciwa cena i historia"
@@ -85,12 +85,12 @@ market:
     eyebrow: "Polska · Uczciwe ceny · Ocena redakcyjna"
     heading_start: "Ile to naprawdę jest warte?"
     heading_emphasis: ""
-    lede: "IleZa.pl to polski radar cen używanej elektroniki i sprzętu komputerowego bez premii za nowość, marketing czy marżę dużej sieci. Każdy punkt historii cen jest świadomą, ręcznie weryfikowaną oceną redakcyjną realnej wartości rynkowej."
+    lede: "IleZa.pl publikuje ręczne, redakcyjne oceny uczciwych cen produktów z dowolnej kategorii w Polsce, bez premii za nowość, marketing czy marżę dużej sieci. Każdy punkt historii cen jest świadomą, ręcznie weryfikowaną oceną redakcyjną tego, ile produkt jest rozsądnie wart."
     home_faq:
         eyebrow: "Pytania i odpowiedzi"
         title: "Często zadawane pytania o IleZa.pl"
         q1: "Czym jest uczciwa cena (fair price) na IleZa.pl?"
-        a1: "To niezależna, redakcyjna ocena realnej wartości rynkowej używanego sprzętu, oczyszczona z premii za nowość, ładne opakowanie, agresywny marketing czy marże dużych sieci handlowych."
+        a1: "To niezależna, redakcyjna ocena tego, ile produkt z dowolnej kategorii jest rozsądnie wart, oczyszczona z premii za nowość, ładne opakowanie, agresywny marketing czy marże dużych sieci handlowych."
         q2: "W jaki sposób zbierane i weryfikowane są dane o cenach?"
         a2: "Każdy punkt w historii cen jest wynikiem ręcznej weryfikacji ogłoszeń i transakcji na polskim rynku wtórnym. Nie stosujemy nieprzejrzystych algorytmów ani przypadkowych średnich."
         q3: "Czy mogę sprawdzić kalkulator wynagrodzeń lub historię konkretnego modelu?"
