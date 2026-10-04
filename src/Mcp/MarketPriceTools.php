@@ -190,11 +190,12 @@ final readonly class MarketPriceTools
                 ? min((int) round($high_pln * 100), $medianGrosz)
                 : $medianGrosz;
 
-            if ($lowGrosz >= $highGrosz) {
-                if ($lowGrosz > $highGrosz) {
-                    return $this->json(['error' => 'Inconsistent prices. Ensure positive prices, low <= median, and high >= low.']);
-                }
+            if ($lowGrosz > $highGrosz) {
+                return $this->json(['error' => 'Inconsistent prices. Ensure positive prices, low <= median, and high >= low.']);
+            }
 
+            // A range narrower than 1% of the floor reads as collapsed.
+            if (($highGrosz - $lowGrosz) * 100 < $lowGrosz) {
                 $highGrosz = max($highGrosz, (int) round($lowGrosz * 1.12));
             }
         }

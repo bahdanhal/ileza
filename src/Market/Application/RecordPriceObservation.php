@@ -41,11 +41,12 @@ final readonly class RecordPriceObservation
 
             $highGrosz = min($highGrosz, $medianGrosz);
 
-            if ($lowGrosz >= $highGrosz) {
-                if ($lowGrosz > $highGrosz) {
-                    throw new \InvalidArgumentException('Inconsistent prices. Ensure positive prices, low <= median, and high >= low.');
-                }
+            if ($lowGrosz > $highGrosz) {
+                throw new \InvalidArgumentException('Inconsistent prices. Ensure positive prices, low <= median, and high >= low.');
+            }
 
+            // A range narrower than 1% of the floor reads as collapsed.
+            if (($highGrosz - $lowGrosz) * 100 < $lowGrosz) {
                 $highGrosz = max($highGrosz, (int) round($lowGrosz * 1.12));
             }
 

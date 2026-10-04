@@ -63,6 +63,48 @@ final class RecordPriceObservationTest extends TestCase
         );
     }
 
+    public function testWidensNearCollapsedRangeAboveMarketFloor(): void
+    {
+        $catalog = new ProductCatalog();
+        $repository = $this->createMock(PriceObservationRepository::class);
+        $repository->expects(self::once())
+            ->method('save')
+            ->with(self::callback(static function (PriceObservation $obs): bool {
+                return $obs->medianGrosz === 199933
+                    && $obs->lowGrosz === 199900
+                    && $obs->highGrosz === 223888;
+            }));
+
+        $service = new RecordPriceObservation($catalog, $repository);
+        $service->execute(
+            'iphone-13-128gb',
+            new \DateTimeImmutable('2026-08-20'),
+            199933,
+            199900,
+            200000,
+        );
+    }
+
+    public function testKeepsRangeAtLeastOnePercentWide(): void
+    {
+        $catalog = new ProductCatalog();
+        $repository = $this->createMock(PriceObservationRepository::class);
+        $repository->expects(self::once())
+            ->method('save')
+            ->with(self::callback(static function (PriceObservation $obs): bool {
+                return $obs->lowGrosz === 200000 && $obs->highGrosz === 202000;
+            }));
+
+        $service = new RecordPriceObservation($catalog, $repository);
+        $service->execute(
+            'iphone-13-128gb',
+            new \DateTimeImmutable('2026-08-20'),
+            202000,
+            200000,
+            230000,
+        );
+    }
+
     public function testThrowsExceptionForUnknownProduct(): void
     {
         $catalog = new ProductCatalog();
