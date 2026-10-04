@@ -4,7 +4,7 @@ parameters:
   env(ANALYTICS_DATA_DIRECTORY): '/app/var/analytics-data'
   env(ANALYTICS_RETENTION_DAYS): '90'
   env(ANALYTICS_BEACON_MODE): 'true'
-  env(MARKET_ADMIN_TOKEN): ''
+  env(MCP_ADMIN_TOKEN): ''
   env(SMTP_HOST): ''
   env(SMTP_PORT): '587'
   env(SMTP_USERNAME): ''
@@ -92,7 +92,7 @@ services:
 
   App\Mcp\AdminAccess:
     arguments:
-      $token: '%env(MARKET_ADMIN_TOKEN)%'
+      $token: '%env(MCP_ADMIN_TOKEN)%'
 
   App\Market\Domain\ProductRepository:
     alias: App\Market\Infrastructure\DoctrineProductRepository

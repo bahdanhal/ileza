@@ -124,8 +124,8 @@ final class MarketAdminController extends AbstractController
     public function login(Request $request): Response
     {
         $password = trim((string) $request->request->get('password', ''));
-        $adminToken = trim((string) ($_ENV['ADMIN_TOKEN'] ?? ($_ENV['MARKET_ADMIN_TOKEN'] ?? $this->secret)));
-        $marketAdminToken = trim((string) ($_ENV['MARKET_ADMIN_TOKEN'] ?? ''));
+        $adminToken = trim((string) ($_ENV['ADMIN_TOKEN'] ?? ($_ENV['MCP_ADMIN_TOKEN'] ?? $this->secret)));
+        $mcpAdminToken = trim((string) ($_ENV['MCP_ADMIN_TOKEN'] ?? ''));
         $secret = trim($this->secret);
 
         if (
@@ -142,7 +142,7 @@ final class MarketAdminController extends AbstractController
             && (
                 ($adminToken !== '' && hash_equals($adminToken, $password))
                 || ($secret !== '' && hash_equals($secret, $password))
-                || ($marketAdminToken !== '' && hash_equals($marketAdminToken, $password))
+                || ($mcpAdminToken !== '' && hash_equals($mcpAdminToken, $password))
             )
         ) {
             $response = $this->redirectToRoute('market_admin_dashboard');
@@ -408,13 +408,13 @@ final class MarketAdminController extends AbstractController
         }
 
         $cleanToken = trim($token);
-        $adminToken = trim((string) ($_ENV['ADMIN_TOKEN'] ?? ($_ENV['MARKET_ADMIN_TOKEN'] ?? $this->secret)));
-        $marketAdminToken = trim((string) ($_ENV['MARKET_ADMIN_TOKEN'] ?? ''));
+        $adminToken = trim((string) ($_ENV['ADMIN_TOKEN'] ?? ($_ENV['MCP_ADMIN_TOKEN'] ?? $this->secret)));
+        $mcpAdminToken = trim((string) ($_ENV['MCP_ADMIN_TOKEN'] ?? ''));
         $secret = trim($this->secret);
 
         return ($adminToken !== '' && hash_equals($adminToken, $cleanToken))
             || ($secret !== '' && hash_equals($secret, $cleanToken))
-            || ($marketAdminToken !== '' && hash_equals($marketAdminToken, $cleanToken));
+            || ($mcpAdminToken !== '' && hash_equals($mcpAdminToken, $cleanToken));
     }
 
     private function isAuthenticated(Request $request): bool
