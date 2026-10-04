@@ -1,0 +1,18 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.bahdanhal/ileza",
+  "title": "IleZa.pl",
+  "description": "Editorial fair prices for products in Poland, plus a Polish net salary and tax calculator.",
+  "version": "2.1.0",
+  "websiteUrl": "https://ileza.pl/",
+  "repository": {
+    "url": "https://github.com/bahdanhal/ileza",
+    "source": "github"
+  },
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://ileza.pl/mcp"
+    }
+  ]
+}

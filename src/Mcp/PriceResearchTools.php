@@ -6,6 +6,7 @@ namespace App\Mcp;
 
 use App\Market\Application\GetNextPriceResearchBatch;
 use Mcp\Capability\Attribute\McpTool;
+use Mcp\Schema\ToolAnnotations;
 use Mcp\Capability\Attribute\Schema;
 
 final readonly class PriceResearchTools
@@ -19,9 +20,11 @@ final readonly class PriceResearchTools
     /** @param array<array-key, mixed> $exclude_slugs */
     #[McpTool(
         name: 'get_next_price_research_batch',
+        title: 'Admin: Next Price Research Batch',
         description: 'Admin-only: Get the next batch of products needing price research (default: 20 products, max: 50), '
             . 'missing prices first, then oldest. Includes definitions, specifications, latest prices, and observation dates. '
-            . 'Skips today and yesterday in Poland. Read-only; does not reserve products. Requires Bearer authorization.'
+            . 'Skips today and yesterday in Poland. Read-only; does not reserve products. Requires Bearer authorization.',
+        annotations: new ToolAnnotations(readOnlyHint: true, openWorldHint: false),
     )]
     public function nextBatch(
         #[Schema(
@@ -45,8 +48,10 @@ final readonly class PriceResearchTools
     /** @param array<array-key, mixed> $exclude_slugs */
     #[McpTool(
         name: 'get_next_polish_fair_price_batch',
+        title: 'Admin: Next Price Research Batch (alias)',
         description: 'Admin-only (backward-compatible alias for get_next_price_research_batch): '
-            . 'Get the next batch of products needing price research (default: 20 products, max: 50). Requires Bearer authorization.'
+            . 'Get the next batch of products needing price research (default: 20 products, max: 50). Requires Bearer authorization.',
+        annotations: new ToolAnnotations(readOnlyHint: true, openWorldHint: false),
     )]
     public function legacyNextBatch(
         #[Schema(

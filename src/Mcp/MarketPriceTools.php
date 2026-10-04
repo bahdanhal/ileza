@@ -11,6 +11,7 @@ use App\Market\Domain\PriceObservation;
 use App\Market\Domain\Product;
 use App\Market\Domain\ProductRepository;
 use Mcp\Capability\Attribute\McpTool;
+use Mcp\Schema\ToolAnnotations;
 use Mcp\Capability\Attribute\Schema;
 
 final readonly class MarketPriceTools
@@ -26,7 +27,9 @@ final readonly class MarketPriceTools
 
     #[McpTool(
         name: 'list_polish_fair_price_products',
-        description: 'List products tracked by IleZa.pl for manual editorial fair-price history in Poland.'
+        title: 'List Fair-Price Products',
+        description: 'List products tracked by IleZa.pl for manual editorial fair-price history in Poland.',
+        annotations: new ToolAnnotations(readOnlyHint: true, openWorldHint: false),
     )]
     public function listProducts(): string
     {
@@ -55,7 +58,9 @@ final readonly class MarketPriceTools
 
     #[McpTool(
         name: 'get_polish_fair_price_product',
-        description: 'Get full product specification, family grouping, and media details for a product slug.'
+        title: 'Get Fair-Price Product',
+        description: 'Get full product specification, family grouping, and media details for a product slug.',
+        annotations: new ToolAnnotations(readOnlyHint: true, openWorldHint: false),
     )]
     public function getProduct(#[Schema(description: 'Product slug returned by list_polish_fair_price_products.')] string $slug): string
     {
@@ -88,8 +93,10 @@ final readonly class MarketPriceTools
 
     #[McpTool(
         name: 'get_polish_fair_price_history',
+        title: 'Get Fair-Price History',
         // phpcs:ignore Generic.Files.LineLength
-        description: 'Get dated manual editorial fair-price estimates for one exact product definition in Poland.'
+        description: 'Get dated manual editorial fair-price estimates for one exact product definition in Poland.',
+        annotations: new ToolAnnotations(readOnlyHint: true, openWorldHint: false),
     )]
     public function getHistory(#[Schema(description: 'Product slug returned by list_polish_fair_price_products.')] string $slug): string
     {
@@ -117,8 +124,10 @@ final readonly class MarketPriceTools
 
     #[McpTool(
         name: 'record_price_observation',
+        title: 'Admin: Record Price Observation',
         // phpcs:ignore Generic.Files.LineLength
-        description: 'Admin-only tool: Record or update verified cheapest usable listing price for Poland, or mark the exact product unavailable. Authorization is handled via the Authorization header - do NOT pass any token argument.'
+        description: 'Admin-only tool: Record or update verified cheapest usable listing price for Poland, or mark the exact product unavailable. Authorization is handled via the Authorization header - do NOT pass any token argument.',
+        annotations: new ToolAnnotations(readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: false),
     )]
     public function recordObservation(
         #[Schema(description: 'Product slug to update (must exist in catalog).')] string $slug,
@@ -134,8 +143,10 @@ final readonly class MarketPriceTools
 
     #[McpTool(
         name: 'update_polish_fair_price_observation',
+        title: 'Admin: Record Price Observation (alias)',
         // phpcs:ignore Generic.Files.LineLength
-        description: 'Admin-only tool (backward-compatible alias for record_price_observation): Add or update the current cheapest usable listing price for Poland, or mark the exact product unavailable. Authorization is handled via the Authorization header - do NOT pass any token argument.'
+        description: 'Admin-only tool (backward-compatible alias for record_price_observation): Add or update the current cheapest usable listing price for Poland, or mark the exact product unavailable. Authorization is handled via the Authorization header - do NOT pass any token argument.',
+        annotations: new ToolAnnotations(readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: false),
     )]
     public function updateObservation(
         #[Schema(description: 'Product slug to update (must exist in catalog).')] string $slug,
@@ -232,7 +243,9 @@ final readonly class MarketPriceTools
 
     #[McpTool(
         name: 'create_polish_fair_price_product',
-        description: 'Admin-only: Create a new tracked product configuration in the database. Requires Bearer authorization.'
+        title: 'Admin: Create Product',
+        description: 'Admin-only: Create a new tracked product configuration in the database. Requires Bearer authorization.',
+        annotations: new ToolAnnotations(readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false),
     )]
     public function createProduct(
         #[Schema(description: 'URL-safe product slug (e.g. iphone-16-pro-256gb).')] string $slug,
@@ -307,7 +320,9 @@ final readonly class MarketPriceTools
 
     #[McpTool(
         name: 'update_polish_fair_price_product',
-        description: 'Admin-only: Update an existing tracked product configuration. Requires Bearer authorization.'
+        title: 'Admin: Update Product',
+        description: 'Admin-only: Update an existing tracked product configuration. Requires Bearer authorization.',
+        annotations: new ToolAnnotations(readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: false),
     )]
     public function updateProduct(
         #[Schema(description: 'Existing product slug to update.')] string $slug,
@@ -382,7 +397,9 @@ final readonly class MarketPriceTools
 
     #[McpTool(
         name: 'delete_polish_fair_price_product',
-        description: 'Admin-only: Delete a tracked product from the database. Requires Bearer authorization.'
+        title: 'Admin: Delete Product',
+        description: 'Admin-only: Delete a tracked product from the database. Requires Bearer authorization.',
+        annotations: new ToolAnnotations(readOnlyHint: false, destructiveHint: true, idempotentHint: true, openWorldHint: false),
     )]
     public function deleteProduct(#[Schema(description: 'Product slug to delete.')] string $slug): string
     {

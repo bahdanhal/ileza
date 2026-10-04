@@ -189,6 +189,7 @@ services:
     arguments:
       $inner: '@.inner'
       $sessionStore: '@mcp.server.default.session.store'
+      $adminAccess: '@App\Mcp\AdminAccess'
     public: true
     tags:
       - { name: controller.service_arguments }

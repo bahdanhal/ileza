@@ -6,6 +6,7 @@ namespace App\Mcp;
 
 use App\Income\Domain\PolishIncomeCalculator;
 use Mcp\Capability\Attribute\McpTool;
+use Mcp\Schema\ToolAnnotations;
 use Mcp\Capability\Attribute\Schema;
 
 final readonly class IncomeCalculatorTools
@@ -16,8 +17,10 @@ final readonly class IncomeCalculatorTools
 
     #[McpTool(
         name: 'calculate_polish_income_comparison',
+        title: 'Compare Polish Net Income by Contract Type',
         // phpcs:ignore Generic.Files.LineLength
-        description: 'Calculate Polish contract and tax net income comparison for a company budget or UoP gross across UoP (employment), Umowa Zlecenie (mandate), Umowa o Dzieło (work contract), B2B (progressive, linear 19%, lump-sum/ryczałt), and Spółka z o.o. (board member resolution).'
+        description: 'Calculate Polish contract and tax net income comparison for a company budget or UoP gross across UoP (employment), Umowa Zlecenie (mandate), Umowa o Dzieło (work contract), B2B (progressive, linear 19%, lump-sum/ryczałt), and Spółka z o.o. (board member resolution).',
+        annotations: new ToolAnnotations(readOnlyHint: true, openWorldHint: false),
     )]
     public function calculateIncome(
         #[Schema(description: 'Total monthly company employer budget in PLN (e.g. 15000).')]

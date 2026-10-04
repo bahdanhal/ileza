@@ -2,11 +2,11 @@ mcp:
   servers:
     default:
       name: 'IleZa.pl Fair Prices & Tax MCP'
-      version: '2.0.0'
-      description: 'Manual editorial fair-price histories for products in Poland and a net salary/tax calculator, plus Bearer-protected administration and market statistics.'
+      version: '2.1.0'
+      description: 'Manual editorial fair prices and dated fair-price histories for products in any category in Poland, plus a Polish net salary and tax calculator.'
       website_url: 'https://ileza.pl/'
       instructions: |
-        Public tools provide manual editorial fair-price histories and Polish net salary calculations. Price estimates are subjective editorial judgments, not statistical samples or algorithmic valuations. Administrative tools require an Authorization: Bearer header.
+        Public tools provide manual editorial fair-price histories and Polish net salary calculations. Price estimates are subjective editorial judgments, not statistical samples or algorithmic valuations. Public tools need no authentication.
       transports:
         http: true
         stdio: true

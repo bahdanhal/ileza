@@ -15,6 +15,7 @@ use App\Market\Domain\ProductRequestStore;
 use Bahdan\LeadCaptureBundle\Domain\Lead;
 use Bahdan\LeadCaptureBundle\Domain\LeadRepository;
 use Mcp\Capability\Attribute\McpTool;
+use Mcp\Schema\ToolAnnotations;
 use Mcp\Capability\Attribute\Schema;
 
 final readonly class AdminTools
@@ -32,8 +33,10 @@ final readonly class AdminTools
 
     #[McpTool(
         name: 'get_admin_dashboard_statistics',
+        title: 'Admin: Dashboard Statistics',
         // phpcs:ignore Generic.Files.LineLength
-        description: 'Admin-only: Get privacy-preserving traffic, submission, and market-coverage statistics. Requires an Authorization: Bearer header.'
+        description: 'Admin-only: Get privacy-preserving traffic, submission, and market-coverage statistics. Requires an Authorization: Bearer header.',
+        annotations: new ToolAnnotations(readOnlyHint: true, openWorldHint: false),
     )]
     public function statistics(): string
     {
@@ -93,8 +96,10 @@ final readonly class AdminTools
 
     #[McpTool(
         name: 'list_admin_contact_leads',
+        title: 'Admin: Contact Leads',
         // phpcs:ignore Generic.Files.LineLength
-        description: 'Admin-only: List recent private consultation requests, including contact details and messages. Requires an Authorization: Bearer header.'
+        description: 'Admin-only: List recent private consultation requests, including contact details and messages. Requires an Authorization: Bearer header.',
+        annotations: new ToolAnnotations(readOnlyHint: true, openWorldHint: false),
     )]
     public function contactLeads(
         #[Schema(description: 'Maximum records to return, from 1 to 100.')] int $limit = 50,
@@ -123,8 +128,10 @@ final readonly class AdminTools
 
     #[McpTool(
         name: 'list_admin_product_requests',
+        title: 'Admin: Product Requests',
         // phpcs:ignore Generic.Files.LineLength
-        description: 'Admin-only: List recent unfulfilled product tracking requests from the community. Requires an Authorization: Bearer header.'
+        description: 'Admin-only: List recent unfulfilled product tracking requests from the community. Requires an Authorization: Bearer header.',
+        annotations: new ToolAnnotations(readOnlyHint: true, openWorldHint: false),
     )]
     public function productRequests(
         #[Schema(description: 'Maximum records to return, from 1 to 100.')] int $limit = 50,
@@ -147,8 +154,10 @@ final readonly class AdminTools
 
     #[McpTool(
         name: 'list_admin_price_tips',
+        title: 'Admin: Price Tips',
         // phpcs:ignore Generic.Files.LineLength
-        description: 'Admin-only: List active community-submitted public listing links awaiting editorial price review. Requires an Authorization: Bearer header.'
+        description: 'Admin-only: List active community-submitted public listing links awaiting editorial price review. Requires an Authorization: Bearer header.',
+        annotations: new ToolAnnotations(readOnlyHint: true, openWorldHint: false),
     )]
     public function priceTips(
         #[Schema(description: 'Maximum records to return, from 1 to 100.')] int $limit = 50,
@@ -178,8 +187,10 @@ final readonly class AdminTools
 
     #[McpTool(
         name: 'list_admin_blog_articles',
+        title: 'Admin: List Blog Articles',
         // phpcs:ignore Generic.Files.LineLength
-        description: 'Admin-only: List buying guides and blog articles across locales with metadata, word counts, and price widget dependencies. Requires an Authorization: Bearer header.'
+        description: 'Admin-only: List buying guides and blog articles across locales with metadata, word counts, and price widget dependencies. Requires an Authorization: Bearer header.',
+        annotations: new ToolAnnotations(readOnlyHint: true, openWorldHint: false),
     )]
     public function blogArticles(
         #[Schema(description: 'Filter by locale ("pl" or "en"), or omit for all.')] ?string $locale = null,
@@ -218,8 +229,10 @@ final readonly class AdminTools
 
     #[McpTool(
         name: 'get_admin_blog_article',
+        title: 'Admin: Get Blog Article',
         // phpcs:ignore Generic.Files.LineLength
-        description: 'Admin-only: Get full buying guide / blog article markdown and price widget metadata by slug and locale. Requires an Authorization: Bearer header.'
+        description: 'Admin-only: Get full buying guide / blog article markdown and price widget metadata by slug and locale. Requires an Authorization: Bearer header.',
+        annotations: new ToolAnnotations(readOnlyHint: true, openWorldHint: false),
     )]
     public function getBlogArticle(
         #[Schema(description: 'URL slug of the article.')] string $slug,
@@ -251,8 +264,10 @@ final readonly class AdminTools
 
     #[McpTool(
         name: 'save_admin_blog_article',
+        title: 'Admin: Save Blog Article',
         // phpcs:ignore Generic.Files.LineLength
-        description: 'Admin-only: Create or update a buying guide / blog article with automatic smart-character cleanup and plain ASCII normalization. Requires an Authorization: Bearer header.'
+        description: 'Admin-only: Create or update a buying guide / blog article with automatic smart-character cleanup and plain ASCII normalization. Requires an Authorization: Bearer header.',
+        annotations: new ToolAnnotations(readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: false),
     )]
     public function saveBlogArticle(
         #[Schema(description: 'Language locale ("pl" or "en").')] string $locale,
@@ -324,8 +339,10 @@ final readonly class AdminTools
 
     #[McpTool(
         name: 'delete_admin_blog_article',
+        title: 'Admin: Delete Blog Article',
         // phpcs:ignore Generic.Files.LineLength
-        description: 'Admin-only: Delete a buying guide / blog article by locale and slug. Requires an Authorization: Bearer header.'
+        description: 'Admin-only: Delete a buying guide / blog article by locale and slug. Requires an Authorization: Bearer header.',
+        annotations: new ToolAnnotations(readOnlyHint: false, destructiveHint: true, idempotentHint: true, openWorldHint: false),
     )]
     public function deleteBlogArticle(
         #[Schema(description: 'Locale of the article ("pl" or "en").')] string $locale,
