@@ -6,7 +6,7 @@ Manual editorial fair-price histories for products in Poland, paired with a priv
 
 **Related projects:** [Bahdan Hal - software engineering consulting](https://bahdanhal.pl/) · [Stackhal - free developer and DevOps tools](https://stackhal.com/)
 
-**Shared Packagist packages:** [`bahdan/symfony-safe-http-client`](https://packagist.org/packages/bahdan/symfony-safe-http-client) · [`bahdan/symfony-privacy-analytics-bundle`](https://packagist.org/packages/bahdan/symfony-privacy-analytics-bundle) · [`bahdan/lead-capture-bundle`](https://packagist.org/packages/bahdan/lead-capture-bundle)
+**Shared Packagist packages:** [`bahdan/symfony-privacy-analytics-bundle`](https://packagist.org/packages/bahdan/symfony-privacy-analytics-bundle) · [`bahdan/lead-capture-bundle`](https://packagist.org/packages/bahdan/lead-capture-bundle)
 
 ---
 
