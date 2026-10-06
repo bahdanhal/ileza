@@ -107,6 +107,42 @@ final class BeaconControllerTest extends TestCase
         self::assertNull($stored->referrerHost);
     }
 
+    public function testBeaconWithoutReferrerIsAttributedToCampaignSourceHost(): void
+    {
+        $stored = null;
+        $repository = $this->createMock(PageViewRepository::class);
+        $repository->expects(self::once())
+            ->method('save')
+            ->willReturnCallback(static function (PageView $pv) use (&$stored): void {
+                $stored = $pv;
+            });
+
+        $controller = new BeaconController($repository, 'analytics-secret');
+        $payload = json_encode(['p' => '/prices/iphone-13-pro-max-512gb', 'r' => null, 's' => 'chatgpt.com'], JSON_THROW_ON_ERROR);
+        $request = Request::create(
+            'https://ileza.pl/api/pa/hit',
+            'POST',
+            server: [
+                'REMOTE_ADDR' => '198.51.100.8',
+                'HTTP_USER_AGENT' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36',
+                'HTTP_ACCEPT' => '*/*',
+                'HTTP_ACCEPT_LANGUAGE' => 'pl-PL,pl;q=0.9',
+                'HTTP_SEC_FETCH_MODE' => 'no-cors',
+                'HTTP_SEC_CH_UA' => '"Chromium";v="123", "Not A(Brand";v="24", "Google Chrome";v="123"',
+                'HTTP_REFERER' => 'https://ileza.pl/prices/iphone-13-pro-max-512gb?utm_source=chatgpt.com',
+                'CONTENT_TYPE' => 'application/json',
+            ],
+            content: $payload,
+        );
+
+        $controller($request);
+
+        self::assertInstanceOf(PageView::class, $stored);
+        self::assertSame('/prices/iphone-13-pro-max-512gb', $stored->path);
+        self::assertSame('referral', $stored->source);
+        self::assertSame('chatgpt.com', $stored->referrerHost);
+    }
+
     public function testExcludesDntAndGpcHeaders(): void
     {
         $repository = $this->createMock(PageViewRepository::class);
