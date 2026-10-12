@@ -46,12 +46,22 @@ final readonly class SitemapController
             $entries[] = $this->entry($en, $en, $pl, $lastModified);
             $entries[] = $this->entry($pl, $en, $pl, $lastModified);
         }
-        foreach ($this->articles?->all('pl') ?? [] as $article) {
-            $en = '/en/blog/' . $article->getAlternateSlug();
-            $pl = '/blog/' . $article->getSlug();
-            $lastModified = $article->getUpdatedAt()->format('Y-m-d');
-            $entries[] = $this->entry($en, $en, $pl, $lastModified);
-            $entries[] = $this->entry($pl, $en, $pl, $lastModified);
+        $articlesByLocale = ['en' => [], 'pl' => []];
+        foreach (array_keys($articlesByLocale) as $locale) {
+            foreach ($this->articles?->all($locale) ?? [] as $article) {
+                $articlesByLocale[$locale][$article->getSlug()] = $article;
+            }
+        }
+        foreach ($articlesByLocale as $locale => $articles) {
+            $otherLocale = $locale === 'pl' ? 'en' : 'pl';
+            foreach ($articles as $article) {
+                $alternate = $articlesByLocale[$otherLocale][$article->getAlternateSlug()] ?? null;
+                $hasTranslation = $alternate?->getAlternateSlug() === $article->getSlug();
+                $path = ($locale === 'pl' ? '/blog/' : '/en/blog/') . $article->getSlug();
+                $en = $hasTranslation ? '/en/blog/' . ($locale === 'en' ? $article->getSlug() : $article->getAlternateSlug()) : null;
+                $pl = $hasTranslation ? '/blog/' . ($locale === 'pl' ? $article->getSlug() : $article->getAlternateSlug()) : null;
+                $entries[] = $this->entry($path, $en, $pl, $article->getUpdatedAt()->format('Y-m-d'));
+            }
         }
 
         $xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
@@ -66,13 +76,17 @@ final readonly class SitemapController
         ]);
     }
 
-    private function entry(string $location, string $english, string $polish, ?string $lastModified = null): string
+    private function entry(string $location, ?string $english, ?string $polish, ?string $lastModified = null): string
     {
         $base = 'https://ileza.pl';
         $lastmod = $lastModified === null ? '' : '<lastmod>' . $lastModified . '</lastmod>';
 
-        $format = '  <url><loc>%s</loc>%s'
-            . '<xhtml:link rel="alternate" hreflang="en" href="%s"/>'
+        $format = '  <url><loc>%s</loc>%s';
+        if ($english === null || $polish === null) {
+            return sprintf($format . '</url>', $base . $location, $lastmod);
+        }
+
+        $format .= '<xhtml:link rel="alternate" hreflang="en" href="%s"/>'
             . '<xhtml:link rel="alternate" hreflang="pl" href="%s"/>'
             . '<xhtml:link rel="alternate" hreflang="x-default" href="%s"/></url>';
 

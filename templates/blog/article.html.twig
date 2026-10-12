@@ -9,13 +9,16 @@
 {% block description %}<meta name="description" content="{{ article.description }}">{% endblock %}
 {% block canonical %}
     <link rel="canonical" href="https://ileza.pl{{ app.request.locale == 'pl' ? '/blog/' : '/en/blog/' }}{{ article.slug }}">
-    <link rel="alternate" hreflang="{{ app.request.locale }}" href="https://ileza.pl{{ app.request.locale == 'pl' ? '/blog/' : '/en/blog/' }}{{ article.slug }}">
-    <link rel="alternate" hreflang="{{ app.request.locale == 'pl' ? 'en' : 'pl' }}" href="https://ileza.pl{{ app.request.locale == 'pl' ? '/en/blog/' : '/blog/' }}{{ article.alternateSlug }}">
-    <link rel="alternate" hreflang="x-default" href="https://ileza.pl/blog/{{ app.request.locale == 'pl' ? article.slug : article.alternateSlug }}">
+    {% if alternate_article %}
+        <link rel="alternate" hreflang="{{ app.request.locale }}" href="https://ileza.pl{{ app.request.locale == 'pl' ? '/blog/' : '/en/blog/' }}{{ article.slug }}">
+        <link rel="alternate" hreflang="{{ alternate_article.locale }}" href="https://ileza.pl{{ alternate_article.locale == 'pl' ? '/blog/' : '/en/blog/' }}{{ alternate_article.slug }}">
+        <link rel="alternate" hreflang="x-default" href="https://ileza.pl/blog/{{ app.request.locale == 'pl' ? article.slug : alternate_article.slug }}">
+    {% endif %}
 {% endblock %}
 {% block stylesheets %}<link rel="stylesheet" href="/tools.css"><link rel="stylesheet" href="/market.css"><link rel="stylesheet" href="/blog.css">{% endblock %}
 {% block language_switch %}
-    <a class="language-switch" href="{{ path('blog_article', {_locale: app.request.locale == 'pl' ? 'en' : 'pl', slug: article.alternateSlug}) }}" hreflang="{{ app.request.locale == 'pl' ? 'en' : 'pl' }}">{{ app.request.locale == 'pl' ? 'EN' : 'PL' }}</a>
+    {% set alternate_locale = app.request.locale == 'pl' ? 'en' : 'pl' %}
+    <a class="language-switch" href="{{ alternate_article ? path('blog_article', {_locale: alternate_locale, slug: alternate_article.slug}) : path('blog_index', {_locale: alternate_locale}) }}" hreflang="{{ alternate_locale }}">{{ alternate_locale|upper }}</a>
 {% endblock %}
 {% block body %}
     <main class="tool-shell blog-shell">

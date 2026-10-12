@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller;
 
+use App\Content\Application\BlogArticleRepository;
+use App\Content\Domain\BlogArticle;
 use App\Shared\Presentation\Http\SitemapController;
 use App\Market\Application\ProductCatalog;
 use App\Market\Domain\PriceObservation;
@@ -12,6 +14,54 @@ use PHPUnit\Framework\TestCase;
 
 final class SitemapControllerTest extends TestCase
 {
+    public function testIncludesActualArticlesWithoutInventingMissingTranslations(): void
+    {
+        $createArticle = static fn (string $locale, string $slug, string $alternate, string $updated): BlogArticle => new BlogArticle(
+            $locale,
+            $slug,
+            $alternate,
+            'Guide',
+            'Description',
+            'Body',
+            new \DateTimeImmutable('2026-09-01'),
+            new \DateTimeImmutable($updated),
+        );
+        $polish = $createArticle('pl', 'polish-guide', 'english-guide', '2026-09-02');
+        $english = $createArticle('en', 'english-guide', 'polish-guide', '2026-09-03');
+        $untranslatedPl = $createArticle('pl', 'polish-only', 'missing-english', '2026-09-04');
+        $untranslatedEn = $createArticle('en', 'english-only', 'missing-polish', '2026-09-05');
+        $articles = $this->createStub(BlogArticleRepository::class);
+        $articles->method('all')->willReturnCallback(
+            static fn (string $locale): array => $locale === 'pl' ? [$polish, $untranslatedPl] : [$english, $untranslatedEn]
+        );
+        $observations = $this->createStub(PriceObservationRepository::class);
+
+        $content = (string) (new SitemapController(new ProductCatalog(), $observations, $articles))()->getContent();
+        $document = new \DOMDocument();
+        self::assertTrue($document->loadXML($content));
+        $xpath = new \DOMXPath($document);
+        $xpath->registerNamespace('s', 'http://www.sitemaps.org/schemas/sitemap/0.9');
+        $xpath->registerNamespace('h', 'http://www.w3.org/1999/xhtml');
+        self::assertStringNotContainsString('missing-english', $content);
+        self::assertStringNotContainsString('missing-polish', $content);
+        $expectedEntries = [
+            '/blog/polish-guide' => '2026-09-02',
+            '/en/blog/english-guide' => '2026-09-03',
+            '/blog/polish-only' => '2026-09-04',
+            '/en/blog/english-only' => '2026-09-05',
+        ];
+        foreach ($expectedEntries as $path => $date) {
+            $entry = '/s:urlset/s:url[s:loc="https://ileza.pl' . $path . '"]';
+            $entries = $xpath->query($entry);
+            self::assertNotFalse($entries);
+            self::assertCount(1, $entries);
+            self::assertSame($date, $xpath->evaluate('string(' . $entry . '/s:lastmod)'));
+            $alternates = $xpath->query($entry . '/h:link');
+            self::assertNotFalse($alternates);
+            self::assertCount(str_ends_with($path, '-only') ? 0 : 3, $alternates);
+        }
+    }
+
     public function testGeneratesValidXmlSitemapWithHeaders(): void
     {
         $catalog = new ProductCatalog();

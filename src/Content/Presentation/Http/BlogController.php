@@ -69,8 +69,15 @@ final class BlogController extends AbstractController
             }
         }
 
+        $alternateLocale = $request->getLocale() === 'pl' ? 'en' : 'pl';
+        $alternate = $this->articles->find($alternateLocale, $article->getAlternateSlug());
+        if ($alternate?->getAlternateSlug() !== $article->getSlug()) {
+            $alternate = null;
+        }
+
         return $this->render('blog/article.html.twig', [
             'article' => $article,
+            'alternate_article' => $alternate,
             'blocks' => $blocks,
         ]);
     }
