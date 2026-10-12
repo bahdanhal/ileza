@@ -93,6 +93,10 @@ final class GetProductPriceHistory
             }
         }
 
+        if ($latest?->availability !== 'available' || $oneMonthAgo?->availability !== 'available') {
+            $oneMonthAgo = null;
+        }
+
         return [
             'product' => $product,
             'family' => $family,

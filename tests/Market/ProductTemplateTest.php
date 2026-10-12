@@ -7,6 +7,7 @@ namespace App\Tests\Market;
 use App\Market\Domain\PriceObservation;
 use App\Market\Domain\Product;
 use App\Market\Domain\ProductFamily;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Twig\Environment;
@@ -32,8 +33,21 @@ final class ProductTemplateTest extends TestCase
         $this->twig->addGlobal('app', $app);
     }
 
-    public function testRendersProductWhenPreviousObservationIsUnavailableWithZeroMedian(): void
+    /** @return iterable<string, array{int, string, string}> */
+    public static function comparisonPrices(): iterable
     {
+        yield 'zero amount in Polish' => [0, 'pl', 'unavailable'];
+        yield 'legacy sentinel in Polish' => [100, 'pl', 'unavailable'];
+        yield 'zero amount in English' => [0, 'en', 'unavailable'];
+        yield 'legacy sentinel in English' => [100, 'en', 'unavailable'];
+        yield 'available baseline in Polish' => [500000, 'pl', 'available'];
+        yield 'available baseline in English' => [500000, 'en', 'available'];
+    }
+
+    #[DataProvider('comparisonPrices')]
+    public function testRendersComparisonsOnlyForAvailablePrices(int $amount, string $locale, string $availability): void
+    {
+        $this->twig->getGlobals()['app']->request->setLocale($locale);
         $product = new Product(
             slug: 'macbook-air-13-m3-24-gb-ram-512-gb-ssd',
             name: 'Apple MacBook Air 13 M3 24 GB 512 GB',
@@ -65,13 +79,13 @@ final class ProductTemplateTest extends TestCase
             PriceObservation::METHODOLOGY_MANUAL,
         );
 
-        $unavailablePrevious = new PriceObservation(
+        $previousObservation = new PriceObservation(
             'macbook-air-13-m3-24-gb-ram-512-gb-ssd',
             new \DateTimeImmutable('2026-09-10'),
-            0,
-            0,
-            0,
-            'unavailable',
+            $amount,
+            $amount,
+            $amount,
+            $availability,
             'No offer found',
             PriceObservation::METHODOLOGY_MANUAL,
         );
@@ -83,15 +97,26 @@ final class ProductTemplateTest extends TestCase
             'category_name' => 'Laptopy',
             'canonical_url' => 'https://ileza.pl/ceny/macbook-air-13-m3-24-gb-ram-512-gb-ssd',
             'latest' => $latest,
-            'history' => [$latest, $unavailablePrevious],
-            'one_month_ago' => $unavailablePrevious,
+            'history' => [$latest, $previousObservation],
+            'one_month_ago' => $previousObservation,
             'related' => [],
         ]);
 
-        self::assertStringContainsString('5 500,00 zł', $html);
+        self::assertStringContainsString($locale === 'pl' ? '5 500,00 zł' : '5,500.00 PLN', $html);
+        if ($availability === 'available') {
+            self::assertStringContainsString('market.faq.month_ago.q', $html);
+            self::assertStringContainsString('trend-badge', $html);
+            self::assertStringContainsString('10%', $html);
+            self::assertStringNotContainsString('market.no_month_data', $html);
+
+            return;
+        }
+
         self::assertStringContainsString('market.asking_price', $html);
         self::assertStringContainsString('market.no_month_data', $html);
         self::assertStringContainsString('market.unavailable_short', $html);
         self::assertStringContainsString('market.unavailable.label', $html);
+        self::assertStringNotContainsString('market.faq.month_ago.q', $html);
+        self::assertStringNotContainsString('trend-badge', $html);
     }
 }

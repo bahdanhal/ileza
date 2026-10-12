@@ -19,6 +19,7 @@
 {% block stylesheets %}<link rel="stylesheet" href="/tools.css"><link rel="stylesheet" href="/market.css"><link rel="stylesheet" href="/market-extra.css">{% endblock %}
 {% block language_switch %}<a class="language-switch" href="{{ path('market_product', {_locale: app.request.locale == 'pl' ? 'en' : 'pl', slug: product.slug}) }}" hreflang="{{ app.request.locale == 'pl' ? 'en' : 'pl' }}">{{ app.request.locale == 'pl' ? 'EN' : 'PL' }}</a>{% endblock %}
 {% block body %}
+    {% set has_month_comparison = latest and latest.availability == 'available' and one_month_ago and one_month_ago.availability == 'available' and one_month_ago.medianGrosz > 0 %}
     <article class="tool-shell market-shell">
         {% set category_slug = hub_info ? (app.request.locale == 'pl' ? hub_info.canonicalSlugPl : hub_info.canonicalSlugEn) : product.category %}
         {% set category_name = hub_info ? (('market.hubs.' ~ hub_info.key)|trans) : (('market.category.' ~ product.category)|trans) %}
@@ -111,11 +112,11 @@
             {% if latest.availability == 'unavailable' %}
                 <section class="market-empty"><h2>{{ 'market.unavailable.title'|trans }}</h2><p>{{ 'market.unavailable.text'|trans }}</p><strong>{{ 'market.unavailable.label'|trans }}</strong><small>{{ latest.observedAt|date(app.request.locale == 'pl' ? 'd.m.Y' : 'M j, Y') }}</small></section>
             {% else %}
-            {% set previous = history|length > 1 ? history[1] : null %}
+            {% set previous = history|length > 1 and history[1].availability == 'available' ? history[1] : null %}
             {% set diff = (previous and previous.medianGrosz > 0) ? (latest.medianGrosz - previous.medianGrosz) : 0 %}
             {% set diff_pct = (previous and previous.medianGrosz > 0) ? ((diff / previous.medianGrosz) * 100)|round(1) : 0 %}
-            {% set month_diff = (one_month_ago and one_month_ago.medianGrosz > 0) ? (latest.medianGrosz - one_month_ago.medianGrosz) : null %}
-            {% set month_pct = (one_month_ago and one_month_ago.medianGrosz > 0) ? ((month_diff / one_month_ago.medianGrosz) * 100)|round(1) : null %}
+            {% set month_diff = has_month_comparison ? (latest.medianGrosz - one_month_ago.medianGrosz) : null %}
+            {% set month_pct = has_month_comparison ? ((month_diff / one_month_ago.medianGrosz) * 100)|round(1) : null %}
 
             <section class="market-latest">
                 <div>
@@ -131,7 +132,7 @@
                 </div>
                 <div>
                     <span>{{ 'market.month_change'|trans }}</span>
-                    {% if one_month_ago and one_month_ago.medianGrosz > 0 %}
+                    {% if has_month_comparison %}
                         <strong>{{ month_diff < 0 ? '📉 ' : (month_diff > 0 ? '📈 +' : '🟢 ') }}{{ (month_diff / 100)|number_format(0) }} zł</strong>
                         <small>{{ 'market.month_ago'|trans }}: {{ _self.money(one_month_ago.medianGrosz, app.request.locale) }} ({{ month_diff > 0 ? '+' : '' }}{{ month_pct }}%)</small>
                     {% else %}
@@ -217,7 +218,7 @@
                     <summary>{{ 'market.faq.price_now.q'|trans({'%product%': localized_product_name}) }}</summary>
                     <p>{{ latest.availability == 'available' ? 'market.faq.price_now.a'|trans({'%product%': localized_product_name, '%median%': _self.money(latest.medianGrosz, app.request.locale), '%low%': _self.money(latest.lowGrosz, app.request.locale), '%high%': _self.money(latest.highGrosz, app.request.locale)}) : 'market.unavailable.text'|trans }}</p>
                 </details>
-                {% if one_month_ago and one_month_ago.medianGrosz > 0 %}
+                {% if has_month_comparison %}
                     <details open>
                         <summary>{{ 'market.faq.month_ago.q'|trans({'%product%': localized_product_name}) }}</summary>
                         <p>{{ 'market.faq.month_ago.a'|trans({'%product%': localized_product_name, '%median%': _self.money(one_month_ago.medianGrosz, app.request.locale), '%diff%': (month_diff > 0 ? '+' : '') ~ ((month_diff / 100)|number_format(0)) ~ ' zł', '%diff_pct%': (month_diff > 0 ? '+' : '') ~ month_pct}) }}</p>

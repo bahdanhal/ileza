@@ -8,10 +8,57 @@ use App\Market\Application\GetProductPriceHistory;
 use App\Market\Application\ProductCatalog;
 use App\Market\Domain\PriceObservation;
 use App\Market\Domain\PriceObservationRepository;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 final class GetProductPriceHistoryTest extends TestCase
 {
+    /** @return iterable<string, array{string, string}> */
+    public static function unavailableComparisons(): iterable
+    {
+        yield 'unavailable baseline with legacy sentinel' => ['available', 'unavailable'];
+        yield 'unavailable current observation' => ['unavailable', 'available'];
+    }
+
+    #[DataProvider('unavailableComparisons')]
+    public function testUnavailableObservationsDoNotProduceMonthlyComparisons(string $latestStatus, string $pastStatus): void
+    {
+        $slug = 'iphone-15-512gb';
+        $catalog = new ProductCatalog();
+        $repository = $this->createMock(PriceObservationRepository::class);
+        $now = new \DateTimeImmutable('2026-10-10', new \DateTimeZone('UTC'));
+        $latest = new PriceObservation($slug, $now, 219967, 180000, 219967, $latestStatus, '', PriceObservation::METHODOLOGY_MANUAL);
+        $pastAmount = $pastStatus === 'available' ? 210000 : 100;
+        $past = new PriceObservation(
+            $slug,
+            $now->modify('-30 days'),
+            $pastAmount,
+            $pastAmount,
+            $pastAmount,
+            $pastStatus,
+            '',
+            PriceObservation::METHODOLOGY_MANUAL
+        );
+        $older = new PriceObservation($slug, $now->modify('-38 days'), 190000, 150000, 190000, 'available', '', PriceObservation::METHODOLOGY_MANUAL);
+        $history = [$latest, $past, $older];
+        $repository->expects(self::once())->method('histories')->with([$slug])->willReturn([$slug => $history]);
+        $repository->method('history')->willReturn([]);
+        $service = new GetProductPriceHistory($catalog, $repository);
+        $service->preload([$slug]);
+
+        $result = $service->detailedHistory($slug);
+        self::assertNotNull($result);
+        self::assertSame($history, $result['history']);
+        self::assertSame($latest, $result['latest']);
+        self::assertNull($result['one_month_ago']);
+
+        $matrix = $service->categoryMatrix('smartphones', 'iphone');
+        $rows = array_values(array_filter($matrix, static fn (array $row): bool => $row['product']->slug === $slug));
+        self::assertCount(1, $rows);
+        self::assertNull($rows[0]['delta_grosz']);
+        self::assertNull($rows[0]['delta_pct']);
+    }
+
     public function testReturnsDetailedHistoryWithOneMonthComparison(): void
     {
         $catalog = new ProductCatalog();
