@@ -181,7 +181,6 @@ market:
         two: "Ostateczną cenę wybieram sam."
         three: "Historia pokazuje, jak moje oceny zmieniają się z czasem."
         public: "Ta cena pokazuje, ile sam zapłaciłbym za produkt. Korzystam z różnych informacji i próbuję różnych podejść, ale ostateczną ocenę wybieram sam."
-        verified_editorially: "Moja osobista ocena z podanego dnia."
         verified_badge: "Ocena Bahdana Hala"
     product_eyebrow: "Historia moich ocen ceny"
     product_lede: "Pokazuję, ile sam zapłaciłbym za tę konfigurację i jak moja ocena zmieniała się z czasem."
@@ -197,7 +196,6 @@ market:
     snapshot_text: "W dniu %date% zapłaciłbym za %product% %median%. Mój przedział cenowy wynosił %low%–%high%."
     dataset:
         name: "Historia moich ocen ceny %product% w Polsce"
-        measurement: "Osobista ocena Bahdana Hala: ile sam by zapłacił"
         fair_price: "Moja ocena ceny w PLN"
         price_range: "Mój przedział cenowy"
     spec:
@@ -297,8 +295,8 @@ market:
     unavailable_short: "Niedostępny"
     unavailable:
         title: "Obecnie niedostępny"
-        label: "Brak potwierdzonych ogłoszeń sprawnego sprzętu"
-        text: "Nie znaleźliśmy obecnie tej konfiguracji w stanie sprawnym technicznie. Ostatnia obserwacja pozostaje w historii, ale nie jest pokazywana jako aktualna cena."
+        label: "Brak aktualnej oceny"
+        text: "Nie znalazłem obecnie tej konfiguracji w stanie sprawnym technicznie, więc nie podaję aktualnej oceny."
     methodology_label: "Co oznacza ta cena?"
     no_data:
         title: "Oczekiwanie na pierwszą ocenę"

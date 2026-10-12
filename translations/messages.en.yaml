@@ -181,7 +181,6 @@ market:
         two: "I choose the final price myself."
         three: "The history shows how my estimates change over time."
         public: "This price shows what I would personally pay for the product. I use different information and experiment with different approaches, but I choose the final estimate myself."
-        verified_editorially: "My personal estimate on the stated date."
         verified_badge: "Estimate by Bahdan Hal"
     product_eyebrow: "History of my price estimates"
     product_lede: "I show what I would personally pay for this configuration and how my estimate has changed over time."
@@ -197,7 +196,6 @@ market:
     snapshot_text: "On %date%, I would have paid %median% for %product%. My price range was %low%–%high%."
     dataset:
         name: "History of my price estimates for %product% in Poland"
-        measurement: "Bahdan Hal’s personal estimate of what he would pay"
         fair_price: "My price estimate in PLN"
         price_range: "My price range"
     spec:
@@ -297,8 +295,8 @@ market:
     unavailable_short: "Unavailable"
     unavailable:
         title: "Currently unavailable"
-        label: "No confirmed usable listing"
-        text: "No exact usable-condition listing is currently confirmed. The last observation remains in the history but is not shown as the current price."
+        label: "No current estimate"
+        text: "I have not found this exact configuration in working condition right now, so I am not giving a current estimate."
     methodology_label: "What does this price mean?"
     no_data:
         title: "The first estimate is not published yet"

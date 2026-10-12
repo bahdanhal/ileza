@@ -1,6 +1,6 @@
 # Architecture Documentation - ileza (ileza.pl)
 
-`ileza` (`ileza.pl`) publishes manual editorial fair prices and dated fair-price histories for products in any category in Poland. The Polish employment and tax calculator is an additional feature of the same product.
+`ileza` (`ileza.pl`) publishes Bahdan Hal’s personal price estimates and dated estimate histories for products in any category in Poland. The Polish employment and tax calculator is an additional feature of the same product.
 
 ---
 
@@ -36,8 +36,8 @@ graph TD
    - Persistence uses Doctrine ORM with an isolated PostgreSQL 17 database and integer `Grosz` Value Objects mapped via a custom DBAL type.
    - External presentation is managed through Symfony controllers and Twig templates (`src/Controller/`, `templates/`).
 
-2. **Editorial Fair-Price Histories (Schema.org Dataset)**
-   - The catalog provides manually reviewed editorial fair-price histories rather than algorithmic valuations or scraped listings.
+2. **Personal Price-Estimate Histories (Schema.org Dataset)**
+   - The catalog publishes the author’s personal opinion on what he would pay for each product, with dated history; it claims no single fixed methodology.
    - Structured data uses Schema.org `Dataset`, `BreadcrumbList`, and `WebPage` (never `Product` or `AggregateOffer`).
    - Observations preload historical snapshots in a single query (`GetProductPriceHistory::preload()`) to eliminate N+1 queries on category and hub pages.
 
