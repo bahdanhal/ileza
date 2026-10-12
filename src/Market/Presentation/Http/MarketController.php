@@ -281,7 +281,7 @@ final class MarketController extends AbstractController
         $matrix = $this->priceHistory->categoryMatrix($categoryKey, $familyFilter);
         $movers = $this->priceHistory->marketMovers($categoryKey, $familyFilter, limit: 4, dropsOnly: true);
 
-        $browse = ($this->browseCatalog ?? new BrowseCatalog())->execute($matrix, $request?->query->all() ?? []);
+        $browse = ($this->browseCatalog ?? new BrowseCatalog())->execute($matrix, $request?->query->all() ?? [], $categoryKey);
 
         /** @var array<string, array{family: ProductFamily, configurations: list<array{product: Product, latest: ?PriceObservation}>}> $familiesBySlug */
         $familiesBySlug = [];

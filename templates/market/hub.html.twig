@@ -31,10 +31,10 @@
     <link rel="alternate" hreflang="pl" href="https://ileza.pl/ceny/{{ hub.canonicalSlugPl }}">
     <link rel="alternate" hreflang="x-default" href="https://ileza.pl/ceny/{{ hub.canonicalSlugPl }}">
     {% if browse.page > 1 %}
-        <link rel="prev" href="{{ absolute_url(path('market_hub', {_locale: app.request.locale, category: app.request.locale == 'pl' ? hub.canonicalSlugPl : hub.canonicalSlugEn, page: browse.page - 1, brand: browse.filters.brand, price: browse.filters.price, ram: browse.filters.ram, chip: browse.filters.chip})) }}">
+        <link rel="prev" href="{{ absolute_url(path('market_hub', {_locale: app.request.locale, category: app.request.locale == 'pl' ? hub.canonicalSlugPl : hub.canonicalSlugEn, page: browse.page - 1, view: view == 'matrix' ? 'matrix' : null, brand: browse.filters.brand, price: browse.filters.price, ram: browse.filters.ram, chip: browse.filters.chip, model: browse.filters.model, storage: browse.filters.storage})) }}">
     {% endif %}
     {% if browse.page < browse.pages %}
-        <link rel="next" href="{{ absolute_url(path('market_hub', {_locale: app.request.locale, category: app.request.locale == 'pl' ? hub.canonicalSlugPl : hub.canonicalSlugEn, page: browse.page + 1, brand: browse.filters.brand, price: browse.filters.price, ram: browse.filters.ram, chip: browse.filters.chip})) }}">
+        <link rel="next" href="{{ absolute_url(path('market_hub', {_locale: app.request.locale, category: app.request.locale == 'pl' ? hub.canonicalSlugPl : hub.canonicalSlugEn, page: browse.page + 1, view: view == 'matrix' ? 'matrix' : null, brand: browse.filters.brand, price: browse.filters.price, ram: browse.filters.ram, chip: browse.filters.chip, model: browse.filters.model, storage: browse.filters.storage})) }}">
     {% endif %}
 {% endblock %}
 {% block stylesheets %}<link rel="stylesheet" href="/tools.css"><link rel="stylesheet" href="/market.css"><link rel="stylesheet" href="/market-extra.css">{% endblock %}
@@ -137,10 +137,23 @@
                 <div><strong>{{ 'market.facets.title'|trans }}</strong><small>{{ 'market.facets.results'|trans({'%count%': browse.total}) }}</small></div>
                 {% if browse.has_filters %}<a href="{{ path('market_hub', {_locale: app.request.locale, category: app.request.locale == 'pl' ? hub.canonicalSlugPl : hub.canonicalSlugEn}) }}">{{ 'market.facets.clear'|trans }}</a>{% endif %}
             </div>
+            {% if view == 'matrix' %}<input type="hidden" name="view" value="matrix">{% endif %}
             <div class="market-facet-fields">
-                <label>{{ 'market.facets.brand'|trans }}
+                {% if browse.options.models is not empty %}
+                    <label>{{ 'market.facets.model'|trans }}
+                        <select name="model"><option value="">{{ 'market.facets.any'|trans }}</option>{% for option in browse.options.models %}<option value="{{ option }}" {{ browse.filters.model == option ? 'selected' : '' }}>{{ option }}</option>{% endfor %}</select>
+                    </label>
+                {% endif %}
+                {% if browse.options.storage is not empty %}
+                    <label>{{ 'market.facets.storage'|trans }}
+                        <select name="storage"><option value="">{{ 'market.facets.any'|trans }}</option>{% for option in browse.options.storage %}<option value="{{ option }}" {{ browse.filters.storage == option ? 'selected' : '' }}>{{ option }}</option>{% endfor %}</select>
+                    </label>
+                {% endif %}
+                {% if browse.options.brands|length > 1 %}
+                    <label>{{ 'market.facets.brand'|trans }}
                     <select name="brand"><option value="">{{ 'market.facets.any'|trans }}</option>{% for option in browse.options.brands %}<option value="{{ option }}" {{ browse.filters.brand == option ? 'selected' : '' }}>{{ option }}</option>{% endfor %}</select>
                 </label>
+                {% elseif browse.filters.brand != '' %}<input type="hidden" name="brand" value="{{ browse.filters.brand }}">{% endif %}
                 <label>{{ 'market.facets.price'|trans }}
                     <select name="price"><option value="">{{ 'market.facets.any'|trans }}</option>{% for option in browse.options.prices %}<option value="{{ option }}" {{ browse.filters.price == option ? 'selected' : '' }}>{{ ('market.facets.price_options.' ~ option|replace({'-': '_'}))|trans }}</option>{% endfor %}</select>
                 </label>
@@ -159,8 +172,8 @@
         </form>
 
         <nav class="market-view-switcher" aria-label="{{ 'market.hubs.view_label'|trans }}">
-            <a href="{{ path('market_hub', {_locale: app.request.locale, category: app.request.locale == 'pl' ? hub.canonicalSlugPl : hub.canonicalSlugEn, brand: browse.filters.brand, price: browse.filters.price, ram: browse.filters.ram, chip: browse.filters.chip}) }}" class="{{ view == 'cards' ? 'active' : '' }}">{{ 'market.hubs.cards_view'|trans }}</a>
-            <a href="{{ path('market_hub', {_locale: app.request.locale, category: app.request.locale == 'pl' ? hub.canonicalSlugPl : hub.canonicalSlugEn, view: 'matrix', brand: browse.filters.brand, price: browse.filters.price, ram: browse.filters.ram, chip: browse.filters.chip}) }}" class="{{ view == 'matrix' ? 'active' : '' }}">{{ 'market.hubs.matrix_view'|trans }}</a>
+            <a href="{{ path('market_hub', {_locale: app.request.locale, category: app.request.locale == 'pl' ? hub.canonicalSlugPl : hub.canonicalSlugEn, brand: browse.filters.brand, price: browse.filters.price, ram: browse.filters.ram, chip: browse.filters.chip, model: browse.filters.model, storage: browse.filters.storage}) }}" class="{{ view == 'cards' ? 'active' : '' }}">{{ 'market.hubs.cards_view'|trans }}</a>
+            <a href="{{ path('market_hub', {_locale: app.request.locale, category: app.request.locale == 'pl' ? hub.canonicalSlugPl : hub.canonicalSlugEn, view: 'matrix', brand: browse.filters.brand, price: browse.filters.price, ram: browse.filters.ram, chip: browse.filters.chip, model: browse.filters.model, storage: browse.filters.storage}) }}" class="{{ view == 'matrix' ? 'active' : '' }}">{{ 'market.hubs.matrix_view'|trans }}</a>
         </nav>
 
         {% if view == 'matrix' %}
@@ -238,7 +251,7 @@
         {% if browse.pages > 1 %}
             <nav class="market-pagination" aria-label="{{ 'market.facets.pagination'|trans }}">
                 {% for page in 1..browse.pages %}
-                    <a href="{{ path('market_hub', {_locale: app.request.locale, category: app.request.locale == 'pl' ? hub.canonicalSlugPl : hub.canonicalSlugEn, page: page, view: view == 'matrix' ? 'matrix' : null, brand: browse.filters.brand, price: browse.filters.price, ram: browse.filters.ram, chip: browse.filters.chip}) }}" class="{{ page == browse.page ? 'active' : '' }}" {{ page == browse.page ? 'aria-current="page"' : '' }}>{{ page }}</a>
+                    <a href="{{ path('market_hub', {_locale: app.request.locale, category: app.request.locale == 'pl' ? hub.canonicalSlugPl : hub.canonicalSlugEn, page: page, view: view == 'matrix' ? 'matrix' : null, brand: browse.filters.brand, price: browse.filters.price, ram: browse.filters.ram, chip: browse.filters.chip, model: browse.filters.model, storage: browse.filters.storage}) }}" class="{{ page == browse.page ? 'active' : '' }}" {{ page == browse.page ? 'aria-current="page"' : '' }}>{{ page }}</a>
                 {% endfor %}
             </nav>
         {% endif %}
@@ -299,6 +312,18 @@
         {% endif %}
 
         <section class="tool-faq">
+            {% if hub_key == 'iphone' or category_key == 'smartphones' %}
+                <h2>{{ 'market.hubs.iphone_faq.title'|trans }}</h2>
+                {% for question in ['configuration', 'storage', 'history', 'condition'] %}
+                    <details open>
+                        <summary>{{ ('market.hubs.iphone_faq.' ~ question ~ '_question')|trans }}</summary>
+                        <p>{{ ('market.hubs.iphone_faq.' ~ question ~ '_answer')|trans }}</p>
+                        {% if question == 'condition' %}
+                            <p><a href="{{ path('blog_article', {_locale: app.request.locale, slug: app.request.locale == 'pl' ? 'checklista-uzywany-iphone' : 'used-iphone-buying-checklist'}) }}">{{ 'market.hubs.iphone_faq.checklist'|trans }}</a></p>
+                        {% endif %}
+                    </details>
+                {% endfor %}
+            {% else %}
             <h2>{{ 'market.hubs.faq_title'|trans }}</h2>
             <details open>
                 <summary>{{ 'market.hubs.faq_q1'|trans }}</summary>
@@ -308,6 +333,7 @@
                 <summary>{{ 'market.hubs.faq_q2'|trans }}</summary>
                 <p>{{ 'market.hubs.faq_a2'|trans }}</p>
             </details>
+            {% endif %}
         </section>
 
         <section class="market-mcp">

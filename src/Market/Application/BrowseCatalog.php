@@ -31,23 +31,45 @@ final class BrowseCatalog
      *         delta_grosz: ?int,
      *         delta_pct: ?float
      *     }>,
-     *     filters: array{brand: string, price: string, ram: string, chip: string},
-     *     options: array{brands: list<string>, prices: list<string>, ram: list<string>, chips: list<string>},
+     *     filters: array{brand: string, price: string, ram: string, chip: string, model: string, storage: string},
+     *     options: array{brands: list<string>, prices: list<string>, ram: list<string>, chips: list<string>, models: list<string>, storage: list<string>},
      *     page: int,
      *     pages: int,
      *     total: int,
      *     has_filters: bool
      * }
      */
-    public function execute(array $rows, array $query): array
+    public function execute(array $rows, array $query, string $category = ''): array
     {
+        $isSmartphone = $category === 'smartphones'
+            || ($category === '' && isset($rows[0]) && $rows[0]['product']->category === 'smartphones');
+        $options = $this->options($rows, $isSmartphone);
         $filters = [
             'brand' => $this->queryString($query, 'brand'),
             'price' => $this->queryString($query, 'price'),
             'ram' => $this->queryString($query, 'ram'),
             'chip' => $this->queryString($query, 'chip'),
+            'model' => $this->queryString($query, 'model'),
+            'storage' => $this->queryString($query, 'storage'),
         ];
-        $options = $this->options($rows);
+        // Keep existing bookmarked price bands usable after introducing phone-specific bands.
+        $legacyPrices = ['under-100', '100-2000', '2000-20000', 'over-20000'];
+        if ($isSmartphone && in_array($filters['price'], $legacyPrices, true)) {
+            $options['prices'][] = $filters['price'];
+        }
+        $facetKeys = [
+            'brand' => 'brands',
+            'price' => 'prices',
+            'ram' => 'ram',
+            'chip' => 'chips',
+            'model' => 'models',
+            'storage' => 'storage',
+        ];
+        foreach ($facetKeys as $filter => $option) {
+            if (!in_array($filters[$filter], $options[$option], true)) {
+                $filters[$filter] = '';
+            }
+        }
 
         $filtered = array_values(array_filter(
             $rows,
@@ -83,16 +105,29 @@ final class BrowseCatalog
 
     /**
      * @param list<array{product: Product, latest: ?PriceObservation}> $rows
-     * @return array{brands: list<string>, prices: list<string>, ram: list<string>, chips: list<string>}
+     * @return array{brands: list<string>, prices: list<string>, ram: list<string>, chips: list<string>, models: list<string>, storage: list<string>}
      */
-    private function options(array $rows): array
+    private function options(array $rows, bool $isSmartphone): array
     {
         $brands = [];
         $ram = [];
         $chips = [];
+        $models = [];
+        $storage = [];
         foreach ($rows as $row) {
             $product = $row['product'];
             $brands[$this->brand($product)] = true;
+            if ($isSmartphone) {
+                $model = $this->model($product);
+                if ($model !== '') {
+                    $models[$model] = true;
+                }
+                $capacity = $product->specifications['storage'] ?? '';
+                if (is_string($capacity) && $capacity !== '') {
+                    $storage[$capacity] = true;
+                }
+                continue;
+            }
             $memory = $this->memory($product);
             if ($memory !== '') {
                 $ram[$memory] = true;
@@ -106,26 +141,45 @@ final class BrowseCatalog
         $brandValues = array_keys($brands);
         $ramValues = array_keys($ram);
         $chipValues = array_keys($chips);
+        $modelValues = array_keys($models);
+        $storageValues = array_keys($storage);
         natcasesort($brandValues);
         natcasesort($ramValues);
         natcasesort($chipValues);
+        natcasesort($modelValues);
+        usort($storageValues, static function (string $left, string $right): int {
+            $leftSize = (float) $left * (str_ends_with($left, 'TB') ? 1024 : 1);
+            $rightSize = (float) $right * (str_ends_with($right, 'TB') ? 1024 : 1);
+
+            return $leftSize <=> $rightSize;
+        });
 
         return [
             'brands' => array_values($brandValues),
-            'prices' => ['under-100', '100-2000', '2000-20000', 'over-20000'],
+            'prices' => $isSmartphone
+                ? ['under-500', '500-1000', '1000-2000', '2000-3000', '3000-5000', 'over-5000']
+                : ['under-100', '100-2000', '2000-20000', 'over-20000'],
             'ram' => array_values($ramValues),
             'chips' => array_values($chipValues),
+            'models' => array_values($modelValues),
+            'storage' => $storageValues,
         ];
     }
 
     /**
      * @param array{product: Product, latest: ?PriceObservation} $row
-     * @param array{brand: string, price: string, ram: string, chip: string} $filters
+     * @param array{brand: string, price: string, ram: string, chip: string, model: string, storage: string} $filters
      */
     private function matches(array $row, array $filters): bool
     {
         $product = $row['product'];
         if ($filters['brand'] !== '' && $filters['brand'] !== $this->brand($product)) {
+            return false;
+        }
+        if ($filters['model'] !== '' && $filters['model'] !== $this->model($product)) {
+            return false;
+        }
+        if ($filters['storage'] !== '' && $filters['storage'] !== ($product->specifications['storage'] ?? '')) {
             return false;
         }
         if ($filters['ram'] !== '' && $filters['ram'] !== $this->memory($product)) {
@@ -153,6 +207,17 @@ final class BrowseCatalog
         return is_string($value) ? $value : '';
     }
 
+    private function model(Product $product): string
+    {
+        $generation = $product->specifications['generation'] ?? '';
+        $variant = $product->specifications['variant'] ?? '';
+        if (!is_string($generation) || !is_string($variant)) {
+            return '';
+        }
+
+        return trim($generation . ($variant === 'Standard' ? '' : ' ' . $variant));
+    }
+
     private function matchesPrice(?PriceObservation $latest, string $price): bool
     {
         if ($latest === null || $latest->availability !== 'available') {
@@ -161,6 +226,12 @@ final class BrowseCatalog
         $pln = $latest->medianGrosz / 100;
 
         return match ($price) {
+            'under-500' => $pln < 500,
+            '500-1000' => $pln >= 500 && $pln < 1000,
+            '1000-2000' => $pln >= 1000 && $pln < 2000,
+            '2000-3000' => $pln >= 2000 && $pln < 3000,
+            '3000-5000' => $pln >= 3000 && $pln <= 5000,
+            'over-5000' => $pln > 5000,
             'under-100' => $pln < 100,
             '100-2000' => $pln >= 100 && $pln < 2000,
             '2000-20000' => $pln >= 2000 && $pln <= 20000,
