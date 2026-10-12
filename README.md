@@ -1,8 +1,8 @@
 # IleZa.pl (`ileza`)
 
-**Live website:** [IleZa.pl - editorial fair prices and Polish salary calculator](https://ileza.pl/)
+**Live website:** [IleZa.pl - personal price estimates and Polish salary calculator](https://ileza.pl/)
 
-Manual editorial fair-price histories for products in Poland, paired with a private browser-based salary and income calculator.
+Personal price estimates and dated histories by Bahdan Hal for products in Poland, paired with a private browser-based salary and income calculator.
 
 **Related projects:** [Bahdan Hal - software engineering consulting](https://bahdanhal.pl/) · [Stackhal - free developer and DevOps tools](https://stackhal.com/)
 
@@ -12,11 +12,11 @@ Manual editorial fair-price histories for products in Poland, paired with a priv
 
 ## 1. Overview
 
-**IleZa.pl** ("Ile za?") publishes transparent editorial judgments about what products are reasonably worth without premiums for novelty, packaging, marketing, or large retail markups. It is designed to cover any product category, including electronics, vehicles, and cosmetics, alongside a browser-only Polish employment and tax comparison calculator.
+**IleZa.pl** ("Ile za?") publishes Bahdan Hal’s personal opinion on what he would pay for a product. Different information and experiments inform these judgments; the author chooses the final price and has no single fixed methodology. It is designed to cover any product category, including electronics, vehicles, and cosmetics, alongside a browser-only Polish employment and tax comparison calculator.
 
 ### Core Features & Canonical Routes:
-- **Fair-Price Catalog (`/`, PL: `/pl/`)**: Catalog of products with manual editorial price estimates.
-- **Product History (`/ceny/{slug}`, EN: `/prices/{slug}`)**: Dated editorial fair prices, reasonable ranges, availability, and historical changes.
+- **Fair-Price Catalog (`/`, PL: `/pl/`)**: Catalog of products with the author’s personal price estimates.
+- **Product History (`/ceny/{slug}`, EN: `/prices/{slug}`)**: Dated personal price estimates, price ranges, availability, and historical changes.
 - **Employment & Tax Calculator (`/kalkulator-wynagrodzen`, EN: `/salary-calculator`)**: Browser-only comparison of UoP, Umowa Zlecenie, Umowa o Dzieło, and B2B from a single company employer budget using 2026 Polish tax rules.
 - **Product Addition Request (`/zglos`, EN: `/request`)**: Community submission queue for new models.
 - **Price Tip Submission (`/ceny/{slug}/okazja`, EN: `/prices/{slug}/price-tip`)**: Community price alerts for admin review.

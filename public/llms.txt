@@ -1,11 +1,11 @@
-# IleZa.pl — Editorial Fair Prices for Any Product Category
+# IleZa.pl — Personal Price Estimates by Bahdan Hal
 
-> Manual editorial fair prices and dated fair-price histories for products in any category in Poland, by Bahdan Hal. A full Polish employment contract calculator is included as an additional feature.
+> Personal estimates of what Bahdan Hal would pay for products in Poland, with dated histories. A full Polish employment contract calculator is included as an additional feature.
 
 ## Primary pages
 
-- [Editorial fair-price index](https://ileza.pl/en/): manual judgments about what products are reasonably worth, with dated histories
-- [Redakcyjny indeks uczciwych cen](https://ileza.pl/): polska wersja indeksu (iPhone, MacBook, RAM, GPU, konsole)
+- [Personal price estimates](https://ileza.pl/en/): what Bahdan Hal would pay for products, with dated histories
+- [Moje oceny cen](https://ileza.pl/): ile sam bym zapłacił, z historią ocen dla konkretnych konfiguracji
 - [Kalkulator wynagrodzeń 2026](https://ileza.pl/kalkulator-wynagrodzen): porównanie kosztu pracodawcy i wypłaty netto dla UoP, zlecenie, o dzieło, B2B oraz Spółki z o.o. (powołanie zarządu)
 - [Baza wiedzy i poradniki](https://ileza.pl/blog/): poradniki zakupowe, checklisty weryfikacji sprzętu i analizy opłacalności
 
@@ -22,5 +22,5 @@
 
 ## Important limitations
 
-Fair-price values are subjective manual editorial judgments, not statistical samples, scraped listings, algorithmic valuations, completed-sale statistics, or purchasing advice. Visitors may privately submit a public sales-page link as additional context; links are never fetched automatically or published, and seller data or page text is not retained.
+Price values express Bahdan Hal’s personal opinion on what he would pay on the stated date. He uses different information and experiments, chooses the final price himself, and has no single fixed methodology. Visitors may privately submit a public sales-page link as additional context; links are never fetched automatically or published, and seller data or page text is not retained.
 

@@ -13,7 +13,7 @@ final class MarketPositioningTest extends TestCase
         $template = (string) file_get_contents(dirname(__DIR__, 2) . '/templates/market/product.html.twig');
 
         self::assertStringContainsString("'@type':'Dataset'", $template);
-        self::assertStringContainsString("'measurementTechnique'", $template);
+        self::assertStringNotContainsString("'measurementTechnique'", $template);
         self::assertStringNotContainsString("'@type':'Product'", $template);
         self::assertStringNotContainsString('AggregateOffer', $template);
         self::assertStringNotContainsString('sampleSize', $template);

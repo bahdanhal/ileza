@@ -61,8 +61,8 @@ final readonly class PriceObservation
     }
 
     public const METHODOLOGY_MANUAL =
-        'Manual editorial estimate based on product knowledge and available market information; '
-        . 'no statistical sample or automated pricing algorithm is claimed.';
+        'Bahdan Hal’s personal opinion on what he would pay for the product on the stated date; '
+        . 'informed by different information and experiments, with no single fixed methodology.';
 
     /**
      * @param array<string, mixed> $data

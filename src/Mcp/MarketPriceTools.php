@@ -28,7 +28,7 @@ final readonly class MarketPriceTools
     #[McpTool(
         name: 'list_polish_fair_price_products',
         title: 'List Fair-Price Products',
-        description: 'List products tracked by IleZa.pl for manual editorial fair-price history in Poland.',
+        description: 'List products with Bahdan Hal’s personal price estimates and dated history in Poland.',
         annotations: new ToolAnnotations(readOnlyHint: true, openWorldHint: false),
     )]
     public function listProducts(): string
@@ -95,7 +95,7 @@ final readonly class MarketPriceTools
         name: 'get_polish_fair_price_history',
         title: 'Get Fair-Price History',
         // phpcs:ignore Generic.Files.LineLength
-        description: 'Get dated manual editorial fair-price estimates for one exact product definition in Poland.',
+        description: 'Get dated personal estimates of what Bahdan Hal would pay for an exact product in Poland.',
         annotations: new ToolAnnotations(readOnlyHint: true, openWorldHint: false),
     )]
     public function getHistory(#[Schema(description: 'Product slug returned by list_polish_fair_price_products.')] string $slug): string
@@ -117,7 +117,7 @@ final readonly class MarketPriceTools
                 'availability' => $item->availability,
             ], $this->priceHistory->forProduct($slug)),
             // phpcs:ignore Generic.Files.LineLength
-            'methodology' => 'Manual editorial estimate based on product knowledge and available market information. It is not a statistical sample, automated pricing algorithm, completed-sale statistic, or purchasing advice.',
+            'methodology' => PriceObservation::METHODOLOGY_MANUAL,
             'canonical_url' => $this->canonicalUrl($slug),
         ]);
     }
@@ -206,7 +206,7 @@ final readonly class MarketPriceTools
             return $this->json(['error' => 'Invalid date format. Use YYYY-MM-DD or ISO 8601.']);
         }
 
-        $note = $summary ?? 'Manual IleZa.pl editorial fair-price estimate.';
+        $note = $summary ?? 'Personal IleZa.pl price estimate by Bahdan Hal.';
 
         try {
             $this->recordObservation->execute(
