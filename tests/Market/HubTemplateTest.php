@@ -8,6 +8,7 @@ use App\Market\Application\BrowseCatalog;
 use App\Market\Application\GetProductPriceHistory;
 use App\Market\Application\ProductCatalog;
 use App\Market\Domain\PriceObservationRepository;
+use App\Market\Domain\ProductFamily;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -45,6 +46,7 @@ final class HubTemplateTest extends TestCase
         self::assertSame(1, $this->countMatches($xpath, '//meta[@name="robots" and @content="noindex,follow"]'));
         self::assertStringContainsString($locale === 'pl' ? 'Pytania o wybór' : 'Questions about choosing', $html);
         self::assertStringNotContainsString('market.hubs.iphone_faq', $html);
+        self::assertStringNotContainsString('market.facets.price_options', $html);
         $guide = $locale === 'pl' ? '/blog/checklista-uzywany-iphone' : '/en/blog/used-iphone-buying-checklist';
         self::assertSame(1, $this->countMatches($xpath, '//section[@class="tool-faq"]//a[@href="' . $guide . '"]'));
         $links = $xpath->query('//nav[@class="market-view-switcher"]/a');
@@ -72,6 +74,59 @@ final class HubTemplateTest extends TestCase
         }
     }
 
+    /** @return iterable<string, array{string, string}> */
+    public static function priceOptionTranslations(): iterable
+    {
+        foreach (['pl', 'en'] as $locale) {
+            foreach (['', 'under-100', '100-2000', '2000-20000', 'over-20000'] as $legacyBand) {
+                yield $locale . ' ' . $legacyBand => [$locale, $legacyBand];
+            }
+        }
+    }
+
+    #[DataProvider('priceOptionTranslations')]
+    public function testEveryPhonePriceOptionIsTranslatedIncludingLegacyBands(string $locale, string $legacyBand): void
+    {
+        $html = $this->renderHub('iphone', $locale, 'cards', ['price' => $legacyBand]);
+        $xpath = new \DOMXPath($this->document($html));
+        $options = $xpath->query('//select[@name="price"]/option[@value!=""]');
+        self::assertNotFalse($options);
+        self::assertSame($legacyBand === '' ? 6 : 7, $options->length);
+        foreach ($options as $option) {
+            self::assertInstanceOf(\DOMElement::class, $option);
+            self::assertStringNotContainsString('market.facets.price_options', $option->textContent);
+            self::assertStringContainsString($locale === 'pl' ? 'zł' : 'PLN', $option->textContent);
+        }
+    }
+
+    #[DataProvider('phoneViews')]
+    public function testFilteredSingletonCardNamesTheExactConfigurationAndLinksToIt(string $locale, string $view): void
+    {
+        $html = $this->renderHub('iphone', $locale, $view, ['model' => 'iPhone 15 Pro', 'storage' => '256 GB']);
+        $xpath = new \DOMXPath($this->document($html));
+        self::assertSame(1, $this->countMatches($xpath, '//article[@class="market-product"]'));
+        $headings = $xpath->query('//article[@class="market-product"]//h2');
+        self::assertNotFalse($headings);
+        $heading = $headings->item(0);
+        self::assertInstanceOf(\DOMElement::class, $heading);
+        self::assertSame('Apple iPhone 15 Pro 256 GB', trim($heading->textContent));
+        $path = ($locale === 'pl' ? '/ceny/' : '/prices/') . 'iphone-15-pro-256gb';
+        self::assertSame(1, $this->countMatches($xpath, '//article[@class="market-product"]//a[@data-market-link and @href="' . $path . '"]'));
+    }
+
+    public function testCardWithMultipleConfigurationsKeepsTheFamilyHeading(): void
+    {
+        $html = $this->renderHub('iphone', 'en', 'cards', ['model' => 'iPhone 15 Pro']);
+        $xpath = new \DOMXPath($this->document($html));
+        $headings = $xpath->query('//article[@class="market-product"]//h2');
+        self::assertNotFalse($headings);
+        self::assertSame(1, $headings->length);
+        $heading = $headings->item(0);
+        self::assertInstanceOf(\DOMElement::class, $heading);
+        self::assertSame('Apple iPhone 15', trim($heading->textContent));
+        self::assertGreaterThan(0, $this->countMatches($xpath, '//article[@class="market-product"]//select[@data-market-spec-select="storage"]'));
+    }
+
     /** @param array<string, string> $query */
     private function renderHub(string $key, string $locale, string $view, array $query = []): string
     {
@@ -83,6 +138,15 @@ final class HubTemplateTest extends TestCase
         $history->preload(array_map(static fn ($product): string => $product->slug, $catalog->all()));
         $matrix = $history->categoryMatrix($hub['category'], $hub['familyFilter']);
         $browse = (new BrowseCatalog())->execute($matrix, $query, $hub['category']);
+        $families = [];
+        foreach ($browse['rows'] as $row) {
+            if (!$row['family'] instanceof ProductFamily) {
+                continue;
+            }
+            $slug = $row['family']->slug;
+            $families[$slug] ??= ['family' => $row['family'], 'configurations' => []];
+            $families[$slug]['configurations'][] = ['product' => $row['product'], 'latest' => $row['latest']];
+        }
         $request = new Request();
         $request->setLocale($locale);
         $twig = new Environment(new FilesystemLoader(dirname(__DIR__, 2) . '/templates'), ['strict_variables' => true]);
@@ -96,6 +160,9 @@ final class HubTemplateTest extends TestCase
             $locale = $parameters['_locale'] ?? 'pl';
             if ($name === 'blog_article') {
                 return ($locale === 'pl' ? '/blog/' : '/en/blog/') . $parameters['slug'];
+            }
+            if ($name === 'market_product') {
+                return ($locale === 'pl' ? '/ceny/' : '/prices/') . $parameters['slug'];
             }
             if ($name === 'market_hub') {
                 $path = ($locale === 'pl' ? '/ceny/' : '/prices/') . $parameters['category'];
@@ -114,7 +181,7 @@ final class HubTemplateTest extends TestCase
             'stats' => $history->categoryStatistics($hub['category'], $hub['familyFilter']),
             'matrix' => $browse['rows'],
             'movers' => [],
-            'families' => [],
+            'families' => array_values($families),
             'hubs' => $catalog->hubs(),
             'browse' => $browse,
             'view' => $view,

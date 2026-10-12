@@ -283,7 +283,7 @@
                         </figure>
                         <div class="market-product-body">
                             <span class="market-category">{{ ('market.category.' ~ item.family.category)|trans }}</span>
-                            <h2>{{ _self.localized_label(item.family.name, app.request.locale) }}</h2>
+                            <h2>{{ _self.localized_label(item.configurations|length == 1 ? initial.product.name : item.family.name, app.request.locale) }}</h2>
                             <div class="market-configuration-selects" data-market-selects>
                                 {% for key in spec_keys %}
                                     {% set values = [] %}
