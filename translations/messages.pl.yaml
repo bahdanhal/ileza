@@ -49,7 +49,7 @@ market:
         title: "Ile sam bym za to zapłacił? Ceny i historia · IleZa.pl"
         description: "Zobacz, ile sam zapłaciłbym za produkty w Polsce. Moje oceny cen, przedziały i historia zmian dla konkretnych konfiguracji."
     product_meta:
-        title: "%product% — ile bym zapłacił? Ocena i historia ceny"
+        title: "%product% — cena w Polsce: ile bym zapłacił i historia"
         description: "Zobacz, ile sam zapłaciłbym za %product%. Moja ocena ceny, przedział i historia zmian w Polsce."
     eyebrow: "Polska · Moje oceny cen"
     heading_start: "Ile sam bym za to zapłacił?"

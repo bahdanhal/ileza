@@ -38,6 +38,9 @@ final class HubTemplateTest extends TestCase
         $document = $this->document($html);
         $xpath = new \DOMXPath($document);
 
+        self::assertStringContainsString('IleZa.pl', (string) $xpath->evaluate('string(//title)'));
+        self::assertStringNotContainsString('IleZa.pl', (string) $xpath->evaluate('string(//h1)'));
+        self::assertStringContainsString('iPhone', (string) $xpath->evaluate('string(//h1)'));
         self::assertSame(1, $this->countMatches($xpath, '//select[@name="model"]/option[@selected and @value="iPhone 15 Pro"]'));
         self::assertSame(1, $this->countMatches($xpath, '//select[@name="storage"]/option[@selected and @value="256 GB"]'));
         foreach (['brand', 'ram', 'chip'] as $field) {

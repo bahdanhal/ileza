@@ -68,7 +68,7 @@
 
         <header class="market-hub-hero">
             <div class="eyebrow">{{ 'market.hubs.hero_eyebrow'|trans }}</div>
-            <h1 class="market-title">{{ ('market.hubs.meta.' ~ hub_key ~ '.title')|trans }}</h1>
+            <h1 class="market-title">{{ ('market.hubs.meta.' ~ hub_key ~ '.title')|trans|replace({' · IleZa.pl': ''}) }}</h1>
             <p class="lede">{{ ('market.hubs.meta.' ~ hub_key ~ '.description')|trans({'%min%': stats.min_price_grosz ? _self.smart_money(stats.min_price_grosz, app.request.locale) : '', '%max%': stats.max_price_grosz ? _self.smart_money(stats.max_price_grosz, app.request.locale) : ''}) }}</p>
 
             <ul class="market-service-strip" aria-label="Category statistics">

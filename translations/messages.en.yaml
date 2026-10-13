@@ -49,7 +49,7 @@ market:
         title: "What Would I Pay? Prices & History · IleZa.pl"
         description: "See what I would personally pay for products in Poland. My price estimates, ranges and dated history for exact configurations."
     product_meta:
-        title: "%product% — what would I pay? Price estimate & history"
+        title: "%product% price in Poland — what I would pay & history"
         description: "See what I would personally pay for %product%. My price estimate, range and dated history in Poland."
     eyebrow: "Poland · My price estimates"
     heading_start: "What would I pay for it?"
