@@ -181,7 +181,7 @@ market:
         two: "I choose the final price myself."
         three: "The history shows how my estimates change over time."
         public: "This price shows what I would personally pay for the product. I use different information and experiment with different approaches, but I choose the final estimate myself."
-        verified_badge: "Estimate by Bahdan Hal"
+        verified_badge: "My personal estimate"
     product_eyebrow: "History of my price estimates"
     product_lede: "I show what I would personally pay for this configuration and how my estimate has changed over time."
     median: "My estimate"
@@ -296,14 +296,14 @@ market:
     unavailable:
         title: "Currently unavailable"
         label: "No current estimate"
-        text: "I have not found this exact configuration in working condition right now, so I am not giving a current estimate."
+        text: "I have not found this exact configuration in working condition right now, so I am not giving a current estimate. Earlier estimates stay in the history below."
     methodology_label: "What does this price mean?"
     no_data:
         title: "The first estimate is not published yet"
         text: "I have not published an estimate for this configuration yet. Its history will begin with the first entry."
     caveat:
         title: "My opinion on the price"
-        text: "This is a personal estimate by Bahdan Hal, the author of IleZa.pl: what I would pay for the product on the stated date."
+        text: "This is my personal estimate: what I would pay for the product on the stated date."
     chart:
         title: "Price trend over time"
     checker:

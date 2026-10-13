@@ -181,7 +181,7 @@ market:
         two: "Ostateczną cenę wybieram sam."
         three: "Historia pokazuje, jak moje oceny zmieniają się z czasem."
         public: "Ta cena pokazuje, ile sam zapłaciłbym za produkt. Korzystam z różnych informacji i próbuję różnych podejść, ale ostateczną ocenę wybieram sam."
-        verified_badge: "Ocena Bahdana Hala"
+        verified_badge: "Moja osobista ocena"
     product_eyebrow: "Historia moich ocen ceny"
     product_lede: "Pokazuję, ile sam zapłaciłbym za tę konfigurację i jak moja ocena zmieniała się z czasem."
     median: "Moja ocena"
@@ -296,14 +296,14 @@ market:
     unavailable:
         title: "Obecnie niedostępny"
         label: "Brak aktualnej oceny"
-        text: "Nie znalazłem obecnie tej konfiguracji w stanie sprawnym technicznie, więc nie podaję aktualnej oceny."
+        text: "Nie znalazłem obecnie tej konfiguracji w stanie sprawnym technicznie, więc nie podaję aktualnej oceny. Wcześniejsze oceny zostają w historii poniżej."
     methodology_label: "Co oznacza ta cena?"
     no_data:
         title: "Oczekiwanie na pierwszą ocenę"
         text: "Nie opublikowałem jeszcze oceny tej konfiguracji. Historia pojawi się wraz z pierwszym wpisem."
     caveat:
         title: "Moja opinia o cenie"
-        text: "To osobista ocena Bahdana Hala, autora IleZa.pl: ile sam zapłaciłbym za produkt w podanym dniu."
+        text: "To moja osobista ocena: ile sam zapłaciłbym za produkt w podanym dniu."
     chart:
         title: "Wykres dynamiki cen"
     checker:

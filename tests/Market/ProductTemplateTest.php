@@ -119,4 +119,46 @@ final class ProductTemplateTest extends TestCase
         self::assertStringNotContainsString('market.faq.month_ago.q', $html);
         self::assertStringNotContainsString('trend-badge', $html);
     }
+
+    public function testUnavailableProductKeepsItsEarlierHistoryNextToTheUnavailableNotice(): void
+    {
+        $product = new Product(
+            slug: 'iphone-14-512gb',
+            name: 'Apple iPhone 14 512 GB',
+            definition: 'Smartphone Apple',
+            category: 'smartfony',
+            specifications: ['Storage' => '512 GB'],
+        );
+        $observation = static fn (string $date, int $amount, string $availability): PriceObservation => new PriceObservation(
+            'iphone-14-512gb',
+            new \DateTimeImmutable($date),
+            $amount,
+            $amount,
+            $amount,
+            $availability,
+            'Note',
+            PriceObservation::METHODOLOGY_MANUAL,
+        );
+        $latest = $observation('2026-10-11', 0, 'unavailable');
+
+        $html = $this->twig->render('market/product.html.twig', [
+            'product' => $product,
+            'family' => null,
+            'category_slug' => 'smartfony',
+            'category_name' => 'Smartfony',
+            'canonical_url' => 'https://ileza.pl/ceny/iphone-14-512gb',
+            'latest' => $latest,
+            'history' => [$latest, $observation('2026-09-28', 210000, 'available')],
+            'one_month_ago' => null,
+            'related' => [],
+        ]);
+
+        self::assertStringContainsString('market.unavailable.title', $html);
+        self::assertStringContainsString('market.history', $html);
+        self::assertStringContainsString('2 100,00 zł', $html);
+        self::assertStringNotContainsString('data-deal-checker', $html);
+        self::assertStringNotContainsString('market.snapshot_text', $html);
+        self::assertStringNotContainsString("'@type':'Dataset'", $html);
+        self::assertStringNotContainsString('"@type":"Dataset"', $html);
+    }
 }
