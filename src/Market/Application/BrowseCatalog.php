@@ -12,6 +12,8 @@ final class BrowseCatalog
 {
     public const ITEMS_PER_PAGE = 100;
 
+    private const GPU_TIERS = ['Entry-level', 'Mid-range', 'Upper mid-range', 'High-end', 'Flagship'];
+
     /**
      * @param list<array{
      *     product: Product,
@@ -43,7 +45,8 @@ final class BrowseCatalog
     {
         $isSmartphone = $category === 'smartphones'
             || ($category === '' && isset($rows[0]) && $rows[0]['product']->category === 'smartphones');
-        $options = $this->options($rows, $isSmartphone);
+        $isGpu = $category === 'gpus';
+        $options = $this->options($rows, $isSmartphone, $isGpu);
         $filters = [
             'brand' => $this->queryString($query, 'brand'),
             'price' => $this->queryString($query, 'price'),
@@ -107,7 +110,7 @@ final class BrowseCatalog
      * @param list<array{product: Product, latest: ?PriceObservation}> $rows
      * @return array{brands: list<string>, prices: list<string>, ram: list<string>, chips: list<string>, models: list<string>, storage: list<string>}
      */
-    private function options(array $rows, bool $isSmartphone): array
+    private function options(array $rows, bool $isSmartphone, bool $isGpu = false): array
     {
         $brands = [];
         $ram = [];
@@ -128,12 +131,15 @@ final class BrowseCatalog
                 }
                 continue;
             }
+            if ($isGpu) {
+                $models[$this->model($product)] = true;
+            }
             $memory = $this->memory($product);
             if ($memory !== '') {
                 $ram[$memory] = true;
             }
-            $chip = $product->specifications['chip'] ?? '';
-            if (is_string($chip) && $chip !== '') {
+            $chip = $this->chip($product);
+            if ($chip !== '') {
                 $chips[$chip] = true;
             }
         }
@@ -145,7 +151,12 @@ final class BrowseCatalog
         $storageValues = array_keys($storage);
         natcasesort($brandValues);
         natcasesort($ramValues);
-        natcasesort($chipValues);
+        if ($isGpu) {
+            usort($chipValues, static fn (string $left, string $right): int => array_search($left, self::GPU_TIERS, true)
+                <=> array_search($right, self::GPU_TIERS, true));
+        } else {
+            natcasesort($chipValues);
+        }
         natcasesort($modelValues);
         usort($storageValues, static function (string $left, string $right): int {
             $leftSize = (float) $left * (str_ends_with($left, 'TB') ? 1024 : 1);
@@ -156,7 +167,7 @@ final class BrowseCatalog
 
         return [
             'brands' => array_values($brandValues),
-            'prices' => $isSmartphone
+            'prices' => $isSmartphone || $isGpu
                 ? ['under-500', '500-1000', '1000-2000', '2000-3000', '3000-5000', 'over-5000']
                 : ['under-100', '100-2000', '2000-20000', 'over-20000'],
             'ram' => array_values($ramValues),
@@ -185,7 +196,7 @@ final class BrowseCatalog
         if ($filters['ram'] !== '' && $filters['ram'] !== $this->memory($product)) {
             return false;
         }
-        if ($filters['chip'] !== '' && $filters['chip'] !== ($product->specifications['chip'] ?? '')) {
+        if ($filters['chip'] !== '' && $filters['chip'] !== $this->chip($product)) {
             return false;
         }
         return $filters['price'] === '' || $this->matchesPrice($row['latest'], $filters['price']);
@@ -193,6 +204,11 @@ final class BrowseCatalog
 
     private function brand(Product $product): string
     {
+        $brand = $product->specifications['brand'] ?? null;
+        if (is_string($brand) && $brand !== '') {
+            return $brand;
+        }
+
         return match ($product->category) {
             'laptops', 'smartphones' => 'Apple',
             'ram' => 'Generic',
@@ -202,13 +218,30 @@ final class BrowseCatalog
 
     private function memory(Product $product): string
     {
-        $value = $product->specifications['memory'] ?? $product->specifications['capacity'] ?? '';
+        $value = $product->specifications['memory']
+            ?? $product->specifications['capacity']
+            ?? $product->specifications['vram']
+            ?? '';
+
+        return is_string($value) ? $value : '';
+    }
+
+    /** Laptops filter by chip; graphics cards reuse the same facet for their class. */
+    private function chip(Product $product): string
+    {
+        $value = $product->specifications['chip'] ?? $product->specifications['tier'] ?? '';
 
         return is_string($value) ? $value : '';
     }
 
     private function model(Product $product): string
     {
+        if ($product->category === 'gpus') {
+            $generation = $product->specifications['generation'] ?? '';
+
+            return is_string($generation) ? $generation : '';
+        }
+
         $generation = $product->specifications['generation'] ?? '';
         $variant = $product->specifications['variant'] ?? '';
         if (!is_string($generation) || !is_string($variant)) {

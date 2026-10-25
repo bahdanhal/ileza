@@ -23,6 +23,7 @@ error404:
     macbook: "MacBook Pro i MacBook Air"
     iphone: "Oceny cen Apple iPhone"
     ram: "Pamięci RAM DDR4 / DDR5"
+    gpus: "Karty graficzne: GeForce, Radeon, Arc"
     blog: "Poradniki i analizy rynku"
 
 
@@ -62,11 +63,12 @@ market:
         q2: "Skąd biorą się moje oceny?"
         a2: "Korzystam z różnych informacji i próbuję różnych podejść. Ostatecznie sam decyduję, ile bym zapłacił i jaka cena wydaje mi się zbyt wysoka. Nie mam jednej stałej metodologii."
         q3: "Czy mogę sprawdzić kalkulator wynagrodzeń lub historię konkretnego modelu?"
-        a3: "Tak, udostępniamy bezpłatny kalkulator porównawczy form zatrudnienia (UoP, B2B, UZ, UoD, Spółka z o.o.) oraz profile cenowe z pełnymi wykresami historii dla laptopów, smartfonów, pamięci RAM i samochodów."
+        a3: "Tak, udostępniamy bezpłatny kalkulator porównawczy form zatrudnienia (UoP, B2B, UZ, UoD, Spółka z o.o.) oraz profile cenowe z pełnymi wykresami historii dla laptopów, smartfonów, pamięci RAM, kart graficznych i samochodów."
     category:
         smartphones: "Smartfony"
         laptops: "Laptopy"
         ram: "Pamięć RAM"
+        gpus: "Karty graficzne"
         cars: "Samochody"
     hubs:
         all: "Wszystkie kategorie"
@@ -75,6 +77,7 @@ market:
         smartphones: "Smartfony"
         iphone: "iPhone"
         ram: "Pamięć RAM"
+        gpus: "Karty graficzne"
         cars: "Samochody"
         nav_label: "Przeglądaj kategorie:"
         matrix_title: "Matryca cenowa konfiguracji"
@@ -126,10 +129,17 @@ market:
             ram:
                 title: "Uczciwe ceny pamięci RAM w Polsce (DDR4, DDR5, DIMM, SO-DIMM) · IleZa.pl"
                 description: "Moje oceny cen pamięci RAM DDR4 i DDR5 w Polsce. Porównaj konfiguracje, przedziały i historię zmian."
+            gpus:
+                title: "Uczciwe ceny kart graficznych w Polsce (GeForce, Radeon, Arc) · IleZa.pl"
+                description: "Moje oceny cen używanych kart graficznych w Polsce według generacji, klasy i VRAM, z historią zmian."
             cars:
                 title: "Uczciwe ceny samochodów w Polsce (Peugeot 206 CC) · IleZa.pl"
                 description: "Zobacz, ile sam zapłaciłbym za Peugeot 206 CC. Moja ocena, przedział cenowy i historia zmian."
     facets:
+        gpus:
+            model: "Generacja"
+            ram: "VRAM"
+            chip: "Klasa"
         model: "Model"
         storage: "Pojemność"
         title: "Filtruj konfiguracje"
@@ -199,6 +209,10 @@ market:
         fair_price: "Moja ocena ceny w PLN"
         price_range: "Mój przedział cenowy"
     spec:
+        brand: "Marka"
+        tier: "Klasa"
+        vram: "VRAM"
+        examples: "Przykładowe modele"
         generation: "Generacja"
         variant: "Wariant"
         line: "Linia"

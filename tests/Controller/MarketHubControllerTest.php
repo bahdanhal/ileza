@@ -155,6 +155,8 @@ final class MarketHubControllerTest extends TestCase
         self::assertStringContainsString('https://ileza.pl/prices/iphone', $xml);
         self::assertStringContainsString('https://ileza.pl/ceny/ram', $xml);
         self::assertStringContainsString('https://ileza.pl/prices/ram', $xml);
+        self::assertStringContainsString('https://ileza.pl/ceny/karty-graficzne', $xml);
+        self::assertStringContainsString('https://ileza.pl/prices/graphics-cards', $xml);
         self::assertStringContainsString('https://ileza.pl/ceny/samochody', $xml);
         self::assertStringContainsString('https://ileza.pl/prices/cars', $xml);
     }

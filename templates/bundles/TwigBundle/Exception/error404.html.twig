@@ -190,6 +190,10 @@
         <span>{{ 'error404.ram'|trans }}</span>
         <span class="radar-card-icon">⚡</span>
       </a>
+      <a href="{{ path('market_hub', {_locale: app.request ? app.request.locale : 'pl', category: (app.request ? app.request.locale : 'pl') == 'pl' ? 'karty-graficzne' : 'graphics-cards'}) }}" class="radar-card">
+        <span>{{ 'error404.gpus'|trans }}</span>
+        <span class="radar-card-icon">🎮</span>
+      </a>
       <a href="{{ path('blog_index', {_locale: app.request ? app.request.locale : 'pl'}) }}" class="radar-card">
         <span>{{ 'error404.blog'|trans }}</span>
         <span class="radar-card-icon">📖</span>

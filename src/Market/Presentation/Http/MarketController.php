@@ -86,7 +86,8 @@ final class MarketController extends AbstractController
                         $values[] = (string) $val;
                     }
                 }
-                if (count($values) > 1) {
+                // Graphics cards pick a configuration by example models; class and VRAM follow from it.
+                if (count($values) > 1 && !in_array($key, ['tier', 'vram'], true)) {
                     $specFields[] = [
                         'key' => $key,
                         'values' => $values,
@@ -258,7 +259,7 @@ final class MarketController extends AbstractController
             'pl' => '/ceny/{category}',
         ],
         name: 'market_hub',
-        requirements: ['category' => 'laptops|macbook|smartphones|iphone|ram|cars|samochody|laptopy|smartfony'],
+        requirements: ['category' => 'laptops|macbook|smartphones|iphone|ram|graphics-cards|karty-graficzne|cars|samochody|laptopy|smartfony'],
         methods: ['GET'],
         priority: 20
     )]

@@ -117,6 +117,62 @@ final class ProductCatalogTest extends TestCase
         self::assertContains('ram-ddr5-laptop', $familySlugs);
     }
 
+    public function testGroupsGraphicsCardsByGenerationClassAndVram(): void
+    {
+        $catalog = new ProductCatalog();
+        $gpus = array_values(array_filter($catalog->all(), static fn ($product): bool => $product->category === 'gpus'));
+        self::assertGreaterThanOrEqual(50, count($gpus));
+
+        $product = $catalog->get('gpu-geforce-rtx-30-mid-range-8gb');
+        self::assertNotNull($product);
+        self::assertSame('NVIDIA GeForce RTX 30 Mid-range 8 GB', $product->name);
+        self::assertSame('gpus', $product->category);
+        self::assertSame('NVIDIA', $product->specifications['brand']);
+        self::assertSame('Mid-range', $product->specifications['tier']);
+        self::assertSame('8 GB', $product->specifications['vram']);
+        self::assertSame(['brand', 'generation', 'tier', 'vram', 'examples'], array_keys($product->specifications));
+        self::assertStringContainsString('RTX 3060 Ti', $product->definition);
+
+        $family = $catalog->familyFor('gpu-geforce-rtx-30-mid-range-8gb');
+        self::assertNotNull($family);
+        self::assertSame('gpu-geforce-rtx-30', $family->slug);
+        self::assertSame('NVIDIA GeForce RTX 30', $family->name);
+
+        $familySlugs = array_map(static fn ($f) => $f->slug, $catalog->familiesForHub('gpus'));
+        foreach (['gpu-geforce-gtx-10', 'gpu-geforce-rtx-50', 'gpu-radeon-rx-500', 'gpu-radeon-rx-9000', 'gpu-intel-arc-b'] as $expected) {
+            self::assertContains($expected, $familySlugs);
+        }
+    }
+
+    public function testFamiliesCarryTheLicenseOfTheirBundledPhoto(): void
+    {
+        $catalog = new ProductCatalog();
+        $licenses = [];
+        foreach ($catalog->families() as $family) {
+            $licenses[$family->slug] = $family->imageLicense;
+        }
+
+        self::assertSame('CC BY 4.0', $licenses['gpu-geforce-rtx-30']);
+        self::assertSame('CC0 1.0', $licenses['gpu-intel-arc-a']);
+        self::assertSame('Public domain', $licenses['gpu-geforce-gtx-10']);
+        self::assertSame('CC BY-SA 4.0', $licenses['gpu-radeon-rx-7000']);
+        self::assertSame('CC BY 2.0', $licenses['iphone-12']);
+        self::assertSame('CC0 1.0', $licenses['iphone-17']);
+    }
+
+    public function testResolvesGraphicsCardHubInBothLanguages(): void
+    {
+        $catalog = new ProductCatalog();
+        // The product page resolves its hub from the category key.
+        foreach (['karty-graficzne', 'graphics-cards', 'gpus'] as $slug) {
+            $hub = $catalog->resolveHub($slug);
+            self::assertNotNull($hub);
+            self::assertSame('gpus', $hub['category']);
+            self::assertSame('karty-graficzne', $hub['canonicalSlugPl']);
+            self::assertSame('graphics-cards', $hub['canonicalSlugEn']);
+        }
+    }
+
     public function testAllProductsHaveValidUrlSafeSlugsAndNonEmptyImages(): void
     {
         $catalog = new ProductCatalog();

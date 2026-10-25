@@ -138,9 +138,10 @@
                 {% if browse.has_filters %}<a href="{{ path('market_hub', {_locale: app.request.locale, category: app.request.locale == 'pl' ? hub.canonicalSlugPl : hub.canonicalSlugEn}) }}">{{ 'market.facets.clear'|trans }}</a>{% endif %}
             </div>
             {% if view == 'matrix' %}<input type="hidden" name="view" value="matrix">{% endif %}
+            {% set facet_label_prefix = category_key == 'gpus' ? 'market.facets.gpus.' : 'market.facets.' %}
             <div class="market-facet-fields">
                 {% if browse.options.models is not empty %}
-                    <label>{{ 'market.facets.model'|trans }}
+                    <label>{{ (facet_label_prefix ~ 'model')|trans }}
                         <select name="model"><option value="">{{ 'market.facets.any'|trans }}</option>{% for option in browse.options.models %}<option value="{{ option }}" {{ browse.filters.model == option ? 'selected' : '' }}>{{ option }}</option>{% endfor %}</select>
                     </label>
                 {% endif %}
@@ -158,12 +159,12 @@
                     <select name="price"><option value="">{{ 'market.facets.any'|trans }}</option>{% for option in browse.options.prices %}<option value="{{ option }}" {{ browse.filters.price == option ? 'selected' : '' }}>{{ ('market.facets.price_options.' ~ option|replace({'-': '_'}))|trans }}</option>{% endfor %}</select>
                 </label>
                 {% if browse.options.ram is not empty %}
-                    <label>{{ 'market.facets.ram'|trans }}
+                    <label>{{ (facet_label_prefix ~ 'ram')|trans }}
                         <select name="ram"><option value="">{{ 'market.facets.any'|trans }}</option>{% for option in browse.options.ram %}<option value="{{ option }}" {{ browse.filters.ram == option ? 'selected' : '' }}>{{ option }}</option>{% endfor %}</select>
                     </label>
                 {% endif %}
                 {% if browse.options.chips is not empty %}
-                    <label>{{ 'market.facets.chip'|trans }}
+                    <label>{{ (facet_label_prefix ~ 'chip')|trans }}
                         <select name="chip"><option value="">{{ 'market.facets.any'|trans }}</option>{% for option in browse.options.chips %}<option value="{{ option }}" {{ browse.filters.chip == option ? 'selected' : '' }}>{{ option }}</option>{% endfor %}</select>
                     </label>
                 {% endif %}
@@ -279,7 +280,7 @@
                     <article class="market-product" data-market-family data-market-configurations="{{ config_data|json_encode }}">
                         <figure>
                             <img src="{{ item.family.image }}" alt="{{ _self.localized_label(item.family.name, app.request.locale) }}" width="640" height="480" loading="lazy">
-                            <figcaption><a href="{{ item.family.imageSource }}">{{ item.family.imageCredit }}</a> · <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a></figcaption>
+                            <figcaption><a href="{{ item.family.imageSource }}">{{ item.family.imageCredit }}</a> · <a href="{{ item.family.imageLicenseUrl }}">{{ item.family.imageLicense }}</a></figcaption>
                         </figure>
                         <div class="market-product-body">
                             <span class="market-category">{{ ('market.category.' ~ item.family.category)|trans }}</span>
@@ -292,7 +293,8 @@
                                             {% set values = values|merge([configuration.product.specifications[key]]) %}
                                         {% endif %}
                                     {% endfor %}
-                                    {% if values|length > 1 %}
+                                    {# Graphics cards pick a configuration by example models; class and VRAM follow from it. #}
+                                    {% if values|length > 1 and key not in ['tier', 'vram'] %}
                                         <div class="market-configuration-field">
                                             <label for="configuration-{{ item.family.slug }}-{{ key }}">{{ ('market.spec.' ~ key)|trans }}</label>
                                             <select id="configuration-{{ item.family.slug }}-{{ key }}" data-market-spec-select="{{ key }}">

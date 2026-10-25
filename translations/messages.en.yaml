@@ -23,6 +23,7 @@ error404:
     macbook: "Apple MacBook Pro & Air"
     iphone: "Apple iPhone price estimates"
     ram: "RAM DDR4 / DDR5 Memory"
+    gpus: "Graphics cards: GeForce, Radeon, Arc"
     blog: "Buying Guides & Insights"
 
 
@@ -62,11 +63,12 @@ market:
         q2: "How do I arrive at my estimates?"
         a2: "I use different information and experiment with different approaches. Ultimately, I decide what I would pay and what seems too expensive to me. I do not have one fixed methodology."
         q3: "Can I check income comparisons or specific product price histories?"
-        a3: "Yes, IleZa.pl provides a comprehensive Polish employment income calculator alongside interactive historical fair-price charts for laptops, MacBooks, smartphones, RAM, and vehicles."
+        a3: "Yes, IleZa.pl provides a comprehensive Polish employment income calculator alongside interactive historical fair-price charts for laptops, MacBooks, smartphones, RAM, graphics cards, and vehicles."
     category:
         smartphones: "Smartphones"
         laptops: "Laptops"
         ram: "RAM memory"
+        gpus: "Graphics cards"
         cars: "Cars"
     hubs:
         all: "All categories"
@@ -75,6 +77,7 @@ market:
         smartphones: "Smartphones"
         iphone: "iPhone"
         ram: "RAM Memory"
+        gpus: "Graphics cards"
         cars: "Cars"
         nav_label: "Browse categories:"
         matrix_title: "Configuration Pricing Matrix"
@@ -126,10 +129,17 @@ market:
             ram:
                 title: "Fair RAM Prices in Poland (DDR4, DDR5, DIMM, SO-DIMM) · IleZa.pl"
                 description: "My price estimates for DDR4 and DDR5 RAM in Poland. Compare configurations, ranges and dated history."
+            gpus:
+                title: "Fair Graphics Card Prices in Poland (GeForce, Radeon, Arc) · IleZa.pl"
+                description: "My price estimates for used graphics cards in Poland, grouped by generation, class and VRAM, with dated history."
             cars:
                 title: "Fair Car Prices in Poland (Peugeot 206 CC) · IleZa.pl"
                 description: "See what I would personally pay for a Peugeot 206 CC. My estimate, price range and dated history."
     facets:
+        gpus:
+            model: "Generation"
+            ram: "VRAM"
+            chip: "Class"
         model: "Model"
         storage: "Storage"
         title: "Filter configurations"
@@ -199,6 +209,10 @@ market:
         fair_price: "My price estimate in PLN"
         price_range: "My price range"
     spec:
+        brand: "Brand"
+        tier: "Class"
+        vram: "VRAM"
+        examples: "Example models"
         generation: "Generation"
         variant: "Variant"
         line: "Line"

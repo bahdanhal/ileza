@@ -30,6 +30,7 @@ final readonly class SitemapController
             ['/prices/smartphones', '/ceny/smartfony'],
             ['/prices/iphone', '/ceny/iphone'],
             ['/prices/ram', '/ceny/ram'],
+            ['/prices/graphics-cards', '/ceny/karty-graficzne'],
             ['/prices/cars', '/ceny/samochody'],
             ['/en/blog/', '/blog/'],
         ];

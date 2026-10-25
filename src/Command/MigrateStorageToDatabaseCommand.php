@@ -87,7 +87,7 @@ final class MigrateStorageToDatabaseCommand extends Command
                 ),
                 'ram' => $product->specifications['family_name'] ?? 'RAM Memory',
                 'cars' => 'Peugeot 206 CC',
-                default => $product->name,
+                default => $product->familyName ?? $product->name,
             };
 
             $entity = new ProductEntity(

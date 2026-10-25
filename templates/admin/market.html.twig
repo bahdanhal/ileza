@@ -33,6 +33,7 @@
         .badge-smartphones { background: rgba(56, 189, 248, 0.15); color: #38bdf8; }
         .badge-laptops { background: rgba(168, 85, 247, 0.15); color: #a855f7; }
         .badge-ram { background: rgba(251, 191, 36, 0.15); color: #fbbf24; }
+        .badge-gpus { background: rgba(255, 92, 53, 0.15); color: #ff5c35; }
         .badge-cars { background: rgba(99, 214, 170, 0.15); color: #63d6aa; }
         .product-thumb { width: 36px; height: 36px; object-fit: cover; border-radius: 6px; border: 1px solid var(--line); vertical-align: middle; margin-right: 8px; }
         .statistics-section { margin-bottom: 36px; }
@@ -310,6 +311,7 @@
                                 <option value="smartphones">Smartphones</option>
                                 <option value="laptops">Laptops</option>
                                 <option value="ram">RAM Memory</option>
+                                <option value="gpus">Graphics cards</option>
                                 <option value="cars">Cars</option>
                                 <option value="cosmetics">Cosmetics</option>
                             </datalist>
@@ -389,6 +391,7 @@
                 <a href="{{ path('market_admin_dashboard', {category: 'smartphones'}) }}" class="filter-chip {{ current_category == 'smartphones' ? 'active' : '' }}">Smartphones</a>
                 <a href="{{ path('market_admin_dashboard', {category: 'laptops'}) }}" class="filter-chip {{ current_category == 'laptops' ? 'active' : '' }}">Laptops</a>
                 <a href="{{ path('market_admin_dashboard', {category: 'ram'}) }}" class="filter-chip {{ current_category == 'ram' ? 'active' : '' }}">RAM Memory</a>
+                <a href="{{ path('market_admin_dashboard', {category: 'gpus'}) }}" class="filter-chip {{ current_category == 'gpus' ? 'active' : '' }}">Graphics cards</a>
                 <a href="{{ path('market_admin_dashboard', {category: 'cars'}) }}" class="filter-chip {{ current_category == 'cars' ? 'active' : '' }}">Cars</a>
 
                 <form method="get" action="{{ path('market_admin_dashboard') }}" style="margin-left: auto; display: flex; gap: 6px;">

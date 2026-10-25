@@ -41,7 +41,7 @@ final class ProductCatalog
     /** @return list<Product> */
     public function seedProducts(): array
     {
-        return [...$this->iphones(), ...$this->macBooks(), ...$this->ram(), ...$this->cars()];
+        return [...$this->iphones(), ...$this->macBooks(), ...$this->ram(), ...$this->gpus(), ...$this->cars()];
     }
 
     public function get(string $slug): ?Product
@@ -120,6 +120,7 @@ final class ProductCatalog
                 ));
             }
             [$image, $credit, $source] = $this->familyImage($familySlug, $first->category, $first);
+            [$license, $licenseUrl] = self::imageLicense($image, $source);
 
             return new ProductFamily(
                 $familySlug,
@@ -129,6 +130,8 @@ final class ProductCatalog
                 $credit,
                 $source,
                 $products,
+                $license,
+                $licenseUrl,
             );
         }, array_values($families));
     }
@@ -182,6 +185,13 @@ final class ProductCatalog
                 'canonicalSlugPl' => 'ram',
                 'canonicalSlugEn' => 'ram',
             ],
+            'karty-graficzne', 'graphics-cards', 'gpus' => [
+                'key' => 'gpus',
+                'category' => 'gpus',
+                'familyFilter' => null,
+                'canonicalSlugPl' => 'karty-graficzne',
+                'canonicalSlugEn' => 'graphics-cards',
+            ],
             'samochody', 'cars' => [
                 'key' => 'cars',
                 'category' => 'cars',
@@ -210,6 +220,7 @@ final class ProductCatalog
             ['key' => 'smartphones', 'category' => 'smartphones', 'familyFilter' => null, 'slugPl' => 'smartfony', 'slugEn' => 'smartphones'],
             ['key' => 'iphone', 'category' => 'smartphones', 'familyFilter' => 'iphone', 'slugPl' => 'iphone', 'slugEn' => 'iphone'],
             ['key' => 'ram', 'category' => 'ram', 'familyFilter' => null, 'slugPl' => 'ram', 'slugEn' => 'ram'],
+            ['key' => 'gpus', 'category' => 'gpus', 'familyFilter' => null, 'slugPl' => 'karty-graficzne', 'slugEn' => 'graphics-cards'],
             ['key' => 'cars', 'category' => 'cars', 'familyFilter' => null, 'slugPl' => 'samochody', 'slugEn' => 'cars'],
         ];
     }
@@ -248,6 +259,27 @@ final class ProductCatalog
 
             return true;
         }));
+    }
+
+    /**
+     * Bundled photos use CC BY-SA 4.0 unless listed here; see public/images/market/ATTRIBUTION.md.
+     *
+     * @return array{0: string, 1: string}
+     */
+    public static function imageLicense(string $image, string $source): array
+    {
+        return match ($image) {
+            '/images/market/iphone-12.jpg' => ['CC BY 2.0', 'https://creativecommons.org/licenses/by/2.0/'],
+            '/images/market/macbook-air-13-m3.jpg' => ['CC BY-SA 2.0', 'https://creativecommons.org/licenses/by-sa/2.0/'],
+            '/images/market/ram-ddr5-laptop.jpg',
+            '/images/market/gpu-geforce-rtx-30.jpg',
+            '/images/market/gpu-geforce-rtx-50.jpg' => ['CC BY 4.0', 'https://creativecommons.org/licenses/by/4.0/'],
+            '/images/market/iphone-17.jpg',
+            '/images/market/gpu-intel-arc-a.jpg',
+            '/images/market/gpu-intel-arc-b.jpg' => ['CC0 1.0', 'https://creativecommons.org/publicdomain/zero/1.0/'],
+            '/images/market/gpu-geforce-gtx-10.jpg' => ['Public domain', $source],
+            default => ['CC BY-SA 4.0', 'https://creativecommons.org/licenses/by-sa/4.0/'],
+        };
     }
 
     /** @return array{0: string, 1: string, 2: string} */
@@ -366,6 +398,71 @@ final class ProductCatalog
                 '4300streetcar',
                 'https://commons.wikimedia.org/wiki/File:SK_Hynix_DDR5_form_factors.jpg',
             ],
+            'gpu-geforce-gtx-10' => [
+                '/images/market/gpu-geforce-gtx-10.jpg',
+                'Evan-Amos',
+                'https://commons.wikimedia.org/wiki/File:NVIDIA-GTX-1070-FoundersEdition-FL.jpg',
+            ],
+            'gpu-geforce-gtx-16' => [
+                '/images/market/gpu-geforce-gtx-16.jpg',
+                'Solomon203, edited by Pittigrilli',
+                'https://commons.wikimedia.org/wiki/File:ASUS_TUF_Gaming_X3_Geforce_GTX_1660_(cropped,_edited).jpg',
+            ],
+            'gpu-geforce-rtx-20' => [
+                '/images/market/gpu-geforce-rtx-20.jpg',
+                'Jacek Halicki',
+                'https://commons.wikimedia.org/wiki/File:2023_MSI_GeForce_RTX_2080_Gaming_X_Trio_(1).jpg',
+            ],
+            'gpu-geforce-rtx-30' => [
+                '/images/market/gpu-geforce-rtx-30.jpg',
+                'PantheraLeo1359531',
+                'https://commons.wikimedia.org/wiki/File:Gigabyte_GeForce_RTX_3090_Eagle_OC_24G,_24576_MiB_GDDR6X_Front_20201114_DSC5880.jpg',
+            ],
+            'gpu-geforce-rtx-40' => [
+                '/images/market/gpu-geforce-rtx-40.jpg',
+                'Jacek Halicki',
+                'https://commons.wikimedia.org/wiki/File:2023_Gigabyte_GeForce_RTX_4070_Aero_OC_12GB_(1).jpg',
+            ],
+            'gpu-geforce-rtx-50' => [
+                '/images/market/gpu-geforce-rtx-50.jpg',
+                'PantheraLeo1359531',
+                'https://commons.wikimedia.org/wiki/File:Palit_GeForce_RTX_5090_Gamerock_20250530_HOF4166_RAW-Export.png',
+            ],
+            'gpu-radeon-rx-500' => [
+                '/images/market/gpu-radeon-rx-500.jpg',
+                'Verte95',
+                'https://commons.wikimedia.org/wiki/File:Sapphire_RX_580_Nitro%2B.jpg',
+            ],
+            'gpu-radeon-rx-5000' => [
+                '/images/market/gpu-radeon-rx-5000.jpg',
+                'Sebastiaan Broekhoven (ITEagle Europe)',
+                'https://commons.wikimedia.org/wiki/File:ASUS_TUF_Gaming_X3_Radeon_RX_5600_XT_EVO_6GB_GDDR6_-_front_view.jpg',
+            ],
+            'gpu-radeon-rx-6000' => [
+                '/images/market/gpu-radeon-rx-6000.jpg',
+                'Vitaly Zdanevich',
+                'https://commons.wikimedia.org/wiki/File:Amd-radeon-rx6800xt-from2020year-front.jpg',
+            ],
+            'gpu-radeon-rx-7000' => [
+                '/images/market/gpu-radeon-rx-7000.jpg',
+                'Geni',
+                'https://commons.wikimedia.org/wiki/File:Sapphire_AMD_Radeon_RX_7900_XTX.jpg',
+            ],
+            'gpu-radeon-rx-9000' => [
+                '/images/market/gpu-radeon-rx-9000.jpg',
+                'Chaddy',
+                'https://commons.wikimedia.org/wiki/File:Sapphire_Pulse_Radeon_RX_9070_XT_-_L%C3%BCfter_1.jpg',
+            ],
+            'gpu-intel-arc-a' => [
+                '/images/market/gpu-intel-arc-a.jpg',
+                'Telaneo',
+                'https://commons.wikimedia.org/wiki/File:Intel_Arc_A770_front.jpg',
+            ],
+            'gpu-intel-arc-b' => [
+                '/images/market/gpu-intel-arc-b.jpg',
+                'Jiahwang',
+                'https://commons.wikimedia.org/wiki/File:Intel_Arc_Battlemage_B580_Limited_Edition.jpg',
+            ],
             'peugeot-206-cc' => [
                 '/images/market/peugeot-206-cc.jpg',
                 'Corvettec6r',
@@ -398,6 +495,11 @@ final class ProductCatalog
                     '/images/market/ram-ddr4-desktop.jpg',
                     'ElooKoN',
                     'https://commons.wikimedia.org/wiki/File:RAM_Module_(SDRAM-DDR4).jpg',
+                ],
+                'gpus' => [
+                    '/images/market/gpu-geforce-rtx-30.jpg',
+                    'PantheraLeo1359531',
+                    'https://commons.wikimedia.org/wiki/File:Gigabyte_GeForce_RTX_3090_Eagle_OC_24G,_24576_MiB_GDDR6X_Front_20201114_DSC5880.jpg',
                 ],
                 default => [
                     '/images/market/iphone-13.jpg',
@@ -782,6 +884,229 @@ final class ProductCatalog
                         'capacity' => $module['capacity'],
                         'speed' => $module['speed'],
                     ]
+                );
+            }
+        }
+
+        return $products;
+    }
+
+    /** @return list<Product> */
+    private function gpus(): array
+    {
+        $products = [];
+
+        /**
+         * Each configuration groups cards of one generation, class and VRAM size: [class, VRAM, example models].
+         *
+         * @var list<array{
+         *     family: string,
+         *     family_name: string,
+         *     brand: string,
+         *     generation: string,
+         *     configurations: list<array{string, string, string}>
+         * }> $groups
+         */
+        $groups = [
+            [
+                'family' => 'gpu-geforce-gtx-10',
+                'family_name' => 'NVIDIA GeForce GTX 10',
+                'brand' => 'NVIDIA',
+                'generation' => 'GeForce GTX 10',
+                'configurations' => [
+                    ['Entry-level', '4 GB', 'GTX 1050 Ti'],
+                    ['Mid-range', '3 GB', 'GTX 1060 3 GB'],
+                    ['Mid-range', '6 GB', 'GTX 1060 6 GB'],
+                    ['Upper mid-range', '8 GB', 'GTX 1070, GTX 1070 Ti'],
+                    ['High-end', '8 GB', 'GTX 1080'],
+                    ['High-end', '11 GB', 'GTX 1080 Ti'],
+                ],
+            ],
+            [
+                'family' => 'gpu-geforce-gtx-16',
+                'family_name' => 'NVIDIA GeForce GTX 16',
+                'brand' => 'NVIDIA',
+                'generation' => 'GeForce GTX 16',
+                'configurations' => [
+                    ['Entry-level', '4 GB', 'GTX 1630, GTX 1650, GTX 1650 Super'],
+                    ['Mid-range', '6 GB', 'GTX 1660, GTX 1660 Super, GTX 1660 Ti'],
+                ],
+            ],
+            [
+                'family' => 'gpu-geforce-rtx-20',
+                'family_name' => 'NVIDIA GeForce RTX 20',
+                'brand' => 'NVIDIA',
+                'generation' => 'GeForce RTX 20',
+                'configurations' => [
+                    ['Mid-range', '6 GB', 'RTX 2060 6 GB'],
+                    ['Mid-range', '8 GB', 'RTX 2060 Super'],
+                    ['Mid-range', '12 GB', 'RTX 2060 12 GB'],
+                    ['Upper mid-range', '8 GB', 'RTX 2070, RTX 2070 Super'],
+                    ['High-end', '8 GB', 'RTX 2080, RTX 2080 Super'],
+                    ['Flagship', '11 GB', 'RTX 2080 Ti'],
+                ],
+            ],
+            [
+                'family' => 'gpu-geforce-rtx-30',
+                'family_name' => 'NVIDIA GeForce RTX 30',
+                'brand' => 'NVIDIA',
+                'generation' => 'GeForce RTX 30',
+                'configurations' => [
+                    ['Entry-level', '6 GB', 'RTX 3050 6 GB'],
+                    ['Entry-level', '8 GB', 'RTX 3050 8 GB'],
+                    ['Mid-range', '8 GB', 'RTX 3060 8 GB, RTX 3060 Ti'],
+                    ['Mid-range', '12 GB', 'RTX 3060 12 GB'],
+                    ['Upper mid-range', '8 GB', 'RTX 3070, RTX 3070 Ti'],
+                    ['High-end', '10 GB', 'RTX 3080 10 GB'],
+                    ['High-end', '12 GB', 'RTX 3080 12 GB, RTX 3080 Ti'],
+                    ['Flagship', '24 GB', 'RTX 3090, RTX 3090 Ti'],
+                ],
+            ],
+            [
+                'family' => 'gpu-geforce-rtx-40',
+                'family_name' => 'NVIDIA GeForce RTX 40',
+                'brand' => 'NVIDIA',
+                'generation' => 'GeForce RTX 40',
+                'configurations' => [
+                    ['Mid-range', '8 GB', 'RTX 4060, RTX 4060 Ti 8 GB'],
+                    ['Mid-range', '16 GB', 'RTX 4060 Ti 16 GB'],
+                    ['Upper mid-range', '12 GB', 'RTX 4070, RTX 4070 Super, RTX 4070 Ti'],
+                    ['Upper mid-range', '16 GB', 'RTX 4070 Ti Super'],
+                    ['High-end', '16 GB', 'RTX 4080, RTX 4080 Super'],
+                    ['Flagship', '24 GB', 'RTX 4090'],
+                ],
+            ],
+            [
+                'family' => 'gpu-geforce-rtx-50',
+                'family_name' => 'NVIDIA GeForce RTX 50',
+                'brand' => 'NVIDIA',
+                'generation' => 'GeForce RTX 50',
+                'configurations' => [
+                    ['Entry-level', '8 GB', 'RTX 5050'],
+                    ['Mid-range', '8 GB', 'RTX 5060, RTX 5060 Ti 8 GB'],
+                    ['Mid-range', '16 GB', 'RTX 5060 Ti 16 GB'],
+                    ['Upper mid-range', '12 GB', 'RTX 5070'],
+                    ['Upper mid-range', '16 GB', 'RTX 5070 Ti'],
+                    ['High-end', '16 GB', 'RTX 5080'],
+                    ['Flagship', '32 GB', 'RTX 5090'],
+                ],
+            ],
+            [
+                'family' => 'gpu-radeon-rx-500',
+                'family_name' => 'AMD Radeon RX 500',
+                'brand' => 'AMD',
+                'generation' => 'Radeon RX 500',
+                'configurations' => [
+                    ['Entry-level', '4 GB', 'RX 550, RX 560'],
+                    ['Mid-range', '4 GB', 'RX 570 4 GB, RX 580 4 GB'],
+                    ['Mid-range', '8 GB', 'RX 570 8 GB, RX 580 8 GB, RX 590'],
+                ],
+            ],
+            [
+                'family' => 'gpu-radeon-rx-5000',
+                'family_name' => 'AMD Radeon RX 5000',
+                'brand' => 'AMD',
+                'generation' => 'Radeon RX 5000',
+                'configurations' => [
+                    ['Entry-level', '4 GB', 'RX 5500 XT 4 GB'],
+                    ['Entry-level', '8 GB', 'RX 5500 XT 8 GB'],
+                    ['Mid-range', '6 GB', 'RX 5600 XT'],
+                    ['Upper mid-range', '8 GB', 'RX 5700, RX 5700 XT'],
+                ],
+            ],
+            [
+                'family' => 'gpu-radeon-rx-6000',
+                'family_name' => 'AMD Radeon RX 6000',
+                'brand' => 'AMD',
+                'generation' => 'Radeon RX 6000',
+                'configurations' => [
+                    ['Entry-level', '4 GB', 'RX 6400, RX 6500 XT'],
+                    ['Mid-range', '8 GB', 'RX 6600, RX 6600 XT, RX 6650 XT'],
+                    ['Upper mid-range', '10 GB', 'RX 6700'],
+                    ['Upper mid-range', '12 GB', 'RX 6700 XT, RX 6750 XT'],
+                    ['High-end', '16 GB', 'RX 6800, RX 6800 XT'],
+                    ['Flagship', '16 GB', 'RX 6900 XT, RX 6950 XT'],
+                ],
+            ],
+            [
+                'family' => 'gpu-radeon-rx-7000',
+                'family_name' => 'AMD Radeon RX 7000',
+                'brand' => 'AMD',
+                'generation' => 'Radeon RX 7000',
+                'configurations' => [
+                    ['Mid-range', '8 GB', 'RX 7600'],
+                    ['Mid-range', '16 GB', 'RX 7600 XT'],
+                    ['Upper mid-range', '12 GB', 'RX 7700 XT'],
+                    ['High-end', '16 GB', 'RX 7800 XT, RX 7900 GRE'],
+                    ['Flagship', '20 GB', 'RX 7900 XT'],
+                    ['Flagship', '24 GB', 'RX 7900 XTX'],
+                ],
+            ],
+            [
+                'family' => 'gpu-radeon-rx-9000',
+                'family_name' => 'AMD Radeon RX 9000',
+                'brand' => 'AMD',
+                'generation' => 'Radeon RX 9000',
+                'configurations' => [
+                    ['Mid-range', '8 GB', 'RX 9060 XT 8 GB'],
+                    ['Mid-range', '16 GB', 'RX 9060 XT 16 GB'],
+                    ['Upper mid-range', '16 GB', 'RX 9070, RX 9070 XT'],
+                ],
+            ],
+            [
+                'family' => 'gpu-intel-arc-a',
+                'family_name' => 'Intel Arc A',
+                'brand' => 'Intel',
+                'generation' => 'Arc A',
+                'configurations' => [
+                    ['Entry-level', '6 GB', 'Arc A380'],
+                    ['Mid-range', '8 GB', 'Arc A580, Arc A750, Arc A770 8 GB'],
+                    ['Mid-range', '16 GB', 'Arc A770 16 GB'],
+                ],
+            ],
+            [
+                'family' => 'gpu-intel-arc-b',
+                'family_name' => 'Intel Arc B',
+                'brand' => 'Intel',
+                'generation' => 'Arc B',
+                'configurations' => [
+                    ['Mid-range', '10 GB', 'Arc B570'],
+                    ['Mid-range', '12 GB', 'Arc B580'],
+                ],
+            ],
+        ];
+
+        foreach ($groups as $group) {
+            foreach ($group['configurations'] as [$tier, $vram, $examples]) {
+                $name = sprintf('%s %s %s', $group['family_name'], $tier, $vram);
+                $slug = strtolower(sprintf(
+                    '%s-%s-%s',
+                    $group['family'],
+                    str_replace(' ', '-', $tier),
+                    str_replace(' ', '', $vram)
+                ));
+
+                $products[] = new Product(
+                    $slug,
+                    $name,
+                    sprintf(
+                        // phpcs:ignore Generic.Files.LineLength
+                        'Any used, working %s graphics card in the %s class with %s of VRAM, for example %s, in any partner design. The estimate covers this group of cards, not one particular model or listing.',
+                        $group['family_name'],
+                        strtolower($tier),
+                        $vram,
+                        $examples
+                    ),
+                    'gpus',
+                    [
+                        'brand' => $group['brand'],
+                        'generation' => $group['generation'],
+                        'tier' => $tier,
+                        'vram' => $vram,
+                        'examples' => $examples,
+                    ],
+                    $group['family'],
+                    $group['family_name'],
                 );
             }
         }

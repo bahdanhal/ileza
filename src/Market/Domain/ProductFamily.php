@@ -15,6 +15,8 @@ final readonly class ProductFamily
         public string $imageCredit,
         public string $imageSource,
         public array $configurations,
+        public string $imageLicense = 'CC BY-SA 4.0',
+        public string $imageLicenseUrl = 'https://creativecommons.org/licenses/by-sa/4.0/',
     ) {
         if ($configurations === []) {
             throw new \InvalidArgumentException('A product family needs at least one configuration.');

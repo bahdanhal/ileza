@@ -121,6 +121,33 @@ final class BrowseCatalogTest extends TestCase
         self::assertSame('ddr5-16', $result['rows'][0]['product']->slug);
     }
 
+    public function testGraphicsCardsFilterByBrandGenerationVramAndClass(): void
+    {
+        $rows = [
+            $this->gpuRow('rtx-30-mid-8', ['brand' => 'NVIDIA', 'generation' => 'GeForce RTX 30', 'tier' => 'Mid-range', 'vram' => '8 GB'], 90000),
+            $this->gpuRow('rtx-30-flag-24', ['brand' => 'NVIDIA', 'generation' => 'GeForce RTX 30', 'tier' => 'Flagship', 'vram' => '24 GB'], 300000),
+            $this->gpuRow('rx-6000-entry-4', ['brand' => 'AMD', 'generation' => 'Radeon RX 6000', 'tier' => 'Entry-level', 'vram' => '4 GB'], 30000),
+            $this->gpuRow('rx-6000-up-12', ['brand' => 'AMD', 'generation' => 'Radeon RX 6000', 'tier' => 'Upper mid-range', 'vram' => '12 GB'], 120000),
+        ];
+        $browser = new BrowseCatalog();
+
+        $all = $browser->execute($rows, [], 'gpus');
+        self::assertSame(['AMD', 'NVIDIA'], $all['options']['brands']);
+        self::assertSame(['GeForce RTX 30', 'Radeon RX 6000'], $all['options']['models']);
+        self::assertSame(['4 GB', '8 GB', '12 GB', '24 GB'], $all['options']['ram']);
+        self::assertSame(['Entry-level', 'Mid-range', 'Upper mid-range', 'Flagship'], $all['options']['chips']);
+        self::assertSame(['under-500', '500-1000', '1000-2000', '2000-3000', '3000-5000', 'over-5000'], $all['options']['prices']);
+        self::assertSame([], $all['options']['storage']);
+
+        $filtered = $browser->execute($rows, ['brand' => 'AMD', 'chip' => 'Upper mid-range', 'price' => '1000-2000'], 'gpus');
+        self::assertSame(1, $filtered['total']);
+        self::assertSame('rx-6000-up-12', $filtered['rows'][0]['product']->slug);
+
+        $byGeneration = $browser->execute($rows, ['model' => 'GeForce RTX 30', 'ram' => '24 GB'], 'gpus');
+        self::assertSame(1, $byGeneration['total']);
+        self::assertSame('rtx-30-flag-24', $byGeneration['rows'][0]['product']->slug);
+    }
+
     /** @return iterable<string, array{int, string}> */
     public static function phonePriceBoundaries(): iterable
     {
@@ -161,6 +188,15 @@ final class BrowseCatalogTest extends TestCase
             'memory' => '8 GB',
             'chip' => 'A17',
         ], $price);
+    }
+
+    /**
+     * @param array<string, string> $specifications
+     * @return array{product: Product, family: null, latest: PriceObservation, one_month_ago: null, delta_grosz: null, delta_pct: null}
+     */
+    private function gpuRow(string $slug, array $specifications, int $medianGrosz): array
+    {
+        return $this->row($slug, $specifications['generation'] . ' ' . $specifications['tier'], 'gpus', $specifications, $medianGrosz);
     }
 
     /**

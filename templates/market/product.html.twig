@@ -76,7 +76,8 @@
 
                         <div class="market-spec-badge">
                             <dt>{{ ('market.spec.' ~ key)|trans }}</dt>
-                            {% if distinct_values|length > 1 %}
+                            {# Graphics cards pick a configuration by example models; class and VRAM follow from it. #}
+                        {% if distinct_values|length > 1 and key not in ['tier', 'vram'] %}
                                 <dd class="market-spec-select-wrap">
                                     <select class="market-spec-select" data-spec-key="{{ key }}" aria-label="{{ ('market.spec.' ~ key)|trans }}">
                                         {% for opt in distinct_values %}
@@ -103,7 +104,7 @@
             {% if family and family.image %}
                 <figure class="market-product-hero-media">
                     <img src="{{ family.image }}" alt="{{ localized_product_name }}" width="640" height="480" loading="eager">
-                    <figcaption><a href="{{ family.imageSource }}" target="_blank" rel="noopener noreferrer">{{ family.imageCredit }}</a> · <a href="{{ family.imageSource }}" target="_blank" rel="noopener noreferrer">Commons</a></figcaption>
+                    <figcaption><a href="{{ family.imageSource }}" target="_blank" rel="noopener noreferrer">{{ family.imageCredit }}</a> · <a href="{{ family.imageLicenseUrl }}" target="_blank" rel="noopener noreferrer">{{ family.imageLicense }}</a> · <a href="{{ family.imageSource }}" target="_blank" rel="noopener noreferrer">Commons</a></figcaption>
                 </figure>
             {% endif %}
         </div>

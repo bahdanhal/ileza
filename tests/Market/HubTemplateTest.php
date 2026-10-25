@@ -21,6 +21,22 @@ use Twig\TwigFunction;
 
 final class HubTemplateTest extends TestCase
 {
+    public function testGraphicsCardHubLabelsReusedFacetsAsGenerationVramAndClass(): void
+    {
+        foreach (['en' => ['Generation', 'VRAM', 'Class'], 'pl' => ['Generacja', 'VRAM', 'Klasa']] as $locale => $expected) {
+            $document = $this->document($this->renderHub('graphics-cards', $locale, 'cards'));
+            $xpath = new \DOMXPath($document);
+            foreach (['model', 'ram', 'chip'] as $index => $field) {
+                $labels = $xpath->query('//form[contains(@class, "market-facets")]//label[select[@name="' . $field . '"]]');
+                $label = $labels === false ? null : $labels->item(0);
+                self::assertInstanceOf(\DOMElement::class, $label, $field);
+                self::assertStringStartsWith($expected[$index], trim($label->textContent));
+            }
+            self::assertSame(1, $this->countMatches($xpath, '//select[@name="brand"]'));
+            self::assertSame(0, $this->countMatches($xpath, '//select[@name="storage"]'));
+        }
+    }
+
     /** @return iterable<string, array{string, string}> */
     public static function phoneViews(): iterable
     {
