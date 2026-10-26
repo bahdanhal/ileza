@@ -86,7 +86,7 @@ final class MarketController extends AbstractController
                         $values[] = (string) $val;
                     }
                 }
-                // Graphics cards pick a configuration by example models; class and VRAM follow from it.
+                // Graphics cards pick a configuration by model; class and VRAM follow from it.
                 if (count($values) > 1 && !in_array($key, ['tier', 'vram'], true)) {
                     $specFields[] = [
                         'key' => $key,

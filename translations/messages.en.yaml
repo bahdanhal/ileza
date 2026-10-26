@@ -131,7 +131,7 @@ market:
                 description: "My price estimates for DDR4 and DDR5 RAM in Poland. Compare configurations, ranges and dated history."
             gpus:
                 title: "Fair Graphics Card Prices in Poland (GeForce, Radeon, Arc) · IleZa.pl"
-                description: "My price estimates for used graphics cards in Poland, grouped by generation, class and VRAM, with dated history."
+                description: "My price estimates for used graphics cards in Poland, one entry per chip model and VRAM size, with dated history."
             cars:
                 title: "Fair Car Prices in Poland (Peugeot 206 CC) · IleZa.pl"
                 description: "See what I would personally pay for a Peugeot 206 CC. My estimate, price range and dated history."
@@ -212,7 +212,6 @@ market:
         brand: "Brand"
         tier: "Class"
         vram: "VRAM"
-        examples: "Example models"
         generation: "Generation"
         variant: "Variant"
         line: "Line"

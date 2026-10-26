@@ -117,26 +117,35 @@ final class ProductCatalogTest extends TestCase
         self::assertContains('ram-ddr5-laptop', $familySlugs);
     }
 
-    public function testGroupsGraphicsCardsByGenerationClassAndVram(): void
+    public function testListsOneGraphicsCardPerChipModelAndVram(): void
     {
         $catalog = new ProductCatalog();
         $gpus = array_values(array_filter($catalog->all(), static fn ($product): bool => $product->category === 'gpus'));
-        self::assertGreaterThanOrEqual(50, count($gpus));
+        self::assertCount(93, $gpus);
+        self::assertCount(93, array_unique(array_map(static fn ($product): string => $product->slug, $gpus)));
 
-        $product = $catalog->get('gpu-geforce-rtx-30-mid-range-8gb');
+        $product = $catalog->get('gpu-geforce-rtx-3060-ti-8gb');
         self::assertNotNull($product);
-        self::assertSame('NVIDIA GeForce RTX 30 Mid-range 8 GB', $product->name);
+        self::assertSame('NVIDIA GeForce RTX 3060 Ti 8 GB', $product->name);
         self::assertSame('gpus', $product->category);
-        self::assertSame('NVIDIA', $product->specifications['brand']);
-        self::assertSame('Mid-range', $product->specifications['tier']);
-        self::assertSame('8 GB', $product->specifications['vram']);
-        self::assertSame(['brand', 'generation', 'tier', 'vram', 'examples'], array_keys($product->specifications));
-        self::assertStringContainsString('RTX 3060 Ti', $product->definition);
+        self::assertSame(
+            ['brand' => 'NVIDIA', 'generation' => 'GeForce RTX 30', 'model' => 'RTX 3060 Ti 8 GB', 'tier' => 'Mid-range', 'vram' => '8 GB'],
+            $product->specifications
+        );
+        self::assertStringContainsString('any partner design', $product->definition);
 
-        $family = $catalog->familyFor('gpu-geforce-rtx-30-mid-range-8gb');
+        // Ti and non-Ti cards, and VRAM variants of one chip, are separate products.
+        self::assertNotNull($catalog->get('gpu-geforce-rtx-3060-8gb'));
+        self::assertNotNull($catalog->get('gpu-geforce-rtx-3060-12gb'));
+        self::assertNotNull($catalog->get('gpu-radeon-rx-6600-xt-8gb'));
+        self::assertNotNull($catalog->get('gpu-intel-arc-a770-16gb'));
+        self::assertNull($catalog->get('gpu-geforce-rtx-30-mid-range-8gb'));
+
+        $family = $catalog->familyFor('gpu-geforce-rtx-3060-ti-8gb');
         self::assertNotNull($family);
         self::assertSame('gpu-geforce-rtx-30', $family->slug);
         self::assertSame('NVIDIA GeForce RTX 30', $family->name);
+        self::assertCount(12, $family->configurations);
 
         $familySlugs = array_map(static fn ($f) => $f->slug, $catalog->familiesForHub('gpus'));
         foreach (['gpu-geforce-gtx-10', 'gpu-geforce-rtx-50', 'gpu-radeon-rx-500', 'gpu-radeon-rx-9000', 'gpu-intel-arc-b'] as $expected) {

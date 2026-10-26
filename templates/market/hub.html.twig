@@ -293,7 +293,7 @@
                                             {% set values = values|merge([configuration.product.specifications[key]]) %}
                                         {% endif %}
                                     {% endfor %}
-                                    {# Graphics cards pick a configuration by example models; class and VRAM follow from it. #}
+                                    {# Graphics cards pick a configuration by model; class and VRAM follow from it. #}
                                     {% if values|length > 1 and key not in ['tier', 'vram'] %}
                                         <div class="market-configuration-field">
                                             <label for="configuration-{{ item.family.slug }}-{{ key }}">{{ ('market.spec.' ~ key)|trans }}</label>

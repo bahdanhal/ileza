@@ -76,7 +76,7 @@
 
                         <div class="market-spec-badge">
                             <dt>{{ ('market.spec.' ~ key)|trans }}</dt>
-                            {# Graphics cards pick a configuration by example models; class and VRAM follow from it. #}
+                            {# Graphics cards pick a configuration by model; class and VRAM follow from it. #}
                         {% if distinct_values|length > 1 and key not in ['tier', 'vram'] %}
                                 <dd class="market-spec-select-wrap">
                                     <select class="market-spec-select" data-spec-key="{{ key }}" aria-label="{{ ('market.spec.' ~ key)|trans }}">

@@ -131,7 +131,7 @@ market:
                 description: "Moje oceny cen pamięci RAM DDR4 i DDR5 w Polsce. Porównaj konfiguracje, przedziały i historię zmian."
             gpus:
                 title: "Uczciwe ceny kart graficznych w Polsce (GeForce, Radeon, Arc) · IleZa.pl"
-                description: "Moje oceny cen używanych kart graficznych w Polsce według generacji, klasy i VRAM, z historią zmian."
+                description: "Moje oceny cen używanych kart graficznych w Polsce osobno dla każdego modelu układu i ilości VRAM, z historią zmian."
             cars:
                 title: "Uczciwe ceny samochodów w Polsce (Peugeot 206 CC) · IleZa.pl"
                 description: "Zobacz, ile sam zapłaciłbym za Peugeot 206 CC. Moja ocena, przedział cenowy i historia zmian."
@@ -212,7 +212,6 @@ market:
         brand: "Marka"
         tier: "Klasa"
         vram: "VRAM"
-        examples: "Przykładowe modele"
         generation: "Generacja"
         variant: "Wariant"
         line: "Linia"
