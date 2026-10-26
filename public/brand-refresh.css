@@ -372,3 +372,27 @@ body.ileza-site {
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition-duration: .01ms !important; }
 }
+
+/* Product photos are square; show the whole product over a blurred copy of the same photo. */
+.ileza-site .market-product figure,
+.market-product-hero-media {
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.ileza-site .market-product figure::before,
+.market-product-hero-media::before {
+  content: "";
+  position: absolute;
+  inset: -24px;
+  z-index: -1;
+  background: var(--card-image) center / cover no-repeat;
+  filter: blur(18px) saturate(.9);
+  opacity: .7;
+}
+
+.ileza-site .market-product img,
+.market-product-hero-media img {
+  position: relative;
+  object-fit: contain;
+}

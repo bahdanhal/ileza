@@ -271,7 +271,6 @@ final class ProductCatalog
         return match ($image) {
             '/images/market/iphone-12.jpg' => ['CC BY 2.0', 'https://creativecommons.org/licenses/by/2.0/'],
             '/images/market/macbook-air-13-m3.jpg' => ['CC BY-SA 2.0', 'https://creativecommons.org/licenses/by-sa/2.0/'],
-            '/images/market/ram-ddr5-laptop.jpg',
             '/images/market/gpu-geforce-rtx-30.jpg',
             '/images/market/gpu-geforce-rtx-50.jpg' => ['CC BY 4.0', 'https://creativecommons.org/licenses/by/4.0/'],
             '/images/market/iphone-17.jpg',
@@ -395,8 +394,8 @@ final class ProductCatalog
             ],
             'ram-ddr5-laptop' => [
                 '/images/market/ram-ddr5-laptop.jpg',
-                '4300streetcar',
-                'https://commons.wikimedia.org/wiki/File:SK_Hynix_DDR5_form_factors.jpg',
+                'Sebastiaan Broekhoven (ITEagle Europe)',
+                'https://commons.wikimedia.org/wiki/File:Kingston_FURY_Impact_DDR5_SO-DIMM_Laptop_Memory_32GB_Module_-_front_view.jpg',
             ],
             'gpu-geforce-gtx-10' => [
                 '/images/market/gpu-geforce-gtx-10.jpg',

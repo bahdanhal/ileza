@@ -12,8 +12,16 @@
     <link rel="alternate" hreflang="en" href="https://ileza.pl/prices/{{ product.slug }}">
     <link rel="alternate" hreflang="pl" href="https://ileza.pl/ceny/{{ product.slug }}">
     <link rel="alternate" hreflang="x-default" href="https://ileza.pl/ceny/{{ product.slug }}">
+{% endblock %}
+{% block og_image %}
     {% if family and family.image %}
         <meta property="og:image" content="https://ileza.pl{{ family.image }}">
+        <meta property="og:image:width" content="1000">
+        <meta property="og:image:height" content="1000">
+        <meta property="og:image:alt" content="{{ localized_product_name }}">
+        <meta name="twitter:image" content="https://ileza.pl{{ family.image }}">
+    {% else %}
+        {{ parent() }}
     {% endif %}
 {% endblock %}
 {% block stylesheets %}<link rel="stylesheet" href="/tools.css"><link rel="stylesheet" href="/market.css"><link rel="stylesheet" href="/market-extra.css">{% endblock %}
@@ -102,8 +110,8 @@
             </div>
 
             {% if family and family.image %}
-                <figure class="market-product-hero-media">
-                    <img src="{{ family.image }}" alt="{{ localized_product_name }}" width="640" height="480" loading="eager">
+                <figure class="market-product-hero-media" style="--card-image: url('{{ family.image }}')">
+                    <img src="{{ family.image }}" alt="{{ localized_product_name }}" width="1000" height="1000" loading="eager">
                     <figcaption><a href="{{ family.imageSource }}" target="_blank" rel="noopener noreferrer">{{ family.imageCredit }}</a> · <a href="{{ family.imageLicenseUrl }}" target="_blank" rel="noopener noreferrer">{{ family.imageLicense }}</a> · <a href="{{ family.imageSource }}" target="_blank" rel="noopener noreferrer">Commons</a></figcaption>
                 </figure>
             {% endif %}

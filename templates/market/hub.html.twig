@@ -278,8 +278,8 @@
                         {% endfor %}
                     {% endfor %}
                     <article class="market-product" data-market-family data-market-configurations="{{ config_data|json_encode }}">
-                        <figure>
-                            <img src="{{ item.family.image }}" alt="{{ _self.localized_label(item.family.name, app.request.locale) }}" width="640" height="480" loading="lazy">
+                        <figure style="--card-image: url('{{ item.family.image }}')">
+                            <img src="{{ item.family.image }}" alt="{{ _self.localized_label(item.family.name, app.request.locale) }}" width="1000" height="1000" loading="lazy">
                             <figcaption><a href="{{ item.family.imageSource }}">{{ item.family.imageCredit }}</a> · <a href="{{ item.family.imageLicenseUrl }}">{{ item.family.imageLicense }}</a></figcaption>
                         </figure>
                         <div class="market-product-body">
