@@ -270,7 +270,6 @@ final class ProductCatalog
     {
         return match ($image) {
             '/images/market/iphone-12.jpg' => ['CC BY 2.0', 'https://creativecommons.org/licenses/by/2.0/'],
-            '/images/market/macbook-air-13-m3.jpg' => ['CC BY-SA 2.0', 'https://creativecommons.org/licenses/by-sa/2.0/'],
             '/images/market/gpu-geforce-rtx-30.jpg',
             '/images/market/gpu-geforce-rtx-50.jpg' => ['CC BY 4.0', 'https://creativecommons.org/licenses/by/4.0/'],
             '/images/market/iphone-17.jpg',
@@ -369,8 +368,8 @@ final class ProductCatalog
             ],
             'macbook-air-13-m3' => [
                 '/images/market/macbook-air-13-m3.jpg',
-                'Thomas Amberg',
-                'https://commons.wikimedia.org/wiki/File:Hardware_PXL_20240701_181416002_(53829190029).jpg',
+                'KKPCW (Kyu3)',
+                'https://commons.wikimedia.org/wiki/File:M2_Macbook_Air_Starlight_model.jpg',
             ],
             'macbook-air-15-m3' => [
                 '/images/market/macbook-air-15.jpg',
