@@ -115,25 +115,25 @@ market:
             checklist: "Otwórz checklistę zakupu używanego iPhone’a"
         meta:
             laptops:
-                title: "Uczciwe ceny laptopów i MacBooków w Polsce · IleZa.pl"
+                title: "Jakie są uczciwe ceny laptopów i MacBooków w Polsce · IleZa.pl"
                 description: "Moje oceny cen MacBooków i laptopów w Polsce — od %min% do %max%, z datami i historią zmian."
             macbook:
-                title: "Uczciwe ceny MacBooków w Polsce (Air, Pro, M1, M2, M3) · IleZa.pl"
+                title: "Jakie są uczciwe ceny MacBooków w Polsce (Air, Pro, M1, M2, M3) · IleZa.pl"
                 description: "Zobacz, ile sam zapłaciłbym za MacBooka. Moje oceny, przedziały cen i historia zmian w Polsce."
             smartphones:
-                title: "Uczciwe ceny smartfonów i iPhone'ów w Polsce · IleZa.pl"
+                title: "Jakie są uczciwe ceny smartfonów i iPhone'ów w Polsce · IleZa.pl"
                 description: "Zobacz, ile sam zapłaciłbym za smartfony i iPhone’y. Moje oceny cen i historia dla konkretnych konfiguracji."
             iphone:
-                title: "Uczciwe ceny iPhone'ów w Polsce (od iPhone X do iPhone 17) · IleZa.pl"
+                title: "Jakie są uczciwe ceny iPhone'ów w Polsce (od iPhone X do iPhone 17) · IleZa.pl"
                 description: "Zobacz, ile sam zapłaciłbym za iPhone’a w Polsce. Moje oceny cen, przedziały i historia dla konkretnego modelu i pojemności."
             ram:
-                title: "Uczciwe ceny pamięci RAM w Polsce (DDR4, DDR5, DIMM, SO-DIMM) · IleZa.pl"
+                title: "Jakie są uczciwe ceny pamięci RAM w Polsce (DDR4, DDR5, DIMM, SO-DIMM) · IleZa.pl"
                 description: "Moje oceny cen pamięci RAM DDR4 i DDR5 w Polsce. Porównaj konfiguracje, przedziały i historię zmian."
             gpus:
-                title: "Uczciwe ceny kart graficznych w Polsce (GeForce, Radeon, Arc) · IleZa.pl"
+                title: "Jakie są uczciwe ceny kart graficznych w Polsce (GeForce, Radeon, Arc) · IleZa.pl"
                 description: "Moje oceny cen używanych kart graficznych w Polsce osobno dla każdego modelu układu i ilości VRAM, z historią zmian."
             cars:
-                title: "Uczciwe ceny samochodów w Polsce (Peugeot 206 CC) · IleZa.pl"
+                title: "Jakie są uczciwe ceny samochodów w Polsce (Peugeot 206 CC) · IleZa.pl"
                 description: "Zobacz, ile sam zapłaciłbym za Peugeot 206 CC. Moja ocena, przedział cenowy i historia zmian."
     facets:
         gpus:
