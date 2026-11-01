@@ -1,0 +1,16 @@
+{
+  "$schema": "https://modelcontextprotocol.io/schema/mcp-server.json",
+  "name": "ileza",
+  "title": "Ileza — Fair Market Valuation & Polish Salary Calculator MCP Server",
+  "description": "Fair product price estimates, dated historical market trends, and Polish tax/contract salary calculations (UoP, B2B, UZ).",
+  "version": "1.0.0",
+  "transport": {
+    "type": "http",
+    "url": "https://ileza.pl/mcp"
+  },
+  "capabilities": {
+    "tools": true,
+    "resources": false
+  },
+  "documentation": "https://ileza.pl/llms.txt"
+}
