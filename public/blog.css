@@ -17,6 +17,11 @@
 .blog-copy h2 { font-family: Georgia, serif; font-size: 34px; line-height: 1.2; margin: 52px 0 16px; }
 .blog-copy h3 { font-size: 22px; margin: 34px 0 12px; }
 .blog-copy p, .blog-copy li { color: var(--muted); }
+.blog-copy ol, .blog-copy ul { margin: 18px 0; padding-left: 28px; }
+.blog-copy li { margin-bottom: 8px; }
+.blog-copy figure, .blog-figure { margin: 36px 0; }
+.blog-copy figure img, .blog-figure img { width: 100%; height: auto; border-radius: 12px; border: 1px solid var(--line); display: block; box-shadow: 0 4px 18px rgba(0, 5, 15, 0.08); }
+.blog-copy figcaption { font-size: 13px; color: var(--muted); margin-top: 10px; text-align: center; }
 .blog-copy strong { color: var(--ink); }
 .blog-price-embed { display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: center; margin: 34px 0; padding: 22px; border: 1px solid var(--orange); border-radius: 14px; background: var(--panel); }
 .blog-price-embed > div { display: flex; flex-direction: column; gap: 5px; }

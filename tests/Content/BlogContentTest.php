@@ -30,13 +30,24 @@ final class BlogContentTest extends TestCase
 
     public function testMarkdownRendererEscapesHtmlAndRendersSupportedFormatting(): void
     {
-        $html = (new MarkdownRenderer())->render("## Heading\n\nA **safe** line <script>alert(1)</script>.\n\n- Item");
+        $input = "## Heading\n\nA **safe** line <script>alert(1)</script>.\n\n- Item 1\n- Item 2\n\n1. First\n2. Second\n\n![Screenshot](/img.png)";
+        $html = (new MarkdownRenderer())->render($input);
 
         self::assertStringContainsString('<h2>Heading</h2>', $html);
         self::assertStringContainsString('<strong>safe</strong>', $html);
         self::assertStringContainsString('&lt;script&gt;', $html);
         self::assertStringNotContainsString('<script>', $html);
-        self::assertStringContainsString('<li>Item</li>', $html);
+        self::assertStringContainsString('<ul>', $html);
+        self::assertStringContainsString('<li>Item 1</li>', $html);
+        self::assertStringContainsString('</ul>', $html);
+        self::assertStringContainsString('<ol>', $html);
+        self::assertStringContainsString('<li>First</li>', $html);
+        self::assertStringContainsString('</ol>', $html);
+        self::assertStringContainsString(
+            '<figure class="blog-figure"><img src="/img.png" alt="Screenshot" loading="lazy">'
+            . '<figcaption>Screenshot</figcaption></figure>',
+            $html
+        );
     }
 
     public function testPreservesPolishDiacriticsWithoutSplitting(): void

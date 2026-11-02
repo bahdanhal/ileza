@@ -12,7 +12,15 @@ final class MarkdownRenderer
         $html = [];
         /** @var list<string> $paragraph */
         $paragraph = [];
-        $inList = false;
+        /** @var 'ul'|'ol'|null $inList */
+        $inList = null;
+
+        $closeList = function () use (&$inList, &$html): void {
+            if ($inList !== null) {
+                $html[] = $inList === 'ol' ? '</ol>' : '</ul>';
+                $inList = null;
+            }
+        };
 
         $flushParagraph = function () use (&$paragraph, &$html): void {
             if ($paragraph !== []) {
@@ -25,41 +33,58 @@ final class MarkdownRenderer
             $trimmed = trim($line);
             if ($trimmed === '') {
                 $flushParagraph();
-                if ($inList) {
-                    $html[] = '</ul>';
-                    $inList = false;
-                }
+                $closeList();
                 continue;
             }
             if (preg_match('/^(#{2,3})\s+(.+)$/u', $trimmed, $heading) === 1) {
                 $flushParagraph();
-                if ($inList) {
-                    $html[] = '</ul>';
-                    $inList = false;
-                }
+                $closeList();
                 $level = strlen($heading[1]);
                 $html[] = sprintf('<h%d>%s</h%d>', $level, $this->inline($heading[2]), $level);
                 continue;
             }
+            if (preg_match('/^!\[([^\]]*)\]\((https?:\/\/[^\s)]+|\/[^\s)]*)\)$/u', $trimmed, $image) === 1) {
+                $flushParagraph();
+                $closeList();
+                $alt = htmlspecialchars($image[1], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                $src = htmlspecialchars($image[2], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                if ($alt !== '') {
+                    $html[] = sprintf(
+                        '<figure class="blog-figure"><img src="%s" alt="%s" loading="lazy"><figcaption>%s</figcaption></figure>',
+                        $src,
+                        $alt,
+                        $alt
+                    );
+                } else {
+                    $html[] = sprintf('<figure class="blog-figure"><img src="%s" alt="" loading="lazy"></figure>', $src);
+                }
+                continue;
+            }
             if (preg_match('/^-\s+(.+)$/u', $trimmed, $item) === 1) {
                 $flushParagraph();
-                if (!$inList) {
+                if ($inList !== 'ul') {
+                    $closeList();
                     $html[] = '<ul>';
-                    $inList = true;
+                    $inList = 'ul';
                 }
                 $html[] = '<li>' . $this->inline($item[1]) . '</li>';
                 continue;
             }
-            if ($inList) {
-                $html[] = '</ul>';
-                $inList = false;
+            if (preg_match('/^\d+\.\s+(.+)$/u', $trimmed, $item) === 1) {
+                $flushParagraph();
+                if ($inList !== 'ol') {
+                    $closeList();
+                    $html[] = '<ol>';
+                    $inList = 'ol';
+                }
+                $html[] = '<li>' . $this->inline($item[1]) . '</li>';
+                continue;
             }
+            $closeList();
             $paragraph[] = $trimmed;
         }
         $flushParagraph();
-        if ($inList) {
-            $html[] = '</ul>';
-        }
+        $closeList();
 
         return implode("\n", $html);
     }
@@ -69,6 +94,12 @@ final class MarkdownRenderer
         $escaped = htmlspecialchars($text, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
         $escaped = preg_replace('/\*\*(.+?)\*\*/u', '<strong>$1</strong>', $escaped) ?? $escaped;
         $escaped = preg_replace('/`([^`]+)`/u', '<code>$1</code>', $escaped) ?? $escaped;
+
+        $escaped = preg_replace_callback(
+            '/!\[([^\]]*)\]\((https?:\/\/[^\s)]+|\/[^\s)]*)\)/u',
+            static fn (array $match): string => sprintf('<img src="%s" alt="%s" loading="lazy">', $match[2], $match[1]),
+            $escaped
+        ) ?? $escaped;
 
         return preg_replace_callback(
             '/\[([^\]]+)\]\((https?:\/\/[^\s)]+|\/[^\s)]*)\)/u',
