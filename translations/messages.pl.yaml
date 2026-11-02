@@ -302,6 +302,9 @@ market:
         sources:
             q: "Czy strona publikuje ogłoszenia lub nazwy serwisów?"
             a: "Publikuję moje oceny cen, przedziały i historię. Linki nadesłane przez użytkowników pozostają prywatne i są usuwane po 90 dniach."
+        how_to_find:
+            q: "Jak szukać tanich ofert na OLX i Allegro z tą ceną?"
+            a: "Ustaw w filtrach korytarz cenowy wokół Ceny Uczciwej: cenę minimalną (Cena Uczciwa minus delta) i maksymalną (Cena Uczciwa plus delta). Zobacz nasz poradnik: <a href=\"%link%\">Jak tanio kupować na OLX i Allegro: metoda korytarza cenowego</a>."
     history: "Historia ceny"
     observations: "ocen"
     date: "Data"
@@ -329,6 +332,11 @@ market:
         below_median: "poniżej mojej oceny"
         above_median: "powyżej mojej oceny"
         within_range: "w moim przedziale"
+    guide_callout:
+        badge: "Poradnik zakupowy"
+        title: "Jak szukać tanich ofert z tą ceną?"
+        text: "Nie klikaj „od najtańszych”. Zobacz, jak ustawić filtry cenowe na OLX i Allegro (Cena Uczciwa ± delta), żeby odciąć puste pudełka i trafić na prawdziwe okazje."
+        cta: "Przeczytaj poradnik"
 
 income:
     meta:

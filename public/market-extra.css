@@ -1007,3 +1007,62 @@
     font: inherit;
     font-size: 14px;
 }
+
+.market-guide-callout {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    margin-top: 24px;
+    padding: 24px 28px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--panel);
+    box-shadow: 0 4px 16px rgba(0, 5, 15, 0.08);
+}
+
+.market-guide-callout-body h2 {
+    font-family: Georgia, serif;
+    font-size: 22px;
+    margin: 6px 0 8px;
+    color: var(--ink);
+}
+
+.market-guide-callout-body p {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0;
+    max-width: 680px;
+}
+
+.market-guide-cta {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 18px;
+    background: var(--ink);
+    color: #fff;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background 0.15s ease;
+}
+
+.market-guide-cta:hover {
+    background: var(--orange);
+    color: #fff;
+}
+
+@media (max-width: 768px) {
+    .market-guide-callout {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .market-guide-cta {
+        width: 100%;
+        justify-content: center;
+    }
+}

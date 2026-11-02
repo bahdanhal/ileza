@@ -215,6 +215,15 @@
                 </div>
             </section>
 
+            <aside class="market-guide-callout" aria-label="{{ 'market.guide_callout.title'|trans }}">
+                <div class="market-guide-callout-body">
+                    <span class="market-category">{{ 'market.guide_callout.badge'|trans }}</span>
+                    <h2>{{ 'market.guide_callout.title'|trans }}</h2>
+                    <p>{{ 'market.guide_callout.text'|trans }}</p>
+                </div>
+                <a class="market-guide-cta" href="{{ path('blog_article', {_locale: app.request.locale, slug: app.request.locale == 'pl' ? 'jak-szukac-tanich-ofert-korytarz-cenowy' : 'how-to-find-deals-using-price-corridors'}) }}">{{ 'market.guide_callout.cta'|trans }} →</a>
+            </aside>
+
             <section class="market-summary"><h2>{{ 'market.snapshot'|trans }}</h2><p>{{ 'market.snapshot_text'|trans({'%product%': localized_product_name, '%median%': _self.money(latest.medianGrosz, app.request.locale), '%low%': _self.money(latest.lowGrosz, app.request.locale), '%high%': _self.money(latest.highGrosz, app.request.locale), '%date%': latest.observedAt|date(app.request.locale == 'pl' ? 'd.m.Y' : 'M j, Y')}) }}</p></section>
             {% endif %}
             <section class="section">
@@ -238,6 +247,7 @@
                 {% endif %}
                 <details><summary>{{ 'market.faq.estimate.q'|trans }}</summary><p>{{ 'market.faq.estimate.a'|trans }}</p></details>
                 <details><summary>{{ 'market.faq.sources.q'|trans }}</summary><p>{{ 'market.faq.sources.a'|trans }}</p></details>
+                <details><summary>{{ 'market.faq.how_to_find.q'|trans }}</summary><p>{{ 'market.faq.how_to_find.a'|trans({'%link%': path('blog_article', {_locale: app.request.locale, slug: app.request.locale == 'pl' ? 'jak-szukac-tanich-ofert-korytarz-cenowy' : 'how-to-find-deals-using-price-corridors'})})|raw }}</p></details>
             </section>
         {% else %}
             <section class="market-empty"><h2>{{ 'market.no_data.title'|trans }}</h2><p>{{ 'market.no_data.text'|trans }}</p></section>

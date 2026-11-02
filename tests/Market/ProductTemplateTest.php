@@ -161,4 +161,59 @@ final class ProductTemplateTest extends TestCase
         self::assertStringNotContainsString("'@type':'Dataset'", $html);
         self::assertStringNotContainsString('"@type":"Dataset"', $html);
     }
+
+    public function testRendersBuyingGuideCalloutAndFaqLink(): void
+    {
+        $this->twig->getGlobals()['app']->request->setLocale('pl');
+        $product = new Product(
+            slug: 'iphone-13-128gb',
+            name: 'Apple iPhone 13 128 GB',
+            definition: 'Smartphone Apple',
+            category: 'smartfony',
+            specifications: ['Storage' => '128 GB'],
+        );
+        $latest = new PriceObservation(
+            'iphone-13-128gb',
+            new \DateTimeImmutable('2026-10-31'),
+            68000,
+            60000,
+            75000,
+            'available',
+            'Cheapest working offer',
+            PriceObservation::METHODOLOGY_MANUAL,
+        );
+
+        $htmlPl = $this->twig->render('market/product.html.twig', [
+            'product' => $product,
+            'family' => null,
+            'category_slug' => 'smartfony',
+            'category_name' => 'Smartfony',
+            'canonical_url' => 'https://ileza.pl/ceny/iphone-13-128gb',
+            'latest' => $latest,
+            'history' => [$latest],
+            'one_month_ago' => null,
+            'related' => [],
+        ]);
+
+        self::assertStringContainsString('market-guide-callout', $htmlPl);
+        self::assertStringContainsString('/blog_article', $htmlPl);
+        self::assertStringContainsString('market.faq.how_to_find.q', $htmlPl);
+
+        $this->twig->getGlobals()['app']->request->setLocale('en');
+        $htmlEn = $this->twig->render('market/product.html.twig', [
+            'product' => $product,
+            'family' => null,
+            'category_slug' => 'smartphones',
+            'category_name' => 'Smartphones',
+            'canonical_url' => 'https://ileza.pl/prices/iphone-13-128gb',
+            'latest' => $latest,
+            'history' => [$latest],
+            'one_month_ago' => null,
+            'related' => [],
+        ]);
+
+        self::assertStringContainsString('market-guide-callout', $htmlEn);
+        self::assertStringContainsString('/blog_article', $htmlEn);
+        self::assertStringContainsString('market.faq.how_to_find.q', $htmlEn);
+    }
 }

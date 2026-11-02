@@ -302,6 +302,9 @@ market:
         sources:
             q: "Does this page publish marketplace listings or names?"
             a: "I publish my price estimates, ranges and history. Links submitted by visitors remain private and are removed after 90 days."
+        how_to_find:
+            q: "How to find bargains on OLX and Allegro using this price?"
+            a: "Set up a price corridor in search filters around the Fair Price: minimum price (Fair Price minus delta) and maximum price (Fair Price plus delta). See our step-by-step guide: <a href=\"%link%\">How to Find Deals on Marketplaces: The IleZa Price Corridor Method</a>."
     history: "Price history"
     observations: "estimates"
     date: "Date"
@@ -329,6 +332,11 @@ market:
         below_median: "below my estimate"
         above_median: "above my estimate"
         within_range: "within my range"
+    guide_callout:
+        badge: "Buying guide"
+        title: "How to find bargains using this price?"
+        text: "Do not click \"cheapest first\". Learn how to set price filters on OLX and Allegro (Fair Price ± delta) to filter out empty boxes and find real bargains."
+        cta: "Read guide"
 
 income:
     meta:
