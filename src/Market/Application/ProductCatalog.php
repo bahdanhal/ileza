@@ -861,7 +861,13 @@ final class ProductCatalog
 
         foreach ($groups as $group) {
             foreach ($group['modules'] as $module) {
-                $name = sprintf('RAM %s %s %s', $group['type'], $module['capacity'], $module['speed']);
+                $name = sprintf(
+                    'RAM %s %s %s %s',
+                    $group['type'],
+                    explode(' ', $group['form_factor'], 2)[0],
+                    $module['capacity'],
+                    $module['speed']
+                );
                 $slug = strtolower(str_replace(
                     [' ', '(', ')', '·'],
                     ['-', '', '', ''],
