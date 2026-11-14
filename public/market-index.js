@@ -69,6 +69,7 @@ document.querySelectorAll('[data-market-family]').forEach((family) => {
     products = [];
   }
 
+  const searchStatus = searchRoot.querySelector('[data-search-status]');
   let activeIndex = -1;
   let matches = [];
 
@@ -98,7 +99,7 @@ document.querySelectorAll('[data-market-family]').forEach((family) => {
       dropdown.hidden = true;
       dropdown.innerHTML = '';
       if (clearBtn) clearBtn.hidden = true;
-      input.setAttribute('aria-expanded', 'false');
+      if (searchStatus) searchStatus.textContent = '';
       activeIndex = -1;
       matches = [];
       return;
@@ -131,7 +132,7 @@ document.querySelectorAll('[data-market-family]').forEach((family) => {
         </div>
       `;
       dropdown.hidden = false;
-      input.setAttribute('aria-expanded', 'true');
+      if (searchStatus) searchStatus.textContent = searchStatus.dataset.emptyLabel;
       activeIndex = -1;
       return;
     }
@@ -139,7 +140,6 @@ document.querySelectorAll('[data-market-family]').forEach((family) => {
     dropdown.innerHTML = topMatches.map((item, idx) => `
       <a href="${item.url}"
          class="search-result-item"
-         role="option"
          data-index="${idx}"
          id="search-opt-${idx}">
         <span class="search-item-category">${escapeHtml(item.category_label || item.category)}</span>
@@ -149,7 +149,7 @@ document.querySelectorAll('[data-market-family]').forEach((family) => {
     `).join('');
 
     dropdown.hidden = false;
-    input.setAttribute('aria-expanded', 'true');
+    if (searchStatus) searchStatus.textContent = searchStatus.dataset.resultsLabel.replace('%count%', String(topMatches.length));
     activeIndex = -1;
   }
 
@@ -166,8 +166,8 @@ document.querySelectorAll('[data-market-family]').forEach((family) => {
     items.forEach((item, idx) => {
       const isActive = idx === activeIndex;
       item.classList.toggle('active', isActive);
-      item.setAttribute('aria-selected', isActive ? 'true' : 'false');
       if (isActive) {
+        item.focus({ preventScroll: true });
         item.scrollIntoView({ block: 'nearest' });
       }
     });
@@ -183,9 +183,18 @@ document.querySelectorAll('[data-market-family]').forEach((family) => {
     }
   });
 
-  input.addEventListener('keydown', (e) => {
+  searchRoot.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      input.focus();
+      dropdown.hidden = true;
+      activeIndex = -1;
+      if (searchStatus) searchStatus.textContent = '';
+      return;
+    }
+    if (e.target !== input && !e.target.closest('.search-result-item')) return;
     const items = dropdown.querySelectorAll('.search-result-item');
-    if (items.length === 0) return;
+    if (dropdown.hidden || items.length === 0) return;
 
     if (e.key === 'ArrowDown') {
       e.preventDefault();
@@ -195,7 +204,7 @@ document.querySelectorAll('[data-market-family]').forEach((family) => {
       e.preventDefault();
       activeIndex = (activeIndex - 1 + items.length) % items.length;
       highlightActive();
-    } else if (e.key === 'Enter') {
+    } else if (e.key === 'Enter' && e.target === input) {
       if (activeIndex >= 0 && items[activeIndex]) {
         e.preventDefault();
         items[activeIndex].click();
@@ -203,10 +212,6 @@ document.querySelectorAll('[data-market-family]').forEach((family) => {
         e.preventDefault();
         items[0].click();
       }
-    } else if (e.key === 'Escape') {
-      dropdown.hidden = true;
-      input.setAttribute('aria-expanded', 'false');
-      activeIndex = -1;
     }
   });
 
@@ -242,14 +247,14 @@ document.querySelectorAll('[data-market-family]').forEach((family) => {
         reqInput.focus();
       }
       dropdown.hidden = true;
-      input.setAttribute('aria-expanded', 'false');
+      if (searchStatus) searchStatus.textContent = '';
     }
   });
 
   document.addEventListener('click', (e) => {
     if (!searchRoot.contains(e.target)) {
       dropdown.hidden = true;
-      input.setAttribute('aria-expanded', 'false');
+      if (searchStatus) searchStatus.textContent = '';
       activeIndex = -1;
     }
   });

@@ -46,10 +46,8 @@
                        placeholder="{{ 'market.search.placeholder'|trans }}"
                        autocomplete="off"
                        spellcheck="false"
-                       aria-autocomplete="list"
-                       aria-expanded="false"
                        aria-controls="market-search-results">
-                <button type="button" class="search-clear-btn" aria-label="Clear search" hidden>✕</button>
+                <button type="button" class="search-clear-btn" aria-label="{{ 'market.search.clear'|trans }}" hidden>✕</button>
             </div>
 
             <div class="search-chips-row">
@@ -62,13 +60,14 @@
 
             <div id="market-search-results"
                  class="market-search-dropdown"
-                 role="listbox"
+                 role="region"
                  aria-label="{{ 'market.search.label'|trans }}"
                  hidden
                  data-no-results="{{ 'market.search.no_results'|trans }}"
                  data-request-prompt="{{ 'market.search.request_prompt'|trans }}"
                  data-request-cta="{{ 'market.search.request_cta'|trans }}">
             </div>
+            <p class="visually-hidden" role="status" data-search-status data-results-label="{{ 'market.search.results_count'|trans }}" data-empty-label="{{ 'market.search.no_results'|trans }}"></p>
             {% if search_json is defined and search_json is not empty %}
                 <script id="market-search-data" type="application/json">{{ search_json|raw }}</script>
             {% endif %}
@@ -196,4 +195,4 @@
 {% block head_scripts %}
   <script type="application/ld+json">{{ {'@context':'https://schema.org','@graph':[{'@type':'WebApplication','@id':'https://ileza.pl/#app','url':'https://ileza.pl/','name':'IleZa.pl Personal Price Estimates','applicationCategory':'FinanceApplication','operatingSystem':'All','browserRequirements':'Requires JavaScript. Requires HTML5.','offers':{'@type':'Offer','price':'0','priceCurrency':'PLN'},'description':('market.lede'|trans),'author':{'@id':'https://ileza.pl/#editorial'},'publisher':{'@id':'https://ileza.pl/#editorial'}},{'@type':'FAQPage','@id':'https://ileza.pl/#faq','mainEntity':[{'@type':'Question','name':('market.home_faq.q1'|trans),'acceptedAnswer':{'@type':'Answer','text':('market.home_faq.a1'|trans)}},{'@type':'Question','name':('market.home_faq.q2'|trans),'acceptedAnswer':{'@type':'Answer','text':('market.home_faq.a2'|trans)}},{'@type':'Question','name':('market.home_faq.q3'|trans),'acceptedAnswer':{'@type':'Answer','text':('market.home_faq.a3'|trans)}}]}]}|json_encode(constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_UNESCAPED_UNICODE'))|raw }}</script>
 {% endblock %}
-{% block scripts %}<script src="/market-index.js" defer></script>{% endblock %}
+{% block scripts %}<script src="/market-index.js?v=20261114-a11y" defer></script>{% endblock %}

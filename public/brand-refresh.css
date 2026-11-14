@@ -396,3 +396,24 @@ body.ileza-site {
   position: relative;
   object-fit: contain;
 }
+
+/* Price movers use the same light palette as the surrounding catalog. */
+.ileza-site .market-mover-card { background: var(--panel); }
+.ileza-site .market-mover-card h3 a { color: var(--ink); }
+.ileza-site .market-mover-card h3 a:hover { color: var(--orange); }
+.ileza-site .market-mover-card .mover-price-now strong { color: #20613f; }
+.ileza-site .market-mover-card .trend-down { background: #e1f0e8; color: #20613f; }
+.ileza-site .market-mover-card .mover-pricing { border-color: var(--line); }
+.ileza-site .income-source-links a { display: inline-block; min-height: 24px; padding-block: 4px; }
+.ileza-site :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible { outline: 3px solid #245d9c; outline-offset: 3px; }
+
+.ileza-site .market-facets button,
+.ileza-site .market-view-switcher a.active { color: #fff; }
+.ileza-site .market-search-dropdown { position: relative; top: auto; background: var(--panel); border-color: var(--line); margin-top: 16px; }
+.ileza-site .search-result-item { color: var(--ink); grid-template-columns: minmax(0, 1fr) auto; }
+.ileza-site .search-item-category { grid-column: 1 / -1; justify-self: start; background: #e8eef5; color: #245d9c; }
+.ileza-site .search-item-name { white-space: normal; overflow-wrap: anywhere; }
+.ileza-site .search-item-price { color: #20613f; background: #e1f0e8; }
+.ileza-site .search-result-item:hover, .ileza-site .search-result-item.active { background: #edf2f7; }
+.ileza-site .search-empty-state { color: var(--muted); }
+.ileza-site .search-request-cta-btn { background: var(--orange); color: #fff; }
