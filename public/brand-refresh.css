@@ -417,3 +417,7 @@ body.ileza-site {
 .ileza-site .search-result-item:hover, .ileza-site .search-result-item.active { background: #edf2f7; }
 .ileza-site .search-empty-state { color: var(--muted); }
 .ileza-site .search-request-cta-btn { background: var(--orange); color: #fff; }
+.ileza-site .matrix-price-strong { color: #20613f; }
+.ileza-site .market-quick-alert-link { background: #e8eef5; color: #245d9c; }
+.ileza-site .market-movers-section .section-title { flex-wrap: wrap; gap: 12px; }
+.ileza-site .market-movers-grid { grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); }
