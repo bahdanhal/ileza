@@ -12,7 +12,7 @@
         "ext-libxml": "*",
         "ext-pdo": "*",
         "bahdan/lead-capture-bundle": "^1.1",
-        "bahdan/symfony-privacy-analytics-bundle": "^1.6",
+        "bahdan/symfony-privacy-analytics-bundle": "^1.6.2",
         "doctrine/doctrine-bundle": "^3.0",
         "doctrine/doctrine-migrations-bundle": "^4.0",
         "doctrine/orm": "^3.3",
