@@ -199,10 +199,10 @@ final class PageViewSubscriberTest extends TestCase
         (new PageViewSubscriber($repository, 'analytics-secret'))->onResponse($event);
     }
 
-    public function testExcludesCurlImpersonateIllegalGreaseBrand(): void
+    public function testRecordsChromiumNavigationWithColonGreaseBrand(): void
     {
         $repository = $this->createMock(PageViewRepository::class);
-        $repository->expects(self::never())->method('save');
+        $repository->expects(self::once())->method('save');
         $request = Request::create('https://ileza.pl/', 'GET', server: [
             'REMOTE_ADDR' => '198.51.100.8',
             'HTTP_USER_AGENT' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 '
@@ -224,12 +224,12 @@ final class PageViewSubscriberTest extends TestCase
         (new PageViewSubscriber($repository, 'analytics-secret'))->onResponse($event);
     }
 
-    public function testExcludesAlibabaScraperNotABrandGreaseHeader(): void
+    public function testRecordsChromiumNavigationWithDottedGreaseBrand(): void
     {
         $repository = $this->createMock(PageViewRepository::class);
-        $repository->expects(self::never())->method('save');
+        $repository->expects(self::once())->method('save');
         $request = Request::create('https://ileza.pl/pl/ceny-uzywane-elektroniki', 'GET', server: [
-            'REMOTE_ADDR' => '47.79.39.102',
+            'REMOTE_ADDR' => '198.51.100.8',
             'HTTP_USER_AGENT' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 '
                 . '(KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36',
             'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',

@@ -166,10 +166,10 @@ final class BeaconControllerTest extends TestCase
         self::assertSame(Response::HTTP_NO_CONTENT, $response->getStatusCode());
     }
 
-    public function testExcludesStealthScraperGreaseHeaders(): void
+    public function testRecordsChromiumBeaconWithGreaseBrand(): void
     {
         $repository = $this->createMock(PageViewRepository::class);
-        $repository->expects(self::never())->method('save');
+        $repository->expects(self::once())->method('save');
 
         $controller = new BeaconController($repository, 'analytics-secret');
         $payload = json_encode(['p' => '/pl/ceny-uzywane-elektroniki'], JSON_THROW_ON_ERROR);
@@ -177,7 +177,7 @@ final class BeaconControllerTest extends TestCase
             'https://ileza.pl/api/pa/hit',
             'POST',
             server: [
-                'REMOTE_ADDR' => '47.79.39.102',
+                'REMOTE_ADDR' => '198.51.100.8',
                 'HTTP_USER_AGENT' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36',
                 'HTTP_ACCEPT' => '*/*',
                 'HTTP_ACCEPT_LANGUAGE' => 'pl-PL,pl;q=0.9',
